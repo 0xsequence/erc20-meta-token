@@ -1,0 +1,73 @@
+{
+  "name": "erc20-meta-wrapper",
+  "version": "0.1.0",
+  "description": "General Meta Transaction Wrapper Contract for ERC20s",
+  "repository": "https://github.com/horizon-games/ERC20-meta-wrapper",
+  "keywords": [
+    "token",
+    "ERC20",
+    "ERC1155",
+    "MetaTransactions",
+    "MetaTx",
+    "ethereum"
+  ],
+  "files": [
+    "build",
+    "contracts",
+    "test"
+  ],
+  "scripts": {
+    "build": "truffle compile --all && yarn gen:contract-typings && tsc -b",
+    "clean": "rm -rf build",
+    "migrate": "truffle migrate --network ganache --reset",
+    "migrate:rinkeby": "truffle migrate --network rinkeby",
+    "test": "tsc -b && truffle test --network ganache test/*.spec.js",
+    "gen:contract-typings": "typechain --target ethers --outDir typings/contracts './build/contracts/*.json'",
+    "lint": "yarn lint:ts && yarn lint:sol",
+    "lint:fix": "yarn lint:ts:fix && yarn lint:sol:fix",
+    "lint:sol": "solium -d .",
+    "lint:sol:fix": "solium -d contracts/ --fix",
+    "lint:ts": "tslint -c tslint.json -p .",
+    "lint:ts:fix": "tslint -c tslint.json -p . --fix",
+    "ganache": "ganache-cli --hardfork 'constantinople' --networkId ${npm_package_config_ganacheNetworkID} --host 0.0.0.0 --port ${npm_package_config_ganachePort} --gasLimit ${npm_package_config_ganacheGasLimit} --gasPrice ${npm_package_config_ganacheGasPrice} --defaultBalanceEther ${npm_package_config_etherBalance} --deterministic --mnemonic \"${npm_package_config_mnemonic}\" ${npm_package_config_extra}",
+    "ganache:verbose": "ganache-cli --networkId ${npm_package_config_ganacheNetworkID} --verbose --host 0.0.0.0 --port ${npm_package_config_ganachePort} --gasLimit ${npm_package_config_ganacheGasLimit} --gasPrice ${npm_package_config_ganacheGasPrice} --defaultBalanceEther ${npm_package_config_etherBalance} --deterministic --mnemonic \"${npm_package_config_mnemonic}\" ${npm_package_config_extra}",
+    "ganache:stop": "ps aux | grep ganache-cli | grep -v grep | awk '{print $2}' | xargs kill -9",
+    "console": "truffle console"
+  },
+  "config": {
+    "mnemonic": "venue satisfy stable segment gauge gentle garage reward certain amateur aim stool",
+    "ganacheNetworkID": 127001,
+    "ganachePort": 8545,
+    "ganacheGasLimit": "0xfffffffffff",
+    "ganacheGasPrice": "20000000000",
+    "etherBalance": "100000",
+    "extra": ""
+  },
+  "devDependencies": {
+    "@types/chai-as-promised": "^7.1.0",
+    "@types/chai-string": "^1.4.1",
+    "@types/mocha": "^5.2.5",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "chai-bignumber": "^3.0.0",
+    "chai-string": "^1.5.0",
+    "dotenv": "^6.1.0",
+    "eth-gas-reporter": "^0.1.12",
+    "ethers": "^4.0.20",
+    "ganache-cli": "6.3.0-beta.0",
+    "solc": "^0.5.2",
+    "solidity-coverage": "^0.5.11",
+    "solium": "^1.2.1",
+    "truffle": "^5.0.1",
+    "truffle-contract": "^4.0.1",
+    "truffle-hdwallet-provider": "1.0.2",
+    "tslint": "^5.12.0",
+    "typechain": "^0.3.10",
+    "typescript": "3.2.2",
+    "zos-lib": "^2.0.2"
+  },
+  "dependencies": {
+    "ganache-core": "2.4.0-beta.0",
+    "openzeppelin-solidity": "^2.1.1"
+  }
+}
