@@ -6,7 +6,7 @@ import { Provider } from "ethers/providers";
 import { BigNumber } from "ethers/utils";
 import { TransactionOverrides } from ".";
 
-export class ERC1155XMock extends Contract {
+export class ERC1155MintBurnMock extends Contract {
   functions: {
     balanceOf(
       _address: string,
@@ -22,30 +22,12 @@ export class ERC1155XMock extends Contract {
 
     isApprovedForAll(_owner: string, _operator: string): Promise<boolean>;
 
-    batchMint(
-      _to: string,
-      _ids: (number | string | BigNumber)[],
-      _values: (number | string | BigNumber)[],
-      overrides?: TransactionOverrides
-    ): Promise<ContractTransaction>;
-
-    mint(
-      _to: string,
-      _id: number | string | BigNumber,
-      _value: number | string | BigNumber,
-      overrides?: TransactionOverrides
-    ): Promise<ContractTransaction>;
-
     safeBatchTransferFrom(
       _from: string,
       _to: string,
       _ids: (number | string | BigNumber)[],
       _values: (number | string | BigNumber)[],
       _data: (string)[],
-      overrides?: TransactionOverrides
-    ): Promise<ContractTransaction>;
-
-    renounceOwnership(
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;
 
@@ -64,29 +46,38 @@ export class ERC1155XMock extends Contract {
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;
 
-    transferOwnership(
-      newOwner: string,
-      overrides?: TransactionOverrides
-    ): Promise<ContractTransaction>;
-
-    mockMint(
+    mintMock(
       _to: string,
       _id: number | string | BigNumber,
       _value: number | string | BigNumber,
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;
 
+    batchMintMock(
+      _to: string,
+      _ids: (number | string | BigNumber)[],
+      _values: (number | string | BigNumber)[],
+      overrides?: TransactionOverrides
+    ): Promise<ContractTransaction>;
+
+    burnMock(
+      _from: string,
+      _id: number | string | BigNumber,
+      _value: number | string | BigNumber,
+      overrides?: TransactionOverrides
+    ): Promise<ContractTransaction>;
+
+    batchBurnMock(
+      _from: string,
+      _ids: (number | string | BigNumber)[],
+      _values: (number | string | BigNumber)[],
+      overrides?: TransactionOverrides
+    ): Promise<ContractTransaction>;
+
     ERC1155_BATCH_RECEIVED_VALUE(): Promise<string>;
     ERC1155_RECEIVED_VALUE(): Promise<string>;
-    owner(): Promise<string>;
-    isOwner(): Promise<boolean>;
   };
   filters: {
-    OwnershipTransferred(
-      previousOwner: string | null,
-      newOwner: string | null
-    ): EventFilter;
-
     TransferSingle(
       _operator: string | null,
       _from: string | null,

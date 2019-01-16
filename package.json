@@ -18,7 +18,7 @@
   ],
   "scripts": {
     "build": "truffle compile --all && yarn gen:contract-typings && tsc -b",
-    "clean": "rm -rf build",
+    "clean": "rm -rf build test typings/contracts",
     "migrate": "truffle migrate --network ganache --reset",
     "migrate:rinkeby": "truffle migrate --network rinkeby",
     "test": "tsc -b && truffle test --network ganache test/*.spec.js",

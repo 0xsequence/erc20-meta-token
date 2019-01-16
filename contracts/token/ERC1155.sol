@@ -8,14 +8,6 @@ import "./IERC1155.sol";
 import "./ERC165.sol";
 
 /**
-* TODO: 
-*  - Check for decimals?
-*  - Deposit logic
-*  - Withdraw logic
-*  - MetaTX logic
-*/
-
-/**
  * @dev Implementation of Multi-Token Standard for ERC20 Meta Wrapper Contract.
  *      In this implementation, token IDs should be the uint256 representation 
  *      of the ERC20 token addresses ( via `uint256(tokenAddress)` ).
