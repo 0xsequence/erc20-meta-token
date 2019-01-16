@@ -50,34 +50,34 @@ contract MetaERC20Wrapper is ERC1155MintBurn {
     mint(msg.sender, uint256(_token), _value);
   }
 
-  // /**
-  //  * @dev Withdraw wrapped ERC20 tokens in this contract to receive the original ERC20s or ETH
-  //  * @param _token The addess of the token to withdrww from this contract
-  //  * @param _to The address where the withdrawn tokens will go to 
-  //  * @param _value The amount of tokens to withdraw
-  //  */
-  // function withdraw(address _token, address payable _to, uint256 _value) public {
+  /**
+   * @dev Withdraw wrapped ERC20 tokens in this contract to receive the original ERC20s or ETH
+   * @param _token The addess of the token to withdrww from this contract
+   * @param _to The address where the withdrawn tokens will go to 
+   * @param _value The amount of tokens to withdraw
+   */
+  function withdraw(address _token, address payable _to, uint256 _value) public {
 
-  //   // Burn meta tokens
-  //   burn(msg.sender, uint256(_token), _value);
+    // Burn meta tokens
+    burn(msg.sender, uint256(_token), _value);
 
-  //   // If ERC20 to withdraw
-  //   if (_token != ETH_ADDRESS) {
+    // If ERC20 to withdraw
+    if (_token != ETH_ADDRESS) {
 
-  //     // Transfer tokens to this contract
-  //     IERC20(_token).transfer(_to, _value);
+      // Transfer tokens to this contract
+      IERC20(_token).transfer(_to, _value);
 
-  //     // Check if transfer was successful
-  //     require(checkSuccess(), "MetaERC20Wrapper#withdraw: TRANSFER_FAILED");
+      // Check if transfer was successful
+      require(checkSuccess(), "MetaERC20Wrapper#withdraw: TRANSFER_FAILED");
 
-  //    // If ETH to withdraw 
-  //   } else {
+     // If ETH to withdraw 
+    } else {
 
-  //     // Transfer corresponding ETH to recipient
-  //     _to.transfer(_value);
+      // Transfer corresponding ETH to recipient
+      _to.transfer(_value);
 
-  //   }
-  // }
+    }
+  }
 
   // ============ Private Helper-Functions ============
 

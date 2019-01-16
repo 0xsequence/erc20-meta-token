@@ -57,7 +57,6 @@ contract ERC1155MintBurn is ERC1155 {
   // Burning Functions               
   // 
 
-
   /**
    * @dev burn _value of tokens of a given token id 
    * @param _from The address to burn tokens from.

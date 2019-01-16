@@ -68,7 +68,7 @@ contract('ERC1155MintBurn', (accounts: string[]) => {
         await expect(tx).to.be.fulfilled
       })
 
-      it('[WILL FAIL] should NOT allow anyone to call mint()', async () => {
+      it('[TypeError: EXPECTED] should NOT allow anyone to call mint()', async () => {
          //@ts-ignore
         const tx = anyoneERC1155MintBurnContract.functions.mint(receiverAddress, tokenID, amount)
         await expect(tx).to.be.rejected
@@ -124,7 +124,7 @@ contract('ERC1155MintBurn', (accounts: string[]) => {
         // console.log('Batch mint :' + receipt.gasUsed)
       })
 
-      it('[WILL FAIL] should NOT allow anyone to call batchMint()', async () => {
+      it('[TypeError: EXPECTED] should NOT allow anyone to call batchMint()', async () => {
         //@ts-ignore
         const tx = anyoneERC1155MintBurnContract.functions.batchMint(receiverAddress, typesArray, amountArray)
         await expect(tx).to.be.rejected
@@ -172,7 +172,7 @@ contract('ERC1155MintBurn', (accounts: string[]) => {
         await expect(tx).to.be.fulfilled
       })
 
-      it('[WILL FAIL] should NOT allow anyone to call burn()', async () => {
+      it('[TypeError: EXPECTED] should NOT allow anyone to call burn()', async () => {
          //@ts-ignore
         const tx = anyoneERC1155MintBurnContract.functions.burn(receiverAddress, tokenID, amountToBurn)
         await expect(tx).to.be.rejected
@@ -234,7 +234,7 @@ contract('ERC1155MintBurn', (accounts: string[]) => {
         // console.log('Batch mint :' + receipt.gasUsed)
         
       })
-      it('[WILL FAIL] should NOT allow anyone to call batchMint()', async () => {
+      it('[TypeError: EXPECTED] should NOT allow anyone to call batchMint()', async () => {
         //@ts-ignore
         const tx = anyoneERC1155MintBurnContract.functions.batchBurn(receiverAddress, typesArray, burnAmountArray)
         await expect(tx).to.be.rejected

@@ -52,6 +52,13 @@ export class MetaERC20Wrapper extends Contract {
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;
 
+    withdraw(
+      _token: string,
+      _to: string,
+      _value: number | string | BigNumber,
+      overrides?: TransactionOverrides
+    ): Promise<ContractTransaction>;
+
     ERC1155_BATCH_RECEIVED_VALUE(): Promise<string>;
     ERC1155_RECEIVED_VALUE(): Promise<string>;
   };
