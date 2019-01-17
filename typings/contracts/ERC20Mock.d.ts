@@ -49,13 +49,6 @@ export class ERC20Mock extends Contract {
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;
 
-    batchTransfer(
-      _tokens: (string)[],
-      _to: string,
-      _amounts: (number | string | BigNumber)[],
-      overrides?: TransactionOverrides
-    ): Promise<ContractTransaction>;
-
     totalSupply(): Promise<BigNumber>;
   };
   filters: {
