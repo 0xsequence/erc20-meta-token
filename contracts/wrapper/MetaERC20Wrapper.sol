@@ -31,7 +31,6 @@ contract MetaERC20Wrapper is ERC1155MintBurn {
   {
     // If ERC20 to deposit
     if (_token != ETH_ADDRESS) {
-
       require(msg.value == 0, "MetaERC20Wrapper#deposit: INCORRECT_MSG_VALUE");
 
       // Transfer tokens to this contract
@@ -42,10 +41,8 @@ contract MetaERC20Wrapper is ERC1155MintBurn {
 
     // If ETH to deposit 
     } else {
-
       // Value should equal amount of ETH
       require(_value == msg.value, "MetaERC20Wrapper#deposit: INCORRECT_MSG_VALUE");
-
     }
 
     // Mint meta tokens
@@ -66,7 +63,6 @@ contract MetaERC20Wrapper is ERC1155MintBurn {
 
     // If ERC20 to withdraw
     if (_token != ETH_ADDRESS) {
-
       // Transfer tokens to this contract
       IERC20(_token).transfer(_to, _value);
 
@@ -75,10 +71,8 @@ contract MetaERC20Wrapper is ERC1155MintBurn {
 
     // If ETH to withdraw 
     } else {
-
       // Transfer corresponding ETH to recipient
       _to.transfer(_value);
-
     }
   }
 
