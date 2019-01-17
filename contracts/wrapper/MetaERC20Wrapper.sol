@@ -16,7 +16,6 @@ contract MetaERC20Wrapper is ERC1155MintBurn {
    * No parameters provided
    */
   function() external payable {
-
     // Deposit ETH sent with transaction
     deposit(ETH_ADDRESS, msg.value);
   }
@@ -27,17 +26,18 @@ contract MetaERC20Wrapper is ERC1155MintBurn {
    * @param _value The amount of token to deposit in this contract
    * Note: Users must first approve this contract addres on the contract of the ERC20 to be deposited
    */
-  function deposit(address _token, uint256 _value) public payable {
-
+  function deposit(address _token, uint256 _value) 
+    public payable 
+  {
     // If ERC20 to deposit
     if (_token != ETH_ADDRESS) {
 
       require(msg.value == 0, "MetaERC20Wrapper#deposit: INCORRECT_MSG_VALUE");
 
-      // // Transfer tokens to this contract
+      // Transfer tokens to this contract
       IERC20(_token).transferFrom(msg.sender, address(this), _value);
 
-      // // Check if transfer was successful
+      // Check if transfer was successful
       require(checkSuccess(), "MetaERC20Wrapper#deposit: TRANSFER_FAILED");
 
     // If ETH to deposit 
@@ -58,8 +58,9 @@ contract MetaERC20Wrapper is ERC1155MintBurn {
    * @param _to The address where the withdrawn tokens will go to 
    * @param _value The amount of tokens to withdraw
    */
-  function withdraw(address _token, address payable _to, uint256 _value) public {
-
+  function withdraw(address _token, address payable _to, uint256 _value)
+    public 
+  {
     // Burn meta tokens
     burn(msg.sender, uint256(_token), _value);
 
@@ -88,10 +89,8 @@ contract MetaERC20Wrapper is ERC1155MintBurn {
     * function returned 0 bytes or 32 bytes that are not all-zero.
     * Code taken from: https://github.com/dydxprotocol/protocol/blob/5c8d83e6c143c4ba3bbb65ee6c1758a409652aef/contracts/lib/TokenInteract.sol
     */
-  function checkSuccess(
-  )
-    private
-    pure
+  function checkSuccess()
+    private pure 
     returns (bool)
   {
     uint256 returnValue = 0;
