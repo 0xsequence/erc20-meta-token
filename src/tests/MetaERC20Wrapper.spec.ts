@@ -58,7 +58,7 @@ contract('MetaERC20Wrapper', (accounts: string[]) => {
   // Provider
   var provider = new ethers.providers.JsonRpcProvider()
 
-  context.only('When MetaERC20Wrapper contract is deployed', () => {
+  context('When MetaERC20Wrapper contract is deployed', () => {
     before(async () => {
       receiverAddress = await receiverWallet.getAddress()
       userAddress = await userWallet.getAddress()

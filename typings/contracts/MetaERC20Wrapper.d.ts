@@ -79,6 +79,8 @@ export class MetaERC20Wrapper extends Contract {
     ERC1155_RECEIVED_VALUE(): Promise<string>;
   };
   filters: {
+    LogBytes(sig: null, transferData: null): EventFilter;
+
     TransferSingle(
       _operator: string | null,
       _from: string | null,

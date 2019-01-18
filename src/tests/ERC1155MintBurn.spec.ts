@@ -3,7 +3,7 @@ import * as ethers from 'ethers'
 import { AbstractContract, assert, expect, BigNumber } from './utils'
 import * as utils from './utils'
 
-import { ERC1155MintBurnMock } from 'typings/contracts/ERC1155MintBurnMock'
+import { ERC1155MetaMock } from 'typings/contracts/ERC1155MetaMock'
 
 // init test wallets from package.json mnemonic
 const web3 = (global as any).web3
@@ -42,8 +42,8 @@ contract('ERC1155MintBurn', (accounts: string[]) => {
   let anyoneAddress: string
   let operatorAddress: string
 
-  let erc1155MintBurnContract: ERC1155MintBurnMock
-  let anyoneERC1155MintBurnContract: ERC1155MintBurnMock
+  let erc1155MintBurnContract: ERC1155MetaMock
+  let anyoneERC1155MintBurnContract: ERC1155MetaMock
 
   context('When ERC1155MintBurn contract is deployed', () => {
     before(async () => {
@@ -54,9 +54,9 @@ contract('ERC1155MintBurn', (accounts: string[]) => {
     })
 
     beforeEach(async () => {
-      let abstract = await AbstractContract.fromArtifactName('ERC1155MintBurnMock')
-      erc1155MintBurnContract = await abstract.deploy(ownerWallet) as ERC1155MintBurnMock
-      anyoneERC1155MintBurnContract = await erc1155MintBurnContract.connect(anyoneSigner) as ERC1155MintBurnMock
+      let abstract = await AbstractContract.fromArtifactName('ERC1155MetaMock')
+      erc1155MintBurnContract = await abstract.deploy(ownerWallet) as ERC1155MetaMock
+      anyoneERC1155MintBurnContract = await erc1155MintBurnContract.connect(anyoneSigner) as ERC1155MetaMock
     })
 
     describe('mint() function', () => {

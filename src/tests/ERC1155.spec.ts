@@ -3,7 +3,7 @@ import * as ethers from 'ethers'
 import { AbstractContract, expect, BigNumber } from './utils'
 import * as utils from './utils'
 
-import { ERC1155Mock } from 'typings/contracts/ERC1155Mock'
+import { ERC1155MetaMock } from 'typings/contracts/ERC1155MetaMock'
 import { ERC1155ReceiverMock } from 'typings/contracts/ERC1155ReceiverMock'
 import { ERC1155OperatorMock } from 'typings/contracts/ERC1155OperatorMock'
 
@@ -40,8 +40,8 @@ contract('ERC1155', (accounts: string[]) => {
   let erc1155Abstract: AbstractContract
   let operatorAbstract: AbstractContract
 
-  let erc1155Contract: ERC1155Mock
-  let operatorERC1155Contract: ERC1155Mock
+  let erc1155Contract: ERC1155MetaMock
+  let operatorERC1155Contract: ERC1155MetaMock
 
 
   // load contract abi and deploy to test server
@@ -50,21 +50,21 @@ contract('ERC1155', (accounts: string[]) => {
     receiverAddress = await receiverWallet.getAddress()
     operatorAddress = await operatorWallet.getAddress()
 
-    erc1155Abstract = await AbstractContract.fromArtifactName('ERC1155Mock')
+    erc1155Abstract = await AbstractContract.fromArtifactName('ERC1155MetaMock')
     operatorAbstract = await AbstractContract.fromArtifactName('ERC1155OperatorMock')
   })
 
   // deploy before each test, to reset state of contract
   beforeEach(async () => {
-    erc1155Contract = await erc1155Abstract.deploy(ownerWallet) as ERC1155Mock 
-    operatorERC1155Contract = await erc1155Contract.connect(operatorSigner) as ERC1155Mock
+    erc1155Contract = await erc1155Abstract.deploy(ownerWallet) as ERC1155MetaMock 
+    operatorERC1155Contract = await erc1155Contract.connect(operatorSigner) as ERC1155MetaMock
   })
 
   describe('Getter functions', () => {
 
     beforeEach(async () => {
-      await erc1155Contract.functions.mockMint(ownerAddress, 5, 256)
-      await erc1155Contract.functions.mockMint(receiverAddress, 66, 133)
+      await erc1155Contract.functions.mintMock(ownerAddress, 5, 256)
+      await erc1155Contract.functions.mintMock(receiverAddress, 66, 133)
     })
 
     it('balanceOf() should return types balance for queried address', async () => {
@@ -97,7 +97,7 @@ contract('ERC1155', (accounts: string[]) => {
       receiverContract = await abstract.deploy(ownerWallet) as ERC1155ReceiverMock
       operatorContract = await operatorAbstract.deploy(operatorWallet) as ERC1155OperatorMock
 
-      await erc1155Contract.functions.mockMint(ownerAddress, 0, 256)
+      await erc1155Contract.functions.mintMock(ownerAddress, 0, 256)
     })
 
     it('should be able to transfer if sufficient balance', async () => {
@@ -130,7 +130,7 @@ contract('ERC1155', (accounts: string[]) => {
     })
 
     it('should REVERT if transfer leads to overflow', async () => {
-      await erc1155Contract.functions.mockMint(receiverAddress, 0, MAXVAL)
+      await erc1155Contract.functions.mintMock(receiverAddress, 0, MAXVAL)
       const tx2 = erc1155Contract.functions.safeTransferFrom(ownerAddress, receiverAddress, 0, 1, [])
       await expect(tx2).to.be.rejected
     })
@@ -160,6 +160,29 @@ contract('ERC1155', (accounts: string[]) => {
       // @ts-ignore
       const tx = erc1155Contract.functions.safeTransferFrom(ownerAddress, receiverContract.address, 0, 1, data)
       await expect(tx).to.be.fulfilled
+    })
+
+    it('should pass if data > 69 bytes', async () => {
+      let dataUint8 = ethers.utils.toUtf8Bytes("Breakthroughs! over the river! flips and crucifixions! gone down the flood!")
+      let data = '0xAAAAAAAB' + ethers.utils.bigNumberify(dataUint8).toHexString().slice(2)
+
+      // NOTE: typechain generates the wrong type for `bytes` type at this time
+      // see https://github.com/ethereum-ts/TypeChain/issues/123
+      // @ts-ignore
+      const tx = erc1155Contract.functions.safeTransferFrom(ownerAddress, receiverContract.address, 0, 1, data)
+      await expect(tx).to.be.fulfilled
+    })
+
+
+    it("should REVERT if data > 69 bytes and if first 4 bytes are '0xAAAAAAAA'", async () => {
+      let dataUint8 = ethers.utils.toUtf8Bytes("Breakthroughs! over the river! flips and crucifixions! gone down the flood!")
+      let data = '0xAAAAAAAA' + ethers.utils.bigNumberify(dataUint8).toHexString().slice(2)
+
+      // NOTE: typechain generates the wrong type for `bytes` type at this time
+      // see https://github.com/ethereum-ts/TypeChain/issues/123
+      // @ts-ignore
+      const tx = erc1155Contract.functions.safeTransferFrom(ownerAddress, receiverContract.address, 0, 1, data)
+      await expect(tx).to.be.rejected
     })
 
     context('When successful transfer', () => {
@@ -243,7 +266,7 @@ contract('ERC1155', (accounts: string[]) => {
 
       // Minting enough values for transfer for each types
       for (let i = 0; i < nTokenTypes; i++) {
-        await erc1155Contract.functions.mockMint(ownerAddress, i, nTokensPerType)
+        await erc1155Contract.functions.mintMock(ownerAddress, i, nTokensPerType)
         types.push(i)
         values.push(nTokensPerType)
       }
@@ -293,7 +316,7 @@ contract('ERC1155', (accounts: string[]) => {
     })
 
     it('should REVERT if transfer leads to overflow', async () => {
-      await erc1155Contract.functions.mockMint(receiverAddress, 5, MAXVAL)
+      await erc1155Contract.functions.mintMock(receiverAddress, 5, MAXVAL)
 
       const tx = erc1155Contract.functions.safeBatchTransferFrom(ownerAddress, receiverAddress, [5], [1], [])
       await expect(tx).to.be.rejected

@@ -171,11 +171,11 @@ library LibBytes {
   {
     require(
       from <= to,
-      "FROM_LESS_THAN_TO_REQUIRED"
+      "LibBytes#slice: FROM_LESS_THAN_TO_REQUIRED"
     );
     require(
-      to < b.length,
-      "TO_LESS_THAN_LENGTH_REQUIRED"
+      to <= b.length,
+      "LibBytes#slice: TO_LESS_THAN_LENGTH_REQUIRED"
     );
     
     // Create a new bytes structure and copy contents
@@ -205,11 +205,11 @@ library LibBytes {
   {
     require(
       from <= to,
-      "FROM_LESS_THAN_TO_REQUIRED"
+      "LibBytes#sliceDestructive: FROM_LESS_THAN_TO_REQUIRED"
     );
     require(
       to < b.length,
-      "TO_LESS_THAN_LENGTH_REQUIRED"
+      "LibBytes#sliceDestructive: TO_LESS_THAN_LENGTH_REQUIRED"
     );
     
     // Create a new bytes structure around [from, to) in-place.
@@ -230,7 +230,7 @@ library LibBytes {
   {
     require(
       b.length > 0,
-      "GREATER_THAN_ZERO_LENGTH_REQUIRED"
+      "LibBytes#popLastByte: GREATER_THAN_ZERO_LENGTH_REQUIRED"
     );
 
     // Store last byte.
@@ -254,7 +254,7 @@ library LibBytes {
   {
     require(
       b.length >= 20,
-      "GREATER_OR_EQUAL_TO_20_LENGTH_REQUIRED"
+      "LibBytes#popLast20Bytes: GREATER_OR_EQUAL_TO_20_LENGTH_REQUIRED"
     );
 
     // Store last 20 bytes.
@@ -300,7 +300,7 @@ library LibBytes {
   {
     require(
       b.length >= index + 20,  // 20 is length of address
-      "GREATER_OR_EQUAL_TO_20_LENGTH_REQUIRED"
+      "LibBytes#readAddress: GREATER_OR_EQUAL_TO_20_LENGTH_REQUIRED"
     );
 
     // Add offset to index:
@@ -332,7 +332,7 @@ library LibBytes {
   {
     require(
       b.length >= index + 20,  // 20 is length of address
-      "GREATER_OR_EQUAL_TO_20_LENGTH_REQUIRED"
+      "LibBytes#writeAddress: GREATER_OR_EQUAL_TO_20_LENGTH_REQUIRED"
     );
 
     // Add offset to index:
@@ -378,7 +378,7 @@ library LibBytes {
   {
     require(
       b.length >= index + 32,
-      "GREATER_OR_EQUAL_TO_32_LENGTH_REQUIRED"
+      "LibBytes#readBytes32: GREATER_OR_EQUAL_TO_32_LENGTH_REQUIRED"
     );
 
     // Arrays are prefixed by a 256 bit length parameter
@@ -405,7 +405,7 @@ library LibBytes {
   {
     require(
       b.length >= index + 32,
-      "GREATER_OR_EQUAL_TO_32_LENGTH_REQUIRED"
+      "LibBytes#writeBytes32: GREATER_OR_EQUAL_TO_32_LENGTH_REQUIRED"
     );
 
     // Arrays are prefixed by a 256 bit length parameter
@@ -462,7 +462,7 @@ library LibBytes {
   {
     require(
       b.length >= index + 4,
-      "GREATER_OR_EQUAL_TO_4_LENGTH_REQUIRED"
+      "LibBytes#readBytes4: GREATER_OR_EQUAL_TO_4_LENGTH_REQUIRED"
     );
 
     // Arrays are prefixed by a 32 byte length field
@@ -500,7 +500,7 @@ library LibBytes {
     // length of nested bytes
     require(
       b.length >= index + nestedBytesLength,
-      "GREATER_OR_EQUAL_TO_NESTED_BYTES_LENGTH_REQUIRED"
+      "LibBytes#readBytesWithLength: GREATER_OR_EQUAL_TO_NESTED_BYTES_LENGTH_REQUIRED"
     );
     
     // Return a pointer to the byte array as it exists inside `b`
@@ -526,7 +526,7 @@ library LibBytes {
     // length of input
     require(
       b.length >= index + 32 + input.length,  // 32 bytes to store length
-      "GREATER_OR_EQUAL_TO_NESTED_BYTES_LENGTH_REQUIRED"
+      "LibBytes#writeBytesWithLength: GREATER_OR_EQUAL_TO_NESTED_BYTES_LENGTH_REQUIRED"
     );
 
     // Copy <input> into <b>
@@ -551,7 +551,7 @@ library LibBytes {
     // Dest length must be >= source length, or some bytes would not be copied.
     require(
       dest.length >= sourceLen,
-      "GREATER_OR_EQUAL_TO_SOURCE_BYTES_LENGTH_REQUIRED"
+      "LibBytes#deepCopyBytes: GREATER_OR_EQUAL_TO_SOURCE_BYTES_LENGTH_REQUIRED"
     );
     memCopy(
       dest.contentAddress(),

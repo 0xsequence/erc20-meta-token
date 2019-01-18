@@ -3,6 +3,7 @@ pragma experimental ABIEncoderV2;
 
 import "./ERC1155MintBurn.sol";
 import "../signature/SignatureValidator.sol";
+import "../utils/LibBytes.sol";
 
 
 /**
@@ -10,9 +11,11 @@ import "../signature/SignatureValidator.sol";
  *      to presign function calls and allow third parties to execute these on their behalf. 
  *      These methods allow for native meta transactions.
  */ 
-contract ERC1155Meta is ERC1155MintBurn, SignatureValidator { 
+contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
 
-    /**
+  using LibBytes for bytes;
+
+  /**
    * TO DO:
    *  - Add tests
    *  - Support contract validator signature type?
@@ -31,14 +34,18 @@ contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
   // Signature Based Transfer methods
   //
 
+  // TO REMOVE
+  event LogBytes(bytes sig, bytes transferData); // ???
+
   /**
    * @dev Allow anyone with a valid signature to transfer on the bahalf of _from
    * @param _from The address which you want to send tokens from
    * @param _to The address which you want to transfer to
    * @param _id Token id to update balance of - For this implementation, via `uint256(tokenAddress)`.
    * @param _value The amount of tokens of provided token ID to be transferred
-   * @param _data Contains a valid signature of length 65 (v,r,s variables from ecdsa signature)
-   *         any additional data for onReceive function must be added after the signature.
+   * @param _data Encodes a meta transfer indicator, signature and extra transfer data.  
+   *          _data should be encoded as (bytes4 isMetaTx, uint8 v, bytes32 r, bytes32 s, bytes data)
+   *          isMetaTx should be 0xAAAAAAAA for meta transfer, or anything else for regular transfer
    */
   function safeTransferFrom(
     address _from,
@@ -50,39 +57,52 @@ contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
   {
     require(_to != address(0), "ERC1155Meta#safeTransferFrom: INVALID_RECIPIENT");
 
-    // Extract sig and data from _sigAndData
-    (bytes32 r, bytes32 s, uint8 v, bytes memory transferData) = abi.decode(_data, (bytes32, bytes32, uint8, bytes));
+    // Is NOT meta transfer
+    if (_data.length <= 69) {
+      super.safeTransferFrom(_from, _to, _id, _value, _data);
+
+    } else {
+      bytes4 isMetaTx = _data.readBytes4(0);
+
+      // Is NOT metaTransfer
+      if (isMetaTx != 0xAAAAAAAA) {
+        super.safeTransferFrom(_from, _to, _id, _value, _data);
+
+      } else {
+          // Get signature and transfer data
+        bytes memory sig = _data.slice(4, 70);                    
+        bytes memory transferData = _data.slice(70, _data.length); 
+        
+        // Get signer's currently available nonce
+        uint256 nonce = nonces[_from];
+
+        // Get data that formed the hash
+        bytes memory data = abi.encodePacked(address(this), _from, _to, _id,  _value, transferData, nonce);
+
+        // Verify if _from is the signer
+        require(isValidSignature(_from, data, sig), "ERC1155Meta#safeTransferFrom: INVALID_SIGNATURE");
     
-    // Pack rsv into sig
-    bytes memory sig = abi.encodePacked(r,s,v);
+        //Update signature nonce
+        nonces[_from] += 1;
 
-    // Get signer's currently available nonce
-    uint256 nonce = nonces[_from];
+        // Update balances
+        balances[_from][_id] = balances[_from][_id].sub(_value); // Subtract value
+        balances[_to][_id] = balances[_to][_id].add(_value);     // Add value
 
-    // Get data that formed the hash
-    bytes memory data = abi.encodePacked(address(this), _from, _to, _id,  _value, transferData, nonce);
+        if (_to.isContract()) {
+          bytes4 retval = IERC1155TokenReceiver(_to).onERC1155Received(msg.sender, _from, _id, _value, transferData);
+          require(retval == ERC1155_RECEIVED_VALUE, "ERC1155Meta#safeTransferFrom: INVALID_ON_RECEIVE_MESSAGE");
+        }
 
-    // Verify if _from is the signer
-    require(isValidSignature(_from, data, sig), "ERC1155Meta#safeTransferFrom: INVALID_SIGNATURE");
- 
-    //Update signature nonce
-    nonces[_from] += 1;
-
-    // Update balances
-    balances[_from][_id] = balances[_from][_id].sub(_value); // Subtract value
-    balances[_to][_id] = balances[_to][_id].add(_value);      // Add value
-
-    if (_to.isContract()) {
-      bytes4 retval = IERC1155TokenReceiver(_to).onERC1155Received(msg.sender, _from, _id, _value, transferData);
-      require(retval == ERC1155_RECEIVED_VALUE, "ERC1155Meta#safeTransferFrom: INVALID_ON_RECEIVE_MESSAGE");
+        // Emit event
+        emit TransferSingle(msg.sender, _from, _to, _id, _value);
+        emit LogBytes(sig, transferData); // ???
+      }
     }
-
-    // Emit event
-    emit TransferSingle(msg.sender, _from, _to, _id, _value);
   } 
 
   //
-  // Operator Functions
+  // Operator Function
   //
 
   /**
