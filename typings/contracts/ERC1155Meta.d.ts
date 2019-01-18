@@ -6,7 +6,7 @@ import { Provider } from "ethers/providers";
 import { BigNumber } from "ethers/utils";
 import { TransactionOverrides } from ".";
 
-export class MetaERC20Wrapper extends Contract {
+export class ERC1155Meta extends Contract {
   functions: {
     balanceOf(
       _address: string,
@@ -14,8 +14,6 @@ export class MetaERC20Wrapper extends Contract {
     ): Promise<BigNumber>;
 
     supportsInterface(_interfaceID: string): Promise<boolean>;
-
-    getNonce(_signer: string): Promise<BigNumber>;
 
     balanceOfBatch(
       _owners: (string)[],
@@ -30,20 +28,14 @@ export class MetaERC20Wrapper extends Contract {
 
     isApprovedForAll(_owner: string, _operator: string): Promise<boolean>;
 
+    getNonce(_signer: string): Promise<BigNumber>;
+
     safeBatchTransferFrom(
       _from: string,
       _to: string,
       _ids: (number | string | BigNumber)[],
       _values: (number | string | BigNumber)[],
       _data: (string)[],
-      overrides?: TransactionOverrides
-    ): Promise<ContractTransaction>;
-
-    sigSetApprovalForAll(
-      _owner: string,
-      _operator: string,
-      _approved: boolean,
-      _sig: (string)[],
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;
 
@@ -62,16 +54,11 @@ export class MetaERC20Wrapper extends Contract {
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;
 
-    deposit(
-      _token: string,
-      _value: number | string | BigNumber,
-      overrides?: TransactionOverrides
-    ): Promise<ContractTransaction>;
-
-    withdraw(
-      _token: string,
-      _to: string,
-      _value: number | string | BigNumber,
+    sigSetApprovalForAll(
+      _owner: string,
+      _operator: string,
+      _approved: boolean,
+      _sig: (string)[],
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;
 

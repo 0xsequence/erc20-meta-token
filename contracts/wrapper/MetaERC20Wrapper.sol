@@ -2,10 +2,10 @@
 pragma solidity ^0.5.0;
 
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
-import "../token/ERC1155MintBurn.sol";
+import "../token/ERC1155Meta.sol";
 
 
-contract MetaERC20Wrapper is ERC1155MintBurn {
+contract MetaERC20Wrapper is ERC1155Meta {
 
   // Address for tokens representing Ether is 0x00...00
   address internal ETH_ADDRESS = address(0x0); 

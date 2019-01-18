@@ -3,6 +3,7 @@ pragma experimental ABIEncoderV2;
 
 import "./ERC1155.sol";
 
+
 /**
  * @dev Multi-Fungible Tokens with minting and burning methods. These methods assume
  *      a parent contract to be executed as they are `internal` functions.
