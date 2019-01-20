@@ -46,6 +46,7 @@ contract('ERC1155MintBurn', (accounts: string[]) => {
   let anyoneERC1155MintBurnContract: ERC1155MetaMock
 
   context('When ERC1155MintBurn contract is deployed', () => {
+
     before(async () => {
       ownerAddress = await ownerWallet.getAddress()
       receiverAddress = await receiverWallet.getAddress()

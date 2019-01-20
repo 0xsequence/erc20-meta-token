@@ -29,7 +29,7 @@ const {
 } = utils.createTestWallet(web3, 4)
 
 
-contract('ERC1155', (accounts: string[]) => {
+contract('ERC1155Meta', (accounts: string[]) => {
 
   const MAXVAL = new BigNumber(2).pow(256).sub(1) // 2**256 - 1
   const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
@@ -60,37 +60,12 @@ contract('ERC1155', (accounts: string[]) => {
     operatorERC1155Contract = await erc1155Contract.connect(operatorSigner) as ERC1155MetaMock
   })
 
-  describe('Getter functions', () => {
-
-    beforeEach(async () => {
-      await erc1155Contract.functions.mintMock(ownerAddress, 5, 256)
-      await erc1155Contract.functions.mintMock(receiverAddress, 66, 133)
-    })
-
-    it('balanceOf() should return types balance for queried address', async () => {
-      let balance5 = await erc1155Contract.functions.balanceOf(ownerAddress, 5)
-      expect(balance5).to.be.eql(new BigNumber(256))
-
-      let balance16 = await erc1155Contract.functions.balanceOf(ownerAddress, 16)
-      expect(balance16).to.be.eql(new BigNumber(0))
-    })
-
-    it('balanceOfBatch() should return types balance for queried addresses', async () => {
-      let balances = await erc1155Contract.functions.balanceOfBatch([ownerAddress, receiverAddress], [5, 66])
-      expect(balances[0]).to.be.eql(new BigNumber(256))
-      expect(balances[1]).to.be.eql(new BigNumber(133))
-
-      let balancesNull = await erc1155Contract.functions.balanceOfBatch([ownerAddress, receiverAddress], [1337, 1337])
-      expect(balancesNull[0]).to.be.eql(new BigNumber(0))
-      expect(balancesNull[1]).to.be.eql(new BigNumber(0))
-    })
-
-  })
-
-  describe('safeTransferFrom() function', () => {
+  describe('safeTransferFrom() (Meta) Function', () => {
 
     let receiverContract: ERC1155ReceiverMock
     let operatorContract: ERC1155OperatorMock
+
+    let txData: string;
 
     beforeEach(async () => {
       let abstract = await AbstractContract.fromArtifactName('ERC1155ReceiverMock')

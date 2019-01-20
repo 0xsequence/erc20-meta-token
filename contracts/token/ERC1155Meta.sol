@@ -44,7 +44,7 @@ contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
    * @param _id Token id to update balance of - For this implementation, via `uint256(tokenAddress)`.
    * @param _value The amount of tokens of provided token ID to be transferred
    * @param _data Encodes a meta transfer indicator, signature and extra transfer data.  
-   *          _data should be encoded as (bytes4 isMetaTx, uint8 v, bytes32 r, bytes32 s, bytes data)
+   *          _data should be encoded as (bytes4 isMetaTx, uint8 v, bytes32 r, bytes32 s, SignatureType sigType, bytes data)
    *          isMetaTx should be 0xAAAAAAAA for meta transfer, or anything else for regular transfer
    */
   function safeTransferFrom(

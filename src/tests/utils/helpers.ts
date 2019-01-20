@@ -1,4 +1,5 @@
 import * as ethers from 'ethers'
+import { expect, assert } from './'
 
 export const UNIT_ETH = ethers.utils.parseEther('1')
 export const HIGH_GAS_LIMIT = { gasLimit: 6e9 }
@@ -15,6 +16,12 @@ export const createTestWallet = (web3: any, addressIndex: number = 0) => {
   const signer = provider.getSigner(addressIndex)
 
   return { wallet, provider, signer }
+}
+
+// Check if tx was Reverted with specified message
+export function RevertError(errorMessage: string) {
+  let prefix = 'VM Exception while processing transaction: revert '
+  return prefix + errorMessage
 }
 
 export interface JSONRPCRequest {
