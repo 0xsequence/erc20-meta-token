@@ -84,11 +84,12 @@ contract SignatureValidator {
         _sig.length == 65,
         "SignatureValidator#isValidSignature: LENGTH_65_REQUIRED"
       );
-      v = uint8(_sig[0]);
-      r = _sig.readBytes32(1);
-      s = _sig.readBytes32(33);
+      r = _sig.readBytes32(0);
+      s = _sig.readBytes32(32);
+      v = uint8(_sig[64]);
       recovered = ecrecover(hash, v, r, s);
       isValid = _signerAddress == recovered;
+
       return isValid;
 
     // Signed using web3.eth_sign
@@ -97,15 +98,16 @@ contract SignatureValidator {
         _sig.length == 65,
         "SignatureValidator#isValidSignature: LENGTH_65_REQUIRED"
       );
-      v = uint8(_sig[0]);
-      r = _sig.readBytes32(1);
-      s = _sig.readBytes32(33);
+      r = _sig.readBytes32(0);
+      s = _sig.readBytes32(32);
+      v = uint8(_sig[64]);
       recovered = ecrecover(
         keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", hash)),
         v,
         r,
         s
       );
+
       isValid = _signerAddress == recovered;
       return isValid;
 

@@ -1,8 +1,9 @@
 import * as ethers from 'ethers'
+import { SigningKey } from 'ethers/utils/signing-key';
+import { joinSignature } from 'ethers/utils/bytes'
 
 export const UNIT_ETH = ethers.utils.parseEther('1')
 export const HIGH_GAS_LIMIT = { gasLimit: 6e9 }
-
 
 // createTestWallet creates a new wallet
 export const createTestWallet = (web3: any, addressIndex: number = 0) => {
@@ -15,6 +16,28 @@ export const createTestWallet = (web3: any, addressIndex: number = 0) => {
   const signer = provider.getSigner(addressIndex)
 
   return { wallet, provider, signer }
+}
+
+// Check if tx was Reverted with specified message
+export function RevertError(errorMessage: string) {
+  let prefix = 'VM Exception while processing transaction: revert '
+  return prefix + errorMessage
+}
+
+// Take a message, hash it and sign it with ETH_SIGN SignatureType
+export async function ethSign(wallet: ethers.Wallet, message: string | Uint8Array) {
+  let hash = ethers.utils.keccak256(message)
+  let hashArray = ethers.utils.arrayify(hash) 
+  let ethsigNoType = await wallet.signMessage(hashArray)
+  return ethsigNoType + '02'
+}
+
+// Take a message, hash it and sign it with EIP_712_SIG SignatureType
+export function eip712Sign(wallet: ethers.Wallet, message: string | Uint8Array) {
+  let hash = ethers.utils.keccak256(message)
+  let signerSigningKey = new SigningKey(wallet.privateKey)
+  let eip712sig = joinSignature(signerSigningKey.signDigest(hash))
+  return eip712sig + '01'
 }
 
 export interface JSONRPCRequest {

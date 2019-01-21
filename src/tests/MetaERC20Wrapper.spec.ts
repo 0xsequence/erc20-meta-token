@@ -142,11 +142,9 @@ contract('MetaERC20Wrapper', (accounts: string[]) => {
               const balance = await userMetaERC20WrapperContract.functions.balanceOf(userAddress, tokenAddress)
               expect(balance).to.be.eql(depositAmount)
             })
+            
           })
-
-
-        })
-    
+        })    
       })
 
       describe('when depositing ETH', () => {
@@ -224,6 +222,7 @@ contract('MetaERC20Wrapper', (accounts: string[]) => {
           const balance = await userMetaERC20WrapperContract.functions.balanceOf(userAddress, ZERO_ADDRESS)
           expect(balance).to.be.eql(depositAmount)
         })
+
       })
     })
 
@@ -274,7 +273,6 @@ contract('MetaERC20Wrapper', (accounts: string[]) => {
           })
 
         })
-
       })
 
       describe('when withdrawing ETH', () => {
@@ -328,10 +326,7 @@ contract('MetaERC20Wrapper', (accounts: string[]) => {
           })
 
         })
-
       })
-
-
     })
   })
 })
