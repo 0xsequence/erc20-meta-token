@@ -49,6 +49,11 @@ contract SignatureValidator {
       "SignatureValidator#isValidSignature: LENGTH_GREATER_THAN_0_REQUIRED"
     );
 
+    require(
+      _signerAddress != address(0x0),
+      "SignatureValidator#isValidSignature: INVALID_SIGNER"
+    );
+
     // Get hash of _data (TO IMPLEMENT / VERIFY) <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     bytes32 hash = keccak256(_data);
 

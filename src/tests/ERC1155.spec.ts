@@ -162,29 +162,6 @@ contract('ERC1155', (accounts: string[]) => {
       await expect(tx).to.be.fulfilled
     })
 
-    it('should pass if data > 69 bytes', async () => {
-      let dataUint8 = ethers.utils.toUtf8Bytes("Breakthroughs! over the river! flips and crucifixions! gone down the flood!")
-      let data = '0xAAAAAAAB' + ethers.utils.bigNumberify(dataUint8).toHexString().slice(2)
-
-      // NOTE: typechain generates the wrong type for `bytes` type at this time
-      // see https://github.com/ethereum-ts/TypeChain/issues/123
-      // @ts-ignore
-      const tx = erc1155Contract.functions.safeTransferFrom(ownerAddress, receiverContract.address, 0, 1, data)
-      await expect(tx).to.be.fulfilled
-    })
-
-
-    it("should REVERT if data > 69 bytes and if first 4 bytes are '0xAAAAAAAA'", async () => {
-      let dataUint8 = ethers.utils.toUtf8Bytes("Breakthroughs! over the river! flips and crucifixions! gone down the flood!")
-      let data = '0xAAAAAAAA' + ethers.utils.bigNumberify(dataUint8).toHexString().slice(2)
-
-      // NOTE: typechain generates the wrong type for `bytes` type at this time
-      // see https://github.com/ethereum-ts/TypeChain/issues/123
-      // @ts-ignore
-      const tx = erc1155Contract.functions.safeTransferFrom(ownerAddress, receiverContract.address, 0, 1, data)
-      await expect(tx).to.be.rejected
-    })
-
     context('When successful transfer', () => {
       let tx: ethers.ContractTransaction
 

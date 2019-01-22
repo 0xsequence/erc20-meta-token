@@ -2,8 +2,8 @@ pragma solidity ^0.5.0;
 pragma experimental ABIEncoderV2;
 
 import "./ERC1155MintBurn.sol";
-import "../signature/SignatureValidator.sol";
 import "../utils/LibBytes.sol";
+import "../signature/SignatureValidator.sol";
 
 
 /**
@@ -22,19 +22,20 @@ contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
    *  - Gas payment with arbitrary token
    *  - Add meta batch transfer
    *  - Add scope approvals?
-   *  - Add meta-deposits
-   *  - Add meta-withdraw
+   *  - Add meta-deposits (via CREATE2)
+   *  - Add meta-withdraw 
    */
 
   // Signature nonce per address
   mapping (address => uint256) internal nonces;
 
+  // Meta transfer identifier:
+  //    bytes4(keccak256("metaSafeTransferFrom(address,address,uint256,uint256,bytes)"));
+  bytes4 internal constant METATRANSFER_IDENTIFIER = 0xebc71fa5; 
+
   //
   // Signature Based Transfer methods
   //
-
-  // TO REMOVE
-  event LogBytes(bytes sig, bytes transferData); // ???
 
   /**
    * @dev Allow anyone with a valid signature to transfer on the bahalf of _from
@@ -43,8 +44,8 @@ contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
    * @param _id Token id to update balance of - For this implementation, via `uint256(tokenAddress)`.
    * @param _value The amount of tokens of provided token ID to be transferred
    * @param _data Encodes a meta transfer indicator, signature and extra transfer data.  
-   *          _data should be encoded as (bytes4 isMetaTx, uint8 v, bytes32 r, bytes32 s, SignatureType sigType, bytes data)
-   *          isMetaTx should be 0xAAAAAAAA for meta transfer, or anything else for regular transfer
+   *          _data should be encoded as (bytes4 METATRANSFER_IDENTIFIER, bytes32 r, bytes32 s,  uint8 v, SignatureType sigType, bytes data)
+   *          isMetaTx should be 0xebc71fa5 for meta transfer, or anything else for regular transfer
    */
   function safeTransferFrom(
     address _from,
@@ -56,15 +57,15 @@ contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
   {
     require(_to != address(0), "ERC1155Meta#safeTransferFrom: INVALID_RECIPIENT");
 
-    // Is NOT meta transfer
-    if (_data.length <= 69) {
+    // Is NOT meta transfer - (dirty check)
+    if (_data.length < 70) { 
       super.safeTransferFrom(_from, _to, _id, _value, _data);
 
     } else {
-      bytes4 isMetaTx = _data.readBytes4(0);
+      bytes4 transferIdentifier = _data.readBytes4(0); // Check if metaTransfer was specified
 
-      // Is NOT metaTransfer
-      if (isMetaTx != 0xAAAAAAAA) {
+      // Is NOT metaTransfer - (explicit check)
+      if (transferIdentifier != METATRANSFER_IDENTIFIER) {
         super.safeTransferFrom(_from, _to, _id, _value, _data);
 
       } else {
@@ -95,7 +96,6 @@ contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
 
         // Emit event
         emit TransferSingle(msg.sender, _from, _to, _id, _value);
-        emit LogBytes(sig, transferData); // ???
       }
     }
   } 

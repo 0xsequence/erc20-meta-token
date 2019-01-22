@@ -1,12 +1,11 @@
 import * as ethers from 'ethers'
 
-
-import { SigningKey } from 'ethers/utils/signing-key';
 import { AbstractContract, expect, RevertError, ethSign, eip712Sign } from './utils'
 import * as utils from './utils'
 
 import { SignatureValidator } from 'typings/contracts/SignatureValidator'
 import { ERC1271WalletMock } from 'typings/contracts/ERC1271WalletMock'
+import { AddressZero } from 'ethers/constants';
 
 // init test wallets from package.json mnemonic
 const web3 = (global as any).web3
@@ -50,6 +49,12 @@ contract('SignatureValidator Contract', (accounts: string[]) => {
       // @ts-ignore
       const tx = signatureValidatorContract.functions.isValidSignature(signerAddress, data, [])
       await expect(tx).to.be.rejectedWith( RevertError("SignatureValidator#isValidSignature: LENGTH_GREATER_THAN_0_REQUIRED") )    
+    })
+
+    it('should REVERT if expected signer is 0x0', async () => {
+      // @ts-ignore
+      const tx = signatureValidatorContract.functions.isValidSignature(AddressZero, data, ethsig)
+      await expect(tx).to.be.rejectedWith( RevertError("SignatureValidator#isValidSignature: INVALID_SIGNER") )    
     })
 
     it('should REVERT if signature is illigal (SignatureType: 0x0)', async () => {

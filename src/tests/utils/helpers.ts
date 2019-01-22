@@ -1,6 +1,6 @@
 import * as ethers from 'ethers'
 import { SigningKey } from 'ethers/utils/signing-key';
-import { joinSignature } from 'ethers/utils/bytes'
+import { joinSignature, bigNumberify, toUtf8Bytes, BigNumber } from 'ethers/utils'
 
 export const UNIT_ETH = ethers.utils.parseEther('1')
 export const HIGH_GAS_LIMIT = { gasLimit: 6e9 }
@@ -30,6 +30,47 @@ export async function ethSign(wallet: ethers.Wallet, message: string | Uint8Arra
   let hashArray = ethers.utils.arrayify(hash) 
   let ethsigNoType = await wallet.signMessage(hashArray)
   return ethsigNoType + '02'
+}
+
+// Encode data that is passed to safeTransferFrom() for metaTransfers
+export async function encodeMetaTransferFromData(
+  contract: string, 
+  signerWallet: ethers.Wallet,
+  receiver: string,
+  id: number | string | BigNumber,
+  amount: number | string | BigNumber,
+  transferData: string,
+  nonce: number | string | BigNumber) 
+{
+  let signer = await signerWallet.getAddress()
+  let sigData;
+  
+  // Ugly and hacky way of dealing with null transferData
+  if (transferData != '') {
+    // Encode data to sign
+    sigData = ethers.utils.concat([contract, signer, receiver,
+      ethers.utils.hexZeroPad(bigNumberify(id).toHexString(), 32),
+      ethers.utils.hexZeroPad(bigNumberify(amount).toHexString(), 32),
+      toUtf8Bytes(transferData),
+      ethers.utils.hexZeroPad(bigNumberify(nonce).toHexString(), 32)
+    ])
+  } else {
+    sigData = ethers.utils.concat([contract, signer, receiver,
+      ethers.utils.hexZeroPad(bigNumberify(id).toHexString(), 32),
+      ethers.utils.hexZeroPad(bigNumberify(amount).toHexString(), 32),
+      ethers.utils.hexZeroPad(bigNumberify(nonce).toHexString(), 32)
+    ])
+  }
+
+  // Get signature
+  let sig = await ethSign(signerWallet, sigData)
+
+  // Encode transfer data
+  let postdata = bigNumberify(toUtf8Bytes(transferData)).toHexString().slice(2)
+
+  // Data to pass in transfer method
+  //  '0xebc71fa5': bytes4(keccak256("metaSafeTransferFrom(address,address,uint256,uint256,bytes)"))
+  return (transferData != '') ? '0xebc71fa5' + sig.slice(2) + postdata : '0xebc71fa5' + sig.slice(2)
 }
 
 // Take a message, hash it and sign it with EIP_712_SIG SignatureType

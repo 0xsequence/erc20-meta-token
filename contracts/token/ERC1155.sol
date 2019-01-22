@@ -1,8 +1,8 @@
 pragma solidity ^0.5.0;
 //pragma experimental ABIEncoderV2;
 
-import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/utils/Address.sol";
+import "../utils/SafeMath.sol";
 import "./IERC1155TokenReceiver.sol";
 import "./IERC1155.sol";
 import "./ERC165.sol";
