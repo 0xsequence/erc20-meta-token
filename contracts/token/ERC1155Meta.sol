@@ -14,20 +14,14 @@ import "../signature/SignatureValidator.sol";
 contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
   using LibBytes for bytes;
 
-  // MetaTx data
+  // Gas Receipt 
   struct GasReceipt {
-    uint32 gasLimit;             // Max amount of gas that can be reimbursed
-    uint32 baseGas;              // Base gas cost (includes things like 21k, data encoding, etc.)
-    uint128 gasPrice;            // Price denominated in token X per gas unit
-    address feeToken;            // Token to pay for gas ??? Can be self by default?
-    address payable feeReceiver; // Address to send payment to 
+    uint32 gasLimit;              // Max amount of gas that can be reimbursed
+    uint32 baseGas;               // Base gas cost (includes things like 21k, data encoding, etc.)
+    uint128 gasPrice;             // Price denominated in token X per gas unit
+    address feeToken;             // Token to pay for gas ??? Can be self by default?
+    address payable feeRecipient; // Address to send payment to 
   }
-
-  // Takes bytes array and returns decoded GasReceipt structure
-  function decodeGasReceipt(bytes memory _data) public view returns (GasReceipt) {
-    (bytes4 metaTag, GasReceipt memory gasReceipt, bytes memory _data) = abi.decode(_data, (bytes4, GasReceipt, bytes));
-    return gasReceipt;
-  } 
 
   /**
    * TO DO:
@@ -55,8 +49,6 @@ contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
   //
   // Signature Based Transfer methods
   //
-
-  event Log(bytes _dataCropped, bytes sig, bytes transferData);
 
   /**
    * @dev Allow anyone with a valid signature to transfer on the bahalf of _from
