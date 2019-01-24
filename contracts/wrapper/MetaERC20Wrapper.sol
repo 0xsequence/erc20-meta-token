@@ -1,5 +1,5 @@
-// solhint-disable
 pragma solidity ^0.5.0;
+pragma experimental ABIEncoderV2;
 
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "../token/ERC1155Meta.sol";

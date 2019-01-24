@@ -15,7 +15,7 @@ module.exports = {
       enabled: true,
       runs: 200
     },
-    evmVersion: "constantinople",
+    evmVersion: "byzantium",
     version: "0.5.0"
   },
 
