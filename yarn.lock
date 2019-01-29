@@ -47,10 +47,15 @@
   resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-5.2.5.tgz#8a4accfc403c124a0bafe8a9fc61a05ec1032073"
   integrity sha512-lAVp+Kj54ui/vLUFxsJTMtWvZraZxum3w3Nwkble2dNuV5VnPA+Mi2oGX9XYJAaIvZi3tn3cbjS/qcJXRb6Bww==
 
-"@types/node@*", "@types/node@^10.3.2":
+"@types/node@*":
   version "10.12.18"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.18.tgz#1d3ca764718915584fcd9f6344621b7672665c67"
   integrity sha512-fh+pAqt4xRzPfqA6eh3Z2y6fyZavRIumvjhaCL753+TVkGKGhpPeyrJG2JftD0T9q4GF00KjefsQ+PQNDdWQaQ==
+
+"@types/node@^10.3.2":
+  version "10.12.19"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.19.tgz#ca1018c26be01f07e66ac7fefbeb6407e4490c61"
+  integrity sha512-2NVovndCjJQj6fUUn9jCgpP4WSqr+u1SoUZMZyJkhGeBFsm6dE46l31S7lPUYt9uQ28XI+ibrJA1f5XyH5HNtA==
 
 "@types/node@^8.0.0":
   version "8.10.39"
@@ -2470,9 +2475,9 @@ ethers@4.0.0-beta.1:
     xmlhttprequest "1.8.0"
 
 ethers@^4.0.21:
-  version "4.0.21"
-  resolved "https://registry.yarnpkg.com/ethers/-/ethers-4.0.21.tgz#b3d88fa5f5832383de515769841fe6ad8545a71a"
-  integrity sha512-wKW0tG15n91qtnt6e1YUXOeRRiHc03U6qenmLQbjiPLX9KVhNnBKe1kFpRtiiuPp0dyHsWWmtML9pz44pmAO1g==
+  version "4.0.23"
+  resolved "https://registry.yarnpkg.com/ethers/-/ethers-4.0.23.tgz#930c7b1585241f61b29c262ffd8f21e82721ba30"
+  integrity sha512-9IwYV3LuESPF2cgwF42SL2vqrwWEsA2+15WVtO2dZb1F/twARaCWb7PrgoODldj+bmwKmUv3rG9PFfBkbumPwA==
   dependencies:
     "@types/node" "^10.3.2"
     aes-js "3.0.0"
@@ -4396,6 +4401,11 @@ ms@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.1.tgz#30a5864eb3ebb0a66f2ebe6d727af06a09d86e0a"
   integrity sha512-tgp+dl5cGk28utYktBsrFqA7HKgrhgPsg6Z/EfhWI4gl1Hwq8B/GmY/0oXZ6nF8hDVesS/FpnYaD/kOWhYQvyg==
+
+multi-token-standard@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/multi-token-standard/-/multi-token-standard-0.3.1.tgz#ec09cfd869e466ebf5ecd66a9d198aec7cc90159"
+  integrity sha512-YtBdRyQcrZ8Na45DNmC33wv2tc+53Q1+Rhtamf1bbNzg8OuYbgIVQiiHjh+nCgfs7/GNp7gJcjNWW3t/NySTlQ==
 
 mz@^2.6.0:
   version "2.7.0"

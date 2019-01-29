@@ -54,7 +54,7 @@ export class ERC1155Meta extends Contract {
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;
 
-    sigSetApprovalForAll(
+    metaSetApprovalForAll(
       _owner: string,
       _operator: string,
       _approved: boolean,

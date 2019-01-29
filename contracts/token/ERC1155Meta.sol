@@ -33,6 +33,7 @@ contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
    *  - Add 1 tx wrap (via CREATE2)
    *  - Add meta-withdraw 
    *  - Add unwrap on receive method
+   *  - Tests for meta approvals
    */
 
   // Signature nonce per address
@@ -149,10 +150,9 @@ contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
    * @param _approved _operator"s new operator status (true or false). 
    * @param _sig Bytes array containing signature related variables.
    */
-  function sigSetApprovalForAll(address _owner, address _operator,  bool _approved, bytes memory _sig) 
+  function metaSetApprovalForAll(address _owner, address _operator,  bool _approved, bytes memory _sig) 
     public  
   {  
-
     // Get signer's currently available nonce
     uint256 nonce = nonces[_owner];
 
