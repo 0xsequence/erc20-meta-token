@@ -56,9 +56,11 @@ contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
    * @param _to The address which you want to transfer to
    * @param _id Token id to update balance of - For this implementation, via `uint256(tokenAddress)`.
    * @param _value The amount of tokens of provided token ID to be transferred
-   * @param _data Encodes a meta transfer indicator, gas payment receipt, signature and extra transfer data.
-   *          _data should be encoded as (bytes4 METATRANSFER_FLAG, bytes32 r, bytes32 s, uint8 v, SignatureType sigType, GasReceipt g, bytes data)
-   *          isMetaTx should be 0xebc71fa5 for meta transfer, or anything else for regular transfer
+   * @param _data Encodes a meta transfer indicator, signature, gas payment receipt and extra transfer data.
+   *          _data should be encoded as (bytes4 METATRANSFER_FLAG, (bytes32 r, bytes32 s, uint8 v, SignatureType sigType), (GasReceipt g, bytes data))
+   *            i.e. high level encoding should be (bytes4, bytes, bytes), where the latter bytes array is a nested bytes array
+   *          METATRANSFER_FLAG should be 0xebc71fa5 for meta transfer with gas reimbursement
+   *          METATRANSFER_FLAG should be 0x3fed7708 for meta transfer WITHOUT gas reimbursement (and hence without gasReceipt)
    */
   function safeTransferFrom(
     address _from,
@@ -112,6 +114,16 @@ contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
     }
   }
 
+  /**
+   * @dev Verifies is a signature is valid based on data
+   * @param _from The address which you want to send tokens from
+   * @param _to The address which you want to transfer to
+   * @param _id Token id to update balance of - For this implementation, via `uint256(tokenAddress)`.
+   * @param _value The amount of tokens of provided token ID to be transferred
+   * @param _data Encodes a meta transfer indicator, signature, gas payment receipt and extra transfer data.
+   *          _data should be encoded as (bytes4 METATRANSFER_FLAG, (bytes32 r, bytes32 s, uint8 v, SignatureType sigType), (GasReceipt g, bytes data))
+   *            i.e. high level encoding should be (bytes4, bytes, bytes), where the latter bytes array is a nested bytes array
+   */
   function validateTransferSignature(
     address _from,
     address _to,
@@ -120,26 +132,8 @@ contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
     bytes memory _data)
     internal returns (bytes memory signedData)
   { 
-    bytes4 tag;
-    bytes memory sig;
-    bytes memory signedData;
-
-    // Check if one or more byte arrays are included.
-    // Index 64 indicates the index at which the first byte arrays
-    // start. Hence, if the start of the first byte arrays is not 64,
-    // this implies that at least one other byte array was included
-    // uint256 sigIndex = _data.readUint256(32);
-    // require(sigIndex == 64 || sigIndex == 96, 'ERC1155Meta#validateTransferSignature: INVALID_BYTE_ARRAYS_ENCODING');
-
     // Get signature and data to sign
-    // if (sigIndex == 96) {
-    (tag, sig, signedData) = abi.decode(_data, (bytes4, bytes, bytes));
-
-    // No gas receipt or transferData was included
-    // } else {
-      // (tag, sig) = abi.decode(_data, (bytes4, bytes));
-      // signedData = '';
-    // }
+    (bytes4 tag, bytes memory sig, bytes memory signedData) = abi.decode(_data, (bytes4, bytes, bytes));
 
     // Get signer's currently available nonce
     uint256 nonce = nonces[_from];
