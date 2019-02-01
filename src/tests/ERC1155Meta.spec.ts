@@ -6,7 +6,6 @@ import {
   BigNumber, 
   RevertError, 
   encodeMetaTransferFromData,
-  encodeMetaTransferFromDataNoGas,
   GasReceiptType, 
   ethSign 
 } from './utils'
@@ -121,8 +120,8 @@ contract('ERC1155Meta', (accounts: string[]) => {
       data = await encodeMetaTransferFromData(transferObj, gasReceipt)
     })
 
-    it('should call parent function if data < 70 bytes', async () => {
-      let dataUint8 = toUtf8Bytes("Breakthroughs! over the river! flips and crucifixions!")
+    it('should call parent function if empty data', async () => {
+      let dataUint8 = toUtf8Bytes("")
       data = '0xebc71fa4' + bigNumberify(dataUint8).toHexString().slice(2)
 
       // Check if data lelngth is less than 70
@@ -135,7 +134,7 @@ contract('ERC1155Meta', (accounts: string[]) => {
       await expect(tx).to.be.fulfilled
     })
 
-    it('should call parent function if data > 70 bytes without metaTransfer identifier', async () => {
+    it('should call parent function if data without metaTransfer identifier', async () => {
       let dataUint8 = toUtf8Bytes("Breakthroughs! over the river! flips and crucifixions! gone down the flood!")
       let data = '0xebc71fa4' + bigNumberify(dataUint8).toHexString().slice(2)
 
@@ -147,7 +146,7 @@ contract('ERC1155Meta', (accounts: string[]) => {
       await expect(tx).to.be.fulfilled
     })
 
-    it("should REVERT if data > 70 bytes and if first 4 bytes are '0xebc71fa5'", async () => {
+    it("should REVERT if data first 4 bytes are '0xebc71fa5' and random encoded data the rest", async () => {
       let dataUint8 = toUtf8Bytes("Breakthroughs! over the river! flips and crucifixions! gone down the flood!")
       let data = METATRANSFER_IDENTIFIER + bigNumberify(dataUint8).toHexString().slice(2)
 
@@ -205,30 +204,66 @@ contract('ERC1155Meta', (accounts: string[]) => {
     })
 
     it("should REVERT if transfer data is incorrect", async () => {
-      const sigArgTypes = ['address', 'address', 'address', 'uint256', 'uint256', 'bytes', 'uint256'];
-      const dataTypes = ['bytes4', GasReceiptType, 'bytes'];
+      const sigArgTypes = ['address', 'address', 'address', 'uint256', 'uint256', 'uint256'];
+      const txDataTypes = ['bytes4', 'bytes', 'bytes'];
     
       let signer = await transferObj.signerWallet.getAddress()
       
       // Packed encoding of transfer signature message
       let sigData = ethers.utils.solidityPack(sigArgTypes, [
         transferObj.contractAddress, signer, transferObj.receiver, transferObj.id, 
-        transferObj.amount, transferObj.transferData, transferObj.nonce
+        transferObj.amount, transferObj.nonce
       ])
+
+      // Correct and incorrect transferData
+      let goodGasAndTransferData = ethers.utils.defaultAbiCoder.encode([GasReceiptType, 'bytes'], [gasReceipt, transferObj.transferData])
+      let badGasAndTransferData = ethers.utils.defaultAbiCoder.encode([GasReceiptType, 'bytes'], [gasReceipt, toUtf8Bytes('Goodbyebyebye')])
+
+      // Encode normally the whole thing
+      sigData = ethers.utils.solidityPack(['bytes', 'bytes'], [sigData, goodGasAndTransferData])
     
       // Get signature
       let sig = await ethSign(transferObj.signerWallet, sigData)
     
-      // Encode transfer data
-      let postdata = bigNumberify(toUtf8Bytes('Goodbyebyebye')).toHexString().slice(2)
-    
-      // Data to pass in transfer method
-      //  '0xebc71fa5': bytes4(keccak256("metaSafeTransferFrom(address,address,uint256,uint256,bytes)"))
-      data = ethers.utils.defaultAbiCoder.encode(dataTypes, ['0xebc71fa5', gasReceipt, sig + postdata])
+      // PASS BAD DATA
+      data = ethers.utils.defaultAbiCoder.encode(txDataTypes, ['0xebc71fa5', sig, badGasAndTransferData])
 
       // @ts-ignore
       const tx = operatorERC1155Contract.functions.safeTransferFrom(ownerAddress, receiverAddress, id, amount, data)
-      await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#safeTransferFrom: INVALID_SIGNATURE") )  
+      await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#safeTransferFrom: INVALID_SIGNATURE") )
+    })
+
+    it("should REVERT if gasReceipt is incorrect", async () => {
+      const sigArgTypes = ['address', 'address', 'address', 'uint256', 'uint256', 'uint256'];
+      const txDataTypes = ['bytes4', 'bytes', 'bytes'];
+    
+      let signer = await transferObj.signerWallet.getAddress()
+      
+      // Packed encoding of transfer signature message
+      let sigData = ethers.utils.solidityPack(sigArgTypes, [
+        transferObj.contractAddress, signer, transferObj.receiver, transferObj.id, 
+        transferObj.amount, transferObj.nonce
+      ])
+
+      // Form bad gas receipt
+      let badGasReceipt = {...gasReceipt, gasPrice: 109284123}
+
+      // Correct and incorrect transferData
+      let goodGasAndTransferData = ethers.utils.defaultAbiCoder.encode([GasReceiptType, 'bytes'], [gasReceipt, transferObj.transferData])
+      let badGasAndTransferData = ethers.utils.defaultAbiCoder.encode([GasReceiptType, 'bytes'], [badGasReceipt, transferObj.transferData])
+
+      // Encode normally the whole thing
+      sigData = ethers.utils.solidityPack(['bytes', 'bytes'], [sigData, goodGasAndTransferData])
+    
+      // Get signature
+      let sig = await ethSign(transferObj.signerWallet, sigData)
+    
+      // PASS BAD DATA
+      data = ethers.utils.defaultAbiCoder.encode(txDataTypes, ['0xebc71fa5', sig, badGasAndTransferData])
+
+      // @ts-ignore
+      const tx = operatorERC1155Contract.functions.safeTransferFrom(ownerAddress, receiverAddress, id, amount, data)
+      await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#safeTransferFrom: INVALID_SIGNATURE") )
     })
 
     it("should REVERT if nonce is incorrect", async () => {
@@ -257,11 +292,21 @@ contract('ERC1155Meta', (accounts: string[]) => {
 
   
     it('should pass if no gas receipt is included, with 0x3fed7708 as a flag', async () => {
-      data = await encodeMetaTransferFromDataNoGas(transferObj)
+      data = await encodeMetaTransferFromData(transferObj)
 
       // @ts-ignore
       const tx = operatorERC1155Contract.functions.safeTransferFrom(ownerAddress, receiverAddress, id, amount, data)
       await expect(tx).to.be.fulfilled
+    })
+
+    it('should pass if no gas receipt and no transfer data is included, with 0x3fed7708 as a flag', async () => {
+      transferObj.transferData = toUtf8Bytes('');
+      data = await encodeMetaTransferFromData(transferObj)
+
+      // @ts-ignore
+      const tx = operatorERC1155Contract.functions.safeTransferFrom(ownerAddress, receiverAddress, id, amount, data)
+      await expect(tx).to.be.fulfilled
+
     })
 
     describe('When signature is valid', () => {

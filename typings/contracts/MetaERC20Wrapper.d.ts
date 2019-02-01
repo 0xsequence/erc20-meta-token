@@ -45,14 +45,6 @@ export class MetaERC20Wrapper extends Contract {
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;
 
-    metaSetApprovalForAll(
-      _owner: string,
-      _operator: string,
-      _approved: boolean,
-      _sig: (string)[],
-      overrides?: TransactionOverrides
-    ): Promise<ContractTransaction>;
-
     safeTransferFrom(
       _from: string,
       _to: string,
