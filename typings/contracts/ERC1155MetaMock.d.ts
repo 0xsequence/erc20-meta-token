@@ -54,6 +54,15 @@ export class ERC1155MetaMock extends Contract {
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;
 
+    metaSetApprovalForAll(
+      _owner: string,
+      _operator: string,
+      _approved: boolean,
+      _isGasReimbursed: boolean,
+      _data: (string)[],
+      overrides?: TransactionOverrides
+    ): Promise<ContractTransaction>;
+
     mintMock(
       _to: string,
       _id: number | string | BigNumber,

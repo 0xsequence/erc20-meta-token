@@ -5,6 +5,7 @@ import {
   RevertError, 
   expect,
   encodeMetaTransferFromData,
+  encodeMetaApprovalData,
   GasReceiptType, 
   ethSign 
 } from './utils'
@@ -15,7 +16,7 @@ import { toUtf8Bytes, bigNumberify, BigNumber } from 'ethers/utils'
 import { ERC1155MetaMock } from 'typings/contracts/ERC1155MetaMock'
 import { ERC1155ReceiverMock } from 'typings/contracts/ERC1155ReceiverMock'
 import { ERC1155OperatorMock } from 'typings/contracts/ERC1155OperatorMock'
-import { GasReceipt, TransferSignature } from 'typings/txTypes';
+import { GasReceipt, TransferSignature, ApprovalSignature } from 'typings/txTypes';
 
 // init test wallets from package.json mnemonic
 const web3 = (global as any).web3
@@ -105,7 +106,7 @@ contract('ERC1155Meta', (accounts: string[]) => {
         feeRecipient: operatorAddress
       }
       
-      // Transfer Object
+      // Transfer Signature Object
       transferObj = {
         contractAddress: erc1155Contract.address,
         signerWallet: ownerWallet,
@@ -506,17 +507,127 @@ contract('ERC1155Meta', (accounts: string[]) => {
     })
   })
 
-  describe.skip('metaSetApprovalForAll() function', () => {
+  describe('metaSetApprovalForAll() function', () => {
+
+    let feeTokenInitBalance = new BigNumber(100000000);
+    let initBalance = 100;
+    let isGasReimbursed = true;
+    let approved = true;
+    let nonce = 0;
+    let id = 66;
+
+    let approvalObj: ApprovalSignature;
+    let gasReceipt : GasReceipt;
+    let feeToken: BigNumber;
+    let data: string;
+
+    beforeEach(async () => {
+      // Gas Receipt
+      gasReceipt = {
+        gasLimit: 200000,
+        baseGas: 21000,
+        gasPrice: 1,
+        feeToken: new BigNumber('0xca35b7d915458ef540ade6068dfe2f44e8fa733c'),
+        feeRecipient: operatorAddress
+      }
+
+      // Approval Signture Object
+      approvalObj = {
+        contractAddress: erc1155Contract.address,
+        signerWallet: ownerWallet,
+        operator: operatorAddress,
+        approved: approved,
+        nonce: nonce
+      }
+
+      // Mint tokens
+      await erc1155Contract.functions.mintMock(ownerAddress, id, initBalance)
+
+      feeToken = new BigNumber(gasReceipt.feeToken)
+
+      // Mint tokens used to pay for gas
+      await erc1155Contract.functions.mintMock(ownerAddress, feeToken, feeTokenInitBalance)
+
+      // Data to pass in approval method
+      data = await encodeMetaApprovalData(approvalObj, gasReceipt)
+    })
+
+    it("should PASS if signature is valid", async () => {
+      // @ts-ignore
+      let tx = operatorERC1155Contract.functions.metaSetApprovalForAll(ownerAddress, operatorAddress, approved, isGasReimbursed, data)
+      await expect(tx).to.be.fulfilled
+    })
+
+    it("should PASS if gas received is passed, but not claimed", async () => {
+      // @ts-ignore
+      let tx = operatorERC1155Contract.functions.metaSetApprovalForAll(ownerAddress, operatorAddress, approved, false, data)
+      await expect(tx).to.be.fulfilled
+    })
+
+    it("should PASS if gas received is not passed and not claimed", async () => {
+      data = await encodeMetaApprovalData(approvalObj)
+
+      // @ts-ignore
+      let tx = operatorERC1155Contract.functions.metaSetApprovalForAll(ownerAddress, operatorAddress, approved, false, data)
+      await expect(tx).to.be.fulfilled
+    })
+
+    it("should REVERT if gas received is not passed, but is claimed", async () => {
+      data = await encodeMetaApprovalData(approvalObj)
+
+      // @ts-ignore
+      let tx = operatorERC1155Contract.functions.metaSetApprovalForAll(ownerAddress, operatorAddress, approved, true, data)
+      await expect(tx).to.be.rejected;
+    })
+
+    it("should REVERT if contract address is incorrect", async () => {
+      approvalObj.contractAddress = receiverAddress;
+      data = await encodeMetaApprovalData(approvalObj, gasReceipt)
+
+      // @ts-ignore
+      let tx = operatorERC1155Contract.functions.metaSetApprovalForAll(ownerAddress, operatorAddress, approved, isGasReimbursed, data)
+      await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#validateApprovalSignature: INVALID_SIGNATURE") )    
+    })
+
+    it("should REVERT if operator address is incorrect", async () => {
+      approvalObj.operator = receiverAddress;
+      data = await encodeMetaApprovalData(approvalObj, gasReceipt)
+
+      // @ts-ignore
+      let tx = operatorERC1155Contract.functions.metaSetApprovalForAll(ownerAddress, operatorAddress, approved, isGasReimbursed, data)
+      await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#validateApprovalSignature: INVALID_SIGNATURE") )    
+    })
+
+    it("should REVERT if approved value is incorrect", async () => {
+      approvalObj.approved = false;
+      data = await encodeMetaApprovalData(approvalObj, gasReceipt)
+
+      // @ts-ignore
+      let tx = operatorERC1155Contract.functions.metaSetApprovalForAll(ownerAddress, operatorAddress, approved, isGasReimbursed, data)
+      await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#validateApprovalSignature: INVALID_SIGNATURE") )    
+    })
+
+    it("should REVERT if nonce is incorrect", async () => {
+      approvalObj.nonce = nonce+1;
+      data = await encodeMetaApprovalData(approvalObj, gasReceipt)
+
+      // @ts-ignore
+      let tx = operatorERC1155Contract.functions.metaSetApprovalForAll(ownerAddress, operatorAddress, approved, isGasReimbursed, data)
+      await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#validateApprovalSignature: INVALID_SIGNATURE") )    
+    })
+
 
     it('should emit an ApprovalForAll event', async () => {
-      const tx = await erc1155Contract.functions.setApprovalForAll(operatorAddress, true)
+      // @ts-ignore
+      let tx = await operatorERC1155Contract.functions.metaSetApprovalForAll(ownerAddress, operatorAddress, approved, isGasReimbursed, data)
       const receipt = await tx.wait(1)
 
       expect(receipt.events![0].event).to.be.eql('ApprovalForAll')
     })
 
     it('should set the operator status to _status argument', async () => {
-      const tx = erc1155Contract.functions.setApprovalForAll(operatorAddress, true)
+      // @ts-ignore
+      let tx = operatorERC1155Contract.functions.metaSetApprovalForAll(ownerAddress, operatorAddress, approved, isGasReimbursed, data)
       await expect(tx).to.be.fulfilled
 
       const status = await erc1155Contract.functions.isApprovedForAll(ownerAddress, operatorAddress)
@@ -525,11 +636,18 @@ contract('ERC1155Meta', (accounts: string[]) => {
 
     context('When the operator was already an operator', () => {
       beforeEach(async () => {
-        await erc1155Contract.functions.setApprovalForAll(operatorAddress, true)
+        // @ts-ignore
+        let tx = await operatorERC1155Contract.functions.metaSetApprovalForAll(ownerAddress, operatorAddress, approved, isGasReimbursed, data)
+
+        // Update nonce of approval signature object for subsequent tests
+        approvalObj.nonce = nonce + 1;
       })
 
       it('should leave the operator status to set to true again', async () => {
-        const tx = erc1155Contract.functions.setApprovalForAll(operatorAddress, true)
+        data = await encodeMetaApprovalData(approvalObj, gasReceipt)
+
+        // @ts-ignore
+        let tx = operatorERC1155Contract.functions.metaSetApprovalForAll(ownerAddress, operatorAddress, approved, isGasReimbursed, data)
         await expect(tx).to.be.fulfilled
 
         const status = await erc1155Contract.functions.isApprovedForAll(ownerAddress, operatorAddress)
@@ -537,7 +655,11 @@ contract('ERC1155Meta', (accounts: string[]) => {
       })
 
       it('should allow the operator status to be set to false', async () => {
-        const tx = erc1155Contract.functions.setApprovalForAll(operatorAddress, false)
+        approvalObj.approved = false;
+        data = await encodeMetaApprovalData(approvalObj, gasReceipt)
+
+        // @ts-ignore
+        let tx = operatorERC1155Contract.functions.metaSetApprovalForAll(ownerAddress, operatorAddress, false, isGasReimbursed, data)
         await expect(tx).to.be.fulfilled
 
         const status = await erc1155Contract.functions.isApprovedForAll(operatorAddress, ownerAddress)

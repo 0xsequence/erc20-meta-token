@@ -54,6 +54,15 @@ export class ERC1155Meta extends Contract {
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;
 
+    metaSetApprovalForAll(
+      _owner: string,
+      _operator: string,
+      _approved: boolean,
+      _isGasReimbursed: boolean,
+      _data: (string)[],
+      overrides?: TransactionOverrides
+    ): Promise<ContractTransaction>;
+
     ERC1155_BATCH_RECEIVED_VALUE(): Promise<string>;
     ERC1155_RECEIVED_VALUE(): Promise<string>;
   };
