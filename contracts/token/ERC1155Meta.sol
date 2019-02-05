@@ -25,17 +25,17 @@ contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
 
   /**
    * TO DO:
-   *  - Support contract validator signature type?
    *  - Add meta batch transfer
-   *  - Add meta-wrap
    *  - Add 1 tx wrap (via CREATE2)
    *  - Add meta-withdraw
-   *  - Add unwrap on receive method
    *  - Signature 0x19 pre-fix?
    *  - EIP-712 encoding
+   *
+   * COULD DO:
    *  - Async nonces
    *  - Cancellable nonces
-   *  - Loop tests for all conditions
+   *  - Support contract validator signature type
+   *  - Add unwrap on receive method
    */
 
   // Signature nonce per address
