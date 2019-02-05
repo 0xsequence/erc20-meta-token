@@ -16,10 +16,10 @@ contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
 
   // Gas Receipt
   struct GasReceipt {
-    uint32 gasLimit;              // Max amount of gas that can be reimbursed
-    uint32 baseGas;               // Base gas cost (includes things like 21k, data encoding, etc.)
-    uint128 gasPrice;             // Price denominated in token X per gas unit
-    address feeToken;             // Token to pay for gas ??? Can be self by default?
+    uint256 gasLimit;             // Max amount of gas that can be reimbursed
+    uint256 baseGas;              // Base gas cost (includes things like 21k, data encoding, etc.)
+    uint256 gasPrice;             // Price denominated in token X per gas unit
+    uint256 feeToken;             // Token to pay for gas as `uint256(tokenAddress)`, where 0x0 is MetaETH
     address payable feeRecipient; // Address to send payment to
   }
 
@@ -33,6 +33,8 @@ contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
    *  - Add meta-withdraw
    *  - Add unwrap on receive method
    *  - Tests for meta approvals
+   *  - Signature 0x19 pre-fix?
+   *  - EIP-712 encoding
    */
 
   // Signature nonce per address
@@ -72,6 +74,9 @@ contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
   {
     require(_to != address(0), "ERC1155Meta#safeTransferFrom: INVALID_RECIPIENT");
 
+    // Starting gas value
+    uint256 startGas = gasleft();
+
     if (_data.length < 4) {
       super.safeTransferFrom(_from, _to, _id, _value, _data);
 
@@ -86,30 +91,23 @@ contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
       } else {
         bytes memory signedData;
         bytes memory transferData;
-        GasReceipt memory gasTx;
+        GasReceipt memory gasReceipt;
 
         // If Gas receipt is being passed
         if (metaTag == METATRANSFER_FLAG) {
           signedData = validateTransferSignature(_from, _to, _id, _value, _data);
-          (gasTx, transferData) = abi.decode(signedData, (GasReceipt, bytes));
-          transferData = _data;
+          (gasReceipt, transferData) = abi.decode(signedData, (GasReceipt, bytes));
+
+          // Update balances
+          _safeTransferFrom(_from, _to, _id, _value, transferData);
+
+          // Handle gas reimbursement
+          _transferGasFee(_from, startGas, gasReceipt);
 
         } else {
           transferData = validateTransferSignature(_from, _to, _id, _value, _data);
         }
 
-        // Update balances
-        balances[_from][_id] = balances[_from][_id].sub(_value); // Subtract value
-        balances[_to][_id] = balances[_to][_id].add(_value);     // Add value
-
-        // Check if recipient is contract
-        if (_to.isContract()) {
-          bytes4 retval = IERC1155TokenReceiver(_to).onERC1155Received(msg.sender, _from, _id, _value, transferData);
-          require(retval == ERC1155_RECEIVED_VALUE, "ERC1155Meta#safeTransferFrom: INVALID_ON_RECEIVE_MESSAGE");
-        }
-
-        // Emit event
-        emit TransferSingle(msg.sender, _from, _to, _id, _value);
       }
     }
   }
@@ -159,18 +157,28 @@ contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
   //  * @param _owner Address that wants to set operator status  _spender.
   //  * @param _operator The address which will act as an operator for _owner.
   //  * @param _approved _operator"s new operator status (true or false).
-  //  * @param _data Encodes a meta approval signature and gas payment receipt.
-  //  *          _data should be encoded as (bytes1 GASRECEIPT_FLAG, GasReceipt g, bytes32 r, bytes32 s, uint8 v, SignatureType sigType)
-  //  *          GASRECEIPT_FLAG should be 1 if gas receipt is being past, 0 if not
+  //  * @param _data Encodes signature and gas payment receipt
+  //  *          _data should be encoded as ((bytes32 r, bytes32 s, uint8 v, SignatureType sigType), (GasReceipt g))
+  //  *            i.e. high level encoding should be (bytes, bytes), where the latter bytes array is a nested bytes array
   //  */
-  // function metaSetApprovalForAll(address _owner, address _operator,  bool _approved, bytes memory _data)
+  // function metaSetApprovalForAll(
+  //   address _owner, 
+  //   address _operator,  
+  //   bool _approved,
+  //   boolean _isGasReimbursed,
+  //   bytes memory _data)
   //   public
-  // {
+  // { 
+  //   bytes memory sig;
+  
+  //   // Get signature and data to sign
+  //   (sig, bytes memory signedData) = abi.decode(_data, (bytes4, bytes, bytes));
+
   //   // Get signer's currently available nonce
   //   uint256 nonce = nonces[_owner];
 
   //   // Encode data for signature validation
-  //   bytes memory data = abi.encodePacked(address(this), _operator, _approved, nonce);
+  //   bytes memory data = abi.encodePacked(address(this), _operator, _approved, nonce, );
 
   //   // Verify if _owner is the signer
   //   require(isValidSignature(_owner, data, _sig), "ERC1155Meta#sigSetApprovalForAll: INVALID_SIGNATURE");
@@ -184,6 +192,24 @@ contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
   //   // Emit event
   //   emit ApprovalForAll(_owner, _operator, _approved);
   // }
+
+
+  function _transferGasFee(address _from, uint256 _startGas, GasReceipt memory g)
+      internal
+  {
+    // Amount of gas consumed
+    uint256 gasUsed = _startGas.sub(gasleft()).add(g.baseGas); 
+
+    // Reimburse up to gasLimit (instead of throwing) 
+    uint256 fee = gasUsed > g.gasLimit ? g.gasLimit.mul(g.gasPrice): gasUsed.mul(g.gasPrice);
+     
+    // If receiver is 0x0, then anyone can claim, otherwise, refund addresse provided
+    address payable feeRecipient = g.feeRecipient == address(0) ? tx.origin : g.feeRecipient;
+
+    // Paying back in MetaERC20
+    _safeTransferFrom(_from, feeRecipient, g.feeToken, fee, ''); 
+  }
+
 
   //
   // Signature View Functions

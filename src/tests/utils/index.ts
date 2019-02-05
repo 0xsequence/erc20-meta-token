@@ -11,7 +11,6 @@ const BigNumber = ethers.utils.BigNumber
 export { BigNumber }
 
 export const { assert, expect } = chai
-
   .use(chaiString)
   .use(chaiAsPromised)
   .use(ChaiBigNumber());

@@ -5,7 +5,7 @@ export type GasReceipt = {
   gasLimit: number | string | BigNumber;
   baseGas: number | string | BigNumber;
   gasPrice: number | string | BigNumber;
-  feeToken: string;
+  feeToken: number | string | BigNumber;
   feeRecipient: string;
 };
 

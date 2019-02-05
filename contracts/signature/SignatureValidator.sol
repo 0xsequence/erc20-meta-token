@@ -30,7 +30,7 @@ contract SignatureValidator {
 
   /**
    * @dev Verifies that a hash has been signed by the given signer.
-   * @param _signerAddress Address that should have signed the given hash.
+   * @param _signerAddress Address that should have signed the given hash.        
    * @param _data Data structure that was hashed and signed
    * @param _sig Proof that the hash has been signed by signer.
    * @return True if the address recovered from the provided signature matches the input signer address.

@@ -34,10 +34,10 @@ export async function ethSign(wallet: ethers.Wallet, message: string | Uint8Arra
 }
 
 export const GasReceiptType = `tuple(
-    uint32 gasLimit,
-    uint32 baseGas,
-    uint128 gasPrice,
-    address feeToken,
+    uint256 gasLimit,
+    uint256 baseGas,
+    uint256 gasPrice,
+    uint256 feeToken,
     address feeRecipient
   )`
 

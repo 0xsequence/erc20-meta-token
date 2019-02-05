@@ -51,24 +51,11 @@ contract ERC1155 is ERC165 {
   function safeTransferFrom(address _from, address _to, uint256 _id, uint256 _value, bytes memory _data) 
     public 
   {  
-    // Requirements
     require((msg.sender == _from) || operators[_from][msg.sender], "INVALID_OPERATOR");
     require(_to != address(0),"INVALID_RECIPIENT");
     // require(_value >= balances[_from][_id]) is not necessary since checked with safemath operations
     
-    //Update balances
-    balances[_from][_id] = balances[_from][_id].sub(_value); // Subtract value from sender
-    balances[_to][_id] = balances[_to][_id].add(_value);     // Add value to recipient
-      
-    //Pass data if recipient is contract
-    if (_to.isContract()) {
-      // Call receiver function on recipient
-      bytes4 retval = IERC1155TokenReceiver(_to).onERC1155Received(msg.sender, _from, _id, _value, _data);
-      require(retval == ERC1155_RECEIVED_VALUE, "INVALID_ON_RECEIVE_MESSAGE");
-    }
-
-    // Emit transfer Event
-    emit TransferSingle(msg.sender, _from, _to, _id, _value);
+    _safeTransferFrom(_from, _to, _id, _value, _data);
   }
 
   /**
@@ -104,6 +91,36 @@ contract ERC1155 is ERC165 {
     }
 
     emit TransferBatch(msg.sender, _from, _to, _ids, _values);
+  }
+
+  /**
+   * @dev Allow _from or an operator to transfer tokens from one address to another
+   * @param _from The address which you want to send tokens from
+   * @param _to The address which you want to transfer to
+   * @param _id Token id to update balance of - For this implementation, via `uint256(tokenAddress)`.
+   * @param _value The amount of tokens of provided token ID to be transferred
+   * @param _data Data to pass to onERC1155Received() function if recipient is contract
+   */
+  function _safeTransferFrom(
+    address _from,
+    address _to,
+    uint256 _id,
+    uint256 _value,
+    bytes memory _data)
+    internal
+  {
+    // Update balances
+    balances[_from][_id] = balances[_from][_id].sub(_value); // Subtract value
+    balances[_to][_id] = balances[_to][_id].add(_value);     // Add value
+
+    // Check if recipient is contract
+    if (_to.isContract()) {
+      bytes4 retval = IERC1155TokenReceiver(_to).onERC1155Received(msg.sender, _from, _id, _value, _data);
+      require(retval == ERC1155_RECEIVED_VALUE, "ERC1155Meta#safeTransferFrom: INVALID_ON_RECEIVE_MESSAGE");
+    }
+
+    // Emit event
+    emit TransferSingle(msg.sender, _from, _to, _id, _value);
   }
 
   //
