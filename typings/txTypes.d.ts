@@ -18,3 +18,11 @@ export type TransferSignature = {
   transferData: Uint8Array | null;
   nonce: number | string | BigNumber;
 }
+
+export type ApprovalSignature = {
+  contractAddress: string;
+  signerWallet: Wallet;
+  operator: string;
+  approved: boolean;
+  nonce: number | string | BigNumber;
+}

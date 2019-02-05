@@ -54,6 +54,15 @@ export class MetaERC20Wrapper extends Contract {
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;
 
+    metaSetApprovalForAll(
+      _owner: string,
+      _operator: string,
+      _approved: boolean,
+      _isGasReimbursed: boolean,
+      _data: (string)[],
+      overrides?: TransactionOverrides
+    ): Promise<ContractTransaction>;
+
     deposit(
       _token: string,
       _value: number | string | BigNumber,

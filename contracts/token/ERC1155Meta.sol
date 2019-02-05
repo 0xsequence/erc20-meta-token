@@ -26,15 +26,16 @@ contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
   /**
    * TO DO:
    *  - Support contract validator signature type?
-   *  - Gas payment with arbitrary token
    *  - Add meta batch transfer
    *  - Add meta-wrap
    *  - Add 1 tx wrap (via CREATE2)
    *  - Add meta-withdraw
    *  - Add unwrap on receive method
-   *  - Tests for meta approvals
    *  - Signature 0x19 pre-fix?
    *  - EIP-712 encoding
+   *  - Async nonces
+   *  - Cancellable nonces
+   *  - Loop tests for all conditions
    */
 
   // Signature nonce per address
@@ -106,6 +107,9 @@ contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
 
         } else {
           transferData = validateTransferSignature(_from, _to, _id, _value, _data);
+
+          // Update balances
+          _safeTransferFrom(_from, _to, _id, _value, transferData);
         }
 
       }
@@ -113,7 +117,7 @@ contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
   }
 
   /**
-   * @dev Verifies is a signature is valid based on data
+   * @dev Verifies if a transfer signature is valid based on data
    * @param _from The address which you want to send tokens from
    * @param _to The address which you want to transfer to
    * @param _id Token id to update balance of - For this implementation, via `uint256(tokenAddress)`.
@@ -148,50 +152,86 @@ contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
     return signedData;
   }
 
+  /**
+   * @dev Verifies is a signature is valid based on data
+   * @param _owner Address that wants to set operator status  _spender.
+   * @param _operator The address which will act as an operator for _owner.
+   * @param _approved _operator"s new operator status (true or false).
+   * @param _data Encodes signature and gas payment receipt
+   *          _data should be encoded as ((bytes32 r, bytes32 s, uint8 v, SignatureType sigType), (GasReceipt g))
+   *            i.e. high level encoding should be (bytes, bytes), where the latter bytes array is a nested bytes array
+   */
+  function validateApprovalSignature(
+    address _owner,
+    address _operator,
+    bool _approved,
+    bytes memory _data)
+    internal returns (bytes memory signedData)
+  { 
+    // Get signature and data to sign
+    (bytes memory sig, bytes memory signedData) = abi.decode(_data, (bytes, bytes));
+
+    // Get signer's currently available nonce
+    uint256 nonce = nonces[_owner];
+
+    // Get data that formed the hash
+    bytes memory data = abi.encodePacked(address(this), _owner, _operator, _approved, nonce, signedData);
+
+    // Verify if _owner is the signer
+    require(isValidSignature(_owner, data, sig), "ERC1155Meta#validateApprovalSignature: INVALID_SIGNATURE");
+
+    //Update signature nonce
+    nonces[_owner] += 1;
+
+    return signedData;
+  }
+
   //
   // Operator Function
   //
 
-  // /**
-  //  * @dev Approve the passed address to spend on behalf of _from if valid signature is provided.
-  //  * @param _owner Address that wants to set operator status  _spender.
-  //  * @param _operator The address which will act as an operator for _owner.
-  //  * @param _approved _operator"s new operator status (true or false).
-  //  * @param _data Encodes signature and gas payment receipt
-  //  *          _data should be encoded as ((bytes32 r, bytes32 s, uint8 v, SignatureType sigType), (GasReceipt g))
-  //  *            i.e. high level encoding should be (bytes, bytes), where the latter bytes array is a nested bytes array
-  //  */
-  // function metaSetApprovalForAll(
-  //   address _owner, 
-  //   address _operator,  
-  //   bool _approved,
-  //   boolean _isGasReimbursed,
-  //   bytes memory _data)
-  //   public
-  // { 
-  //   bytes memory sig;
-  
-  //   // Get signature and data to sign
-  //   (sig, bytes memory signedData) = abi.decode(_data, (bytes4, bytes, bytes));
+  /**
+   * @dev Approve the passed address to spend on behalf of _from if valid signature is provided.
+   * @param _owner Address that wants to set operator status  _spender.
+   * @param _operator The address which will act as an operator for _owner.
+   * @param _approved _operator"s new operator status (true or false).
+   * @param _isGasReimbursed Whether gas will be reimbursed or not, with vlid signature
+   * @param _data Encodes signature and gas payment receipt
+   *          _data should be encoded as ((bytes32 r, bytes32 s, uint8 v, SignatureType sigType), (GasReceipt g))
+   *            i.e. high level encoding should be (bytes, bytes), where the latter bytes array is a nested bytes array
+   */
+  function metaSetApprovalForAll(
+    address _owner, 
+    address _operator,  
+    bool _approved,
+    bool _isGasReimbursed,
+    bytes memory _data)
+    public
+  { 
+    // Starting gas value
+    uint256 startGas = gasleft();
+    GasReceipt memory gasReceipt;
 
-  //   // Get signer's currently available nonce
-  //   uint256 nonce = nonces[_owner];
+    // If gas reimbursement or not
+    if (_isGasReimbursed) {
+      bytes memory signedData = validateApprovalSignature(_owner, _operator, _approved, _data);
+      gasReceipt = abi.decode(signedData, (GasReceipt));
 
-  //   // Encode data for signature validation
-  //   bytes memory data = abi.encodePacked(address(this), _operator, _approved, nonce, );
+    } else {
+      validateApprovalSignature(_owner, _operator, _approved, _data);
+    }
 
-  //   // Verify if _owner is the signer
-  //   require(isValidSignature(_owner, data, _sig), "ERC1155Meta#sigSetApprovalForAll: INVALID_SIGNATURE");
+    // Update operator status
+    operators[_owner][_operator] = _approved;
 
-  //   // Update signature nonce of _owner
-  //   nonces[_owner] += 1;
+    // Emit event
+    emit ApprovalForAll(_owner, _operator, _approved);
 
-  //   // Update operator status
-  //   operators[_owner][_operator] = _approved;
-
-  //   // Emit event
-  //   emit ApprovalForAll(_owner, _operator, _approved);
-  // }
+    // Handle gas reimbursement
+    if (_isGasReimbursed) {
+      _transferGasFee(_owner, startGas, gasReceipt);
+    }
+  }
 
 
   function _transferGasFee(address _from, uint256 _startGas, GasReceipt memory g)
