@@ -197,7 +197,7 @@ contract('ERC1155Meta', (accounts: string[]) => {
 
           // @ts-ignore
           const tx = operatorERC1155Contract.functions.safeTransferFrom(ownerAddress, receiverAddress, id, amount, data)
-          await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#safeTransferFrom: INVALID_SIGNATURE") )    
+          await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#_validateTransferSignature: INVALID_SIGNATURE") )    
         })
 
         it("should REVERT if signer address is incorrect", async () => {
@@ -206,7 +206,7 @@ contract('ERC1155Meta', (accounts: string[]) => {
 
           // @ts-ignore
           const tx = operatorERC1155Contract.functions.safeTransferFrom(ownerAddress, receiverAddress, id, amount, data)
-          await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#safeTransferFrom: INVALID_SIGNATURE") )  
+          await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#_validateTransferSignature: INVALID_SIGNATURE") )  
         })
 
         it("should REVERT if receiver address is incorrect", async () => {
@@ -215,7 +215,7 @@ contract('ERC1155Meta', (accounts: string[]) => {
 
           // @ts-ignore
           const tx = operatorERC1155Contract.functions.safeTransferFrom(ownerAddress, receiverAddress, id, amount, data)
-          await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#safeTransferFrom: INVALID_SIGNATURE") )  
+          await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#_validateTransferSignature: INVALID_SIGNATURE") )  
         })
 
         it("should REVERT if token id is incorrect", async () => {
@@ -224,7 +224,7 @@ contract('ERC1155Meta', (accounts: string[]) => {
 
           // @ts-ignore
           const tx = operatorERC1155Contract.functions.safeTransferFrom(ownerAddress, receiverAddress, id, amount, data)
-          await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#safeTransferFrom: INVALID_SIGNATURE") )  
+          await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#_validateTransferSignature: INVALID_SIGNATURE") )  
         })
 
         it("should REVERT if token amount is incorrect", async () => {
@@ -233,7 +233,7 @@ contract('ERC1155Meta', (accounts: string[]) => {
 
           // @ts-ignore
           const tx = operatorERC1155Contract.functions.safeTransferFrom(ownerAddress, receiverAddress, id, amount, data)
-          await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#safeTransferFrom: INVALID_SIGNATURE") )  
+          await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#_validateTransferSignature: INVALID_SIGNATURE") )  
         })
 
         it("should REVERT if transfer data is incorrect", async () => {
@@ -272,7 +272,7 @@ contract('ERC1155Meta', (accounts: string[]) => {
 
           // @ts-ignore
           const tx = operatorERC1155Contract.functions.safeTransferFrom(ownerAddress, receiverAddress, id, amount, data)
-          await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#safeTransferFrom: INVALID_SIGNATURE") )
+          await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#_validateTransferSignature: INVALID_SIGNATURE") )
         })
 
         it("should REVERT if nonce is incorrect", async () => {
@@ -281,7 +281,7 @@ contract('ERC1155Meta', (accounts: string[]) => {
 
           // @ts-ignore
           const tx = operatorERC1155Contract.functions.safeTransferFrom(ownerAddress, receiverAddress, id, amount, data)
-          await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#safeTransferFrom: INVALID_SIGNATURE") )  
+          await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#_validateTransferSignature: INVALID_SIGNATURE") )  
         })
 
         it("should PASS if signature is valid", async () => {
@@ -317,7 +317,7 @@ contract('ERC1155Meta', (accounts: string[]) => {
 
             // @ts-ignore
             const tx = operatorERC1155Contract.functions.safeTransferFrom(ownerAddress, ZERO_ADDRESS, id, amount, data)
-            await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#safeTransferFrom: INVALID_RECIPIENT") ) 
+            await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#_validateTransferSignature: INVALID_RECIPIENT") ) 
           })
 
           it('should REVERT if transfer leads to overflow', async () => {
@@ -345,7 +345,7 @@ contract('ERC1155Meta', (accounts: string[]) => {
 
             // @ts-ignore
             const tx = operatorERC1155Contract.functions.safeTransferFrom(ownerAddress, receiverContract.address, id, amount, data)
-            await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#safeTransferFrom: INVALID_ON_RECEIVE_MESSAGE") )
+            await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#_validateTransferSignature: INVALID_ON_RECEIVE_MESSAGE") )
           })
 
           it('should PASS if valid response from receiver contract', async () => {
@@ -438,7 +438,7 @@ contract('ERC1155Meta', (accounts: string[]) => {
   
               // @ts-ignore
               const tx = operatorERC1155Contract.functions.safeTransferFrom(ownerAddress, receiverAddress, id, amount, data)
-              await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#safeTransferFrom: INVALID_SIGNATURE") )
+              await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#_validateTransferSignature: INVALID_SIGNATURE") )
             })
           })
 
@@ -626,7 +626,7 @@ contract('ERC1155Meta', (accounts: string[]) => {
 
           // @ts-ignore
           let tx = operatorERC1155Contract.functions.metaSetApprovalForAll(ownerAddress, operatorAddress, approved, isGasReimbursed, data)
-          await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#validateApprovalSignature: INVALID_SIGNATURE") )    
+          await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#_validateApprovalSignature: INVALID_SIGNATURE") )    
         })
 
         it("should REVERT if operator address is incorrect", async () => {
@@ -635,7 +635,7 @@ contract('ERC1155Meta', (accounts: string[]) => {
 
           // @ts-ignore
           let tx = operatorERC1155Contract.functions.metaSetApprovalForAll(ownerAddress, operatorAddress, approved, isGasReimbursed, data)
-          await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#validateApprovalSignature: INVALID_SIGNATURE") )    
+          await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#_validateApprovalSignature: INVALID_SIGNATURE") )    
         })
 
         it("should REVERT if approved value is incorrect", async () => {
@@ -644,7 +644,7 @@ contract('ERC1155Meta', (accounts: string[]) => {
 
           // @ts-ignore
           let tx = operatorERC1155Contract.functions.metaSetApprovalForAll(ownerAddress, operatorAddress, approved, isGasReimbursed, data)
-          await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#validateApprovalSignature: INVALID_SIGNATURE") )    
+          await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#_validateApprovalSignature: INVALID_SIGNATURE") )    
         })
 
         it("should REVERT if nonce is incorrect", async () => {
@@ -653,7 +653,7 @@ contract('ERC1155Meta', (accounts: string[]) => {
 
           // @ts-ignore
           let tx = operatorERC1155Contract.functions.metaSetApprovalForAll(ownerAddress, operatorAddress, approved, isGasReimbursed, data)
-          await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#validateApprovalSignature: INVALID_SIGNATURE") )    
+          await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#_validateApprovalSignature: INVALID_SIGNATURE") )    
         })
 
 
