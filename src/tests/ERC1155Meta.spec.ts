@@ -104,9 +104,10 @@ contract('ERC1155Meta', (accounts: string[]) => {
     ]
 
     conditions.forEach(function(condition) {
-
       context(condition[2] as string, () => {
+
         beforeEach(async () => {
+
           // Get conditions
           transferData = condition[0] as string | null
           isGasReceipt = condition[1] as boolean
@@ -358,7 +359,14 @@ contract('ERC1155Meta', (accounts: string[]) => {
             await expect(tx).to.be.fulfilled
           })
 
-          describe('When gas is reimbursed [TO-FIX: NO GAS RECEIPT CONTEXTS WILL THROW]', () => { 
+          describe('When gas is reimbursed', () => {
+
+            before(async function () {
+              if (!condition[1]){
+                this.test!.parent!.pending = true;
+                this.skip();
+              }
+            });
  
             it('should reimburse gasReceipt.gasLimit if gas used exceeds limit', async () => {
               let lowGasLimit = 11;
@@ -452,7 +460,14 @@ contract('ERC1155Meta', (accounts: string[]) => {
               expect(balance).to.be.eql(new BigNumber(amount))
             })
 
-            describe('When gas is reimbursed [TO-FIX: NO GAS RECEIPT CONTEXTS WILL THROW]', () => { 
+            describe('When gas is reimbursed', () => {
+              before(async function () {
+                if (!condition[1]){
+                  this.test!.parent!.pending = true;
+                  this.skip();
+                }
+              });
+
               it('should update gas token balance of sender', async () => {
                 const senderBalance = await erc1155Contract.functions.balanceOf(ownerAddress, feeToken)
                 //@ts-ignore
