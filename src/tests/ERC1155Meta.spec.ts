@@ -326,7 +326,7 @@ contract('ERC1155Meta', (accounts: string[]) => {
 
             // @ts-ignore
             const tx = operatorERC1155Contract.functions.safeTransferFrom(ownerAddress, ZERO_ADDRESS, id, amount, data)
-            await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#_validateTransferSignature: INVALID_RECIPIENT") ) 
+            await expect(tx).to.be.rejectedWith( RevertError("ERC1155Meta#safeTransferFrom: INVALID_RECIPIENT") ) 
           })
 
           it('should REVERT if transfer leads to overflow', async () => {
