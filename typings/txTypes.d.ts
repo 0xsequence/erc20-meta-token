@@ -19,6 +19,17 @@ export type TransferSignature = {
   nonce: number | string | BigNumber;
 }
 
+export type BatchTransferSignature = {
+  contractAddress: string;
+  signerWallet: Wallet;
+  receiver: string;
+  ids: number[] | string[] | BigNumber[];
+  amounts: number[] | string[] | BigNumber[];
+  transferData: Uint8Array | null;
+  nonce: number | string | BigNumber;
+}
+
+
 export type ApprovalSignature = {
   contractAddress: string;
   signerWallet: Wallet;
