@@ -3,8 +3,8 @@
 Wrapper contract offering meta-transaction methods to any token compliant with the ERC-20 standard.
 
 # How to use
-`yarn install`
-`yarn test`
+1. `yarn install`    
+2. `yarn test`
 
 npm package coming soon. 
 
