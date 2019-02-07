@@ -71,8 +71,48 @@ contract ERC1155 is ERC165 {
   {
     // Requirements
     require((msg.sender == _from) || operators[_from][msg.sender], "INVALID_OPERATOR");
-    require(_ids.length == _values.length, "INVALID_ARRAYS_LENGTH");
     require(_to != address(0), "INVALID_RECIPIENT");
+
+    _safeBatchTransferFrom(_from, _to, _ids, _values, _data);
+  }
+
+  /**
+   * @dev Allow _from or an operator to transfer tokens from one address to another
+   * @param _from The address which you want to send tokens from
+   * @param _to The address which you want to transfer to
+   * @param _id Token id to update balance of - For this implementation, via `uint256(tokenAddress)`.
+   * @param _value The amount of tokens of provided token ID to be transferred
+   * @param _data Data to pass to onERC1155Received() function if recipient is contract
+   */
+  function _safeTransferFrom(address _from, address _to, uint256 _id, uint256 _value, bytes memory _data)
+    internal
+  {
+    // Update balances
+    balances[_from][_id] = balances[_from][_id].sub(_value); // Subtract value
+    balances[_to][_id] = balances[_to][_id].add(_value);     // Add value
+
+    // Check if recipient is contract
+    if (_to.isContract()) {
+      bytes4 retval = IERC1155TokenReceiver(_to).onERC1155Received(msg.sender, _from, _id, _value, _data);
+      require(retval == ERC1155_RECEIVED_VALUE, "ERC1155#_safeTransferFrom: INVALID_ON_RECEIVE_MESSAGE");
+    }
+
+    // Emit event
+    emit TransferSingle(msg.sender, _from, _to, _id, _value);
+  }
+
+  /**
+   * @dev transfer objects from different ids to specified address
+   * @param _from The address to batchTransfer objects from.
+   * @param _to The address to batchTransfer objects to.
+   * @param _ids Array of ids to update balance of - For this implementation, via `uint256(tokenAddress)`
+   * @param _values Array of amount of object per id to be transferred.
+   * @param _data Data to pass to onERC1155Received() function if recipient is contract
+   */
+  function _safeBatchTransferFrom(address _from, address _to, uint256[] memory _ids, uint256[] memory _values, bytes memory _data) 
+    internal
+  {
+    require(_ids.length == _values.length, "INVALID_ARRAYS_LENGTH");
 
     // Number of transfer to execute
     uint256 nTransfer = _ids.length;
@@ -87,41 +127,12 @@ contract ERC1155 is ERC165 {
     // Pass data if recipient is contract
     if (_to.isContract()) {
       bytes4 retval = IERC1155TokenReceiver(_to).onERC1155BatchReceived(msg.sender, _from, _ids, _values, _data);
-      require(retval == ERC1155_BATCH_RECEIVED_VALUE, "INVALID_ON_RECEIVE_MESSAGE");
+      require(retval == ERC1155_BATCH_RECEIVED_VALUE, "ERC1155#_safeBatchTransferFrom: INVALID_ON_RECEIVE_MESSAGE");
     }
 
     emit TransferBatch(msg.sender, _from, _to, _ids, _values);
   }
 
-  /**
-   * @dev Allow _from or an operator to transfer tokens from one address to another
-   * @param _from The address which you want to send tokens from
-   * @param _to The address which you want to transfer to
-   * @param _id Token id to update balance of - For this implementation, via `uint256(tokenAddress)`.
-   * @param _value The amount of tokens of provided token ID to be transferred
-   * @param _data Data to pass to onERC1155Received() function if recipient is contract
-   */
-  function _safeTransferFrom(
-    address _from,
-    address _to,
-    uint256 _id,
-    uint256 _value,
-    bytes memory _data)
-    internal
-  {
-    // Update balances
-    balances[_from][_id] = balances[_from][_id].sub(_value); // Subtract value
-    balances[_to][_id] = balances[_to][_id].add(_value);     // Add value
-
-    // Check if recipient is contract
-    if (_to.isContract()) {
-      bytes4 retval = IERC1155TokenReceiver(_to).onERC1155Received(msg.sender, _from, _id, _value, _data);
-      require(retval == ERC1155_RECEIVED_VALUE, "ERC1155Meta#safeTransferFrom: INVALID_ON_RECEIVE_MESSAGE");
-    }
-
-    // Emit event
-    emit TransferSingle(msg.sender, _from, _to, _id, _value);
-  }
 
   //
   // Operator Functions

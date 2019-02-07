@@ -30,15 +30,6 @@ export class ERC1155Meta extends Contract {
 
     getNonce(_signer: string): Promise<BigNumber>;
 
-    safeBatchTransferFrom(
-      _from: string,
-      _to: string,
-      _ids: (number | string | BigNumber)[],
-      _values: (number | string | BigNumber)[],
-      _data: (string)[],
-      overrides?: TransactionOverrides
-    ): Promise<ContractTransaction>;
-
     setApprovalForAll(
       _operator: string,
       _approved: boolean,
@@ -50,6 +41,15 @@ export class ERC1155Meta extends Contract {
       _to: string,
       _id: number | string | BigNumber,
       _value: number | string | BigNumber,
+      _data: (string)[],
+      overrides?: TransactionOverrides
+    ): Promise<ContractTransaction>;
+
+    safeBatchTransferFrom(
+      _from: string,
+      _to: string,
+      _ids: (number | string | BigNumber)[],
+      _values: (number | string | BigNumber)[],
       _data: (string)[],
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;

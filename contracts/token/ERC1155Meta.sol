@@ -7,9 +7,8 @@ import "../signature/SignatureValidator.sol";
 
 
 /**
- * @dev Multi-Fungible Tokens with additional functions. These additional functions allow users
+ * @dev ERC-1155 with native metatransaction methods. These additional functions allow users
  *      to presign function calls and allow third parties to execute these on their behalf.
- *      These methods allow for native meta transactions.
  */
 contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
   using LibBytes for bytes;
@@ -25,8 +24,10 @@ contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
 
   /**
    * TO DO:
-   *  - Add meta batch transfer
    *  - Add 1 tx wrap (via CREATE2)
+   *  - Split contract for better oganization
+   *  - Review function descriptions
+   *  - Review error messages in 1155
    *  - Add meta-withdraw
    *  - Signature 0x19 pre-fix?
    *  - EIP-712 encoding
@@ -65,12 +66,7 @@ contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
    *          METATRANSFER_FLAG should be 0xebc71fa5 for meta transfer with gas reimbursement
    *          METATRANSFER_FLAG should be 0x3fed7708 for meta transfer WITHOUT gas reimbursement (and hence without gasReceipt)
    */
-  function safeTransferFrom(
-    address _from,
-    address _to,
-    uint256 _id,
-    uint256 _value,
-    bytes memory _data)
+  function safeTransferFrom(address _from, address _to, uint256 _id, uint256 _value, bytes memory _data)
     public
   {
     require(_to != address(0), "ERC1155Meta#safeTransferFrom: INVALID_RECIPIENT");
@@ -96,22 +92,72 @@ contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
 
         // If Gas receipt is being passed
         if (metaTag == METATRANSFER_FLAG) {
-          signedData = validateTransferSignature(_from, _to, _id, _value, _data);
+          signedData = _validateTransferSignature(_from, _to, _id, _value, _data);
           (gasReceipt, transferData) = abi.decode(signedData, (GasReceipt, bytes));
 
-          // Update balances
           _safeTransferFrom(_from, _to, _id, _value, transferData);
-
-          // Handle gas reimbursement
           _transferGasFee(_from, startGas, gasReceipt);
 
         } else {
-          transferData = validateTransferSignature(_from, _to, _id, _value, _data);
-
-          // Update balances
+          transferData = _validateTransferSignature(_from, _to, _id, _value, _data);
           _safeTransferFrom(_from, _to, _id, _value, transferData);
         }
+      }
+    }
+  }
 
+  /**
+   * @dev transfer objects from different ids to specified address
+   * @param _from The address to batchTransfer objects from.
+   * @param _to The address to batchTransfer objects to.
+   * @param _ids Array of ids to update balance of - For this implementation, via `uint256(tokenAddress)`
+   * @param _values Array of amount of object per id to be transferred.
+   * @param _data Encodes a meta transfer indicator, signature, gas payment receipt and extra transfer data.
+   *          _data should be encoded as (bytes4 METATRANSFER_FLAG, (bytes32 r, bytes32 s, uint8 v, SignatureType sigType), (GasReceipt g, bytes data))
+   *            i.e. high level encoding should be (bytes4, bytes, bytes), where the latter bytes array is a nested bytes array
+   *            METATRANSFER_FLAG should be 0xebc71fa5 for meta transfer with gas reimbursement
+   *            METATRANSFER_FLAG should be 0x3fed7708 for meta transfer WITHOUT gas reimbursement (and hence without gasReceipt)
+   */
+  function safeBatchTransferFrom(address _from, address _to, uint256[] memory _ids, uint256[] memory _values, bytes memory _data) 
+    public 
+  {
+    // Requirements
+    require(_to != address(0), "ERC1155Meta#safeBatchTransferFrom: INVALID_RECIPIENT");
+
+    // Starting gas value
+    uint256 startGas = gasleft();
+
+    if (_data.length < 4) {
+      super.safeBatchTransferFrom(_from, _to, _ids, _values, _data);
+
+    } else {
+      // Get metatransaction tag
+      bytes4 metaTag = _data.readBytes4(0);
+
+      // Is NOT metaTransfer - (explicit check)
+      if (metaTag != METATRANSFER_FLAG && metaTag != METATRANSFER_WITHOUT_GAS_RECEIPT_FLAG) {
+        super.safeBatchTransferFrom(_from, _to, _ids, _values, _data);
+      
+      } else {
+        bytes memory signedData;
+        bytes memory transferData;
+        GasReceipt memory gasReceipt;
+
+        // If Gas receipt is being passed
+        if (metaTag == METATRANSFER_FLAG) {
+          signedData = _validateBatchTransferSignature(_from, _to, _ids, _values, _data);
+          (gasReceipt, transferData) = abi.decode(signedData, (GasReceipt, bytes));
+
+          // Update balances
+          _safeBatchTransferFrom(_from, _to, _ids, _values, transferData);
+        
+          // Handle gas reimbursement
+          _transferGasFee(_from, startGas, gasReceipt);
+        
+        } else {
+          transferData = _validateBatchTransferSignature(_from, _to, _ids, _values, _data);
+          _safeBatchTransferFrom(_from, _to, _ids, _values, transferData);
+        }
       }
     }
   }
@@ -126,7 +172,7 @@ contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
    *          _data should be encoded as (bytes4 METATRANSFER_FLAG, (bytes32 r, bytes32 s, uint8 v, SignatureType sigType), (GasReceipt g, bytes data))
    *            i.e. high level encoding should be (bytes4, bytes, bytes), where the latter bytes array is a nested bytes array
    */
-  function validateTransferSignature(
+  function _validateTransferSignature(
     address _from,
     address _to,
     uint256 _id,
@@ -144,7 +190,43 @@ contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
     bytes memory data = abi.encodePacked(address(this), _from, _to, _id,  _value, nonce, signedData);
 
     // Verify if _from is the signer
-    require(isValidSignature(_from, data, sig), "ERC1155Meta#safeTransferFrom: INVALID_SIGNATURE");
+    require(isValidSignature(_from, data, sig), "ERC1155Meta#_validateTransferSignature: INVALID_SIGNATURE");
+
+    //Update signature nonce
+    nonces[_from] += 1;
+
+    return signedData;
+  }
+
+  /**
+   * @dev Verifies if a transfer signature is valid based on data
+   * @param _from The address to batchTransfer objects from.
+   * @param _to The address to batchTransfer objects to.
+   * @param _ids Array of ids to update balance of - For this implementation, via `uint256(tokenAddress)`
+   * @param _values Array of amount of object per id to be transferred.
+   * @param _data Encodes a meta transfer indicator, signature, gas payment receipt and extra transfer data.
+   *          _data should be encoded as (bytes4 METATRANSFER_FLAG, (bytes32 r, bytes32 s, uint8 v, SignatureType sigType), (GasReceipt g, bytes data))
+   *            i.e. high level encoding should be (bytes4, bytes, bytes), where the latter bytes array is a nested bytes array
+   */
+  function _validateBatchTransferSignature(
+    address _from,
+    address _to,
+    uint256[] memory _ids, 
+    uint256[] memory _values, 
+    bytes memory _data)
+    internal returns (bytes memory signedData)
+  { 
+    // Get signature and data to sign
+    (bytes4 tag, bytes memory sig, bytes memory signedData) = abi.decode(_data, (bytes4, bytes, bytes));
+
+    // Get signer's currently available nonce
+    uint256 nonce = nonces[_from];
+
+    // Get data that formed the hash
+    bytes memory data = abi.encodePacked(address(this), _from, _to, _ids, _values, nonce, signedData);
+
+    // Verify if _from is the signer
+    require(isValidSignature(_from, data, sig), "ERC1155Meta#_validateBatchTransferSignature: INVALID_SIGNATURE");
 
     //Update signature nonce
     nonces[_from] += 1;
@@ -161,7 +243,7 @@ contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
    *          _data should be encoded as ((bytes32 r, bytes32 s, uint8 v, SignatureType sigType), (GasReceipt g))
    *            i.e. high level encoding should be (bytes, bytes), where the latter bytes array is a nested bytes array
    */
-  function validateApprovalSignature(
+  function _validateApprovalSignature(
     address _owner,
     address _operator,
     bool _approved,
@@ -178,7 +260,7 @@ contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
     bytes memory data = abi.encodePacked(address(this), _owner, _operator, _approved, nonce, signedData);
 
     // Verify if _owner is the signer
-    require(isValidSignature(_owner, data, sig), "ERC1155Meta#validateApprovalSignature: INVALID_SIGNATURE");
+    require(isValidSignature(_owner, data, sig), "ERC1155Meta#_validateApprovalSignature: INVALID_SIGNATURE");
 
     //Update signature nonce
     nonces[_owner] += 1;
@@ -214,11 +296,11 @@ contract ERC1155Meta is ERC1155MintBurn, SignatureValidator {
 
     // If gas reimbursement or not
     if (_isGasReimbursed) {
-      bytes memory signedData = validateApprovalSignature(_owner, _operator, _approved, _data);
+      bytes memory signedData = _validateApprovalSignature(_owner, _operator, _approved, _data);
       gasReceipt = abi.decode(signedData, (GasReceipt));
 
     } else {
-      validateApprovalSignature(_owner, _operator, _approved, _data);
+      _validateApprovalSignature(_owner, _operator, _approved, _data);
     }
 
     // Update operator status
