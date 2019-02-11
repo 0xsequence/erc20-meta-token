@@ -6,7 +6,7 @@ import { Provider } from "ethers/providers";
 import { BigNumber } from "ethers/utils";
 import { TransactionOverrides } from ".";
 
-export class ERC165 extends Contract {
+export class IERC165 extends Contract {
   functions: {
     supportsInterface(_interfaceId: string): Promise<boolean>;
   };

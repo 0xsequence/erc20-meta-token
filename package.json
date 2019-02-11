@@ -57,7 +57,7 @@
     "ethers": "^4.0.21",
     "ganache-cli": "6.3.0-beta.0",
     "ganache-core": "2.4.0-beta.0",
-    "multi-token-standard": "^0.3.1",
+    "multi-token-standard": "^0.4.2",
     "openzeppelin-solidity": "^2.1.2",
     "solc": "^0.5.3",
     "solidity-coverage": "^0.5.11",
@@ -71,7 +71,7 @@
     "zos-lib": "^2.1.2"
   },
   "peerDependency": {
-    "multi-token-standard": "^0.3.1",
+    "multi-token-standard": "^0.4.2",
     "openzeppelin-solidity": "^2.1.2"
   }
 }

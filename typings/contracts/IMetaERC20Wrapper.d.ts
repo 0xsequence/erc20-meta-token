@@ -6,18 +6,20 @@ import { Provider } from "ethers/providers";
 import { BigNumber } from "ethers/utils";
 import { TransactionOverrides } from ".";
 
-export class ERC1271WalletMock extends Contract {
+export class IMetaERC20Wrapper extends Contract {
   functions: {
-    isValidSignature(_hash: string, _signature: (string)[]): Promise<string>;
-
-    setShouldReject(
-      _value: boolean,
+    deposit(
+      _token: string,
+      _value: number | string | BigNumber,
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;
 
-    ERC1271_MAGIC_VAL(): Promise<string>;
-    shouldReject(): Promise<boolean>;
-    ERC1271_INVALID(): Promise<string>;
+    withdraw(
+      _token: string,
+      _to: string,
+      _value: number | string | BigNumber,
+      overrides?: TransactionOverrides
+    ): Promise<ContractTransaction>;
   };
   filters: {};
 }

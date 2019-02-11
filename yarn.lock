@@ -4405,10 +4405,10 @@ ms@^2.1.1:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.1.tgz#30a5864eb3ebb0a66f2ebe6d727af06a09d86e0a"
   integrity sha512-tgp+dl5cGk28utYktBsrFqA7HKgrhgPsg6Z/EfhWI4gl1Hwq8B/GmY/0oXZ6nF8hDVesS/FpnYaD/kOWhYQvyg==
 
-multi-token-standard@^0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/multi-token-standard/-/multi-token-standard-0.3.1.tgz#ec09cfd869e466ebf5ecd66a9d198aec7cc90159"
-  integrity sha512-YtBdRyQcrZ8Na45DNmC33wv2tc+53Q1+Rhtamf1bbNzg8OuYbgIVQiiHjh+nCgfs7/GNp7gJcjNWW3t/NySTlQ==
+multi-token-standard@^0.4.2:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/multi-token-standard/-/multi-token-standard-0.4.2.tgz#0aa4abf8169519f97bfc93054e3575d8db0edab7"
+  integrity sha512-7jyuvspWLcjzu7XqrYKdRPGvsMxSTIoa5aG/yH0zji+5pTTRoU78w6tM+EvkjIxS30aLwZI+HxfzM4GLKxHPIw==
 
 mz@^2.6.0:
   version "2.7.0"

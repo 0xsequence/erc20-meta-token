@@ -1,11 +1,11 @@
 import * as ethers from 'ethers'
 
-import { AbstractContract, assert, expect } from './utils'
+import { AbstractContract, RevertError, expect } from './utils'
 import * as utils from './utils'
 
 import { MetaERC20Wrapper } from 'typings/contracts/MetaERC20Wrapper'
 import { ERC20Mock } from 'typings/contracts/ERC20Mock'
-import { BigNumber, bigNumberify } from 'ethers/utils';
+import { BigNumber } from 'ethers/utils';
 
 // init test wallets from package.json mnemonic
 const web3 = (global as any).web3
@@ -108,7 +108,7 @@ contract('MetaERC20Wrapper', (accounts: string[]) => {
 
           it('should REVERT if user does not have sufficient funds', async () => {
             const tx = userMetaERC20WrapperContract.functions.deposit(tokenAddress, INIT_BALANCE + 1, txParam)
-            await expect(tx).to.be.rejected
+            await expect(tx).to.be.rejected;
           })
 
           it('should PASS if user has sufficient funds', async () => {
@@ -120,7 +120,7 @@ contract('MetaERC20Wrapper', (accounts: string[]) => {
           it('should REVERT if msg.value is not 0', async () => {
             // @ts-ignore (https://github.com/ethereum-ts/TypeChain/issues/118)
             const tx = userMetaERC20WrapperContract.functions.deposit(tokenAddress, depositAmount, {gasLimit: 1000000, value: 1})
-            await expect(tx).to.be.rejected
+            await expect(tx).to.be.rejectedWith( RevertError("MetaERC20Wrapper#deposit: INCORRECT_MSG_VALUE") )
           })
           
           context('When tokens are deposited', () => {
@@ -155,13 +155,13 @@ contract('MetaERC20Wrapper', (accounts: string[]) => {
           let tx = userMetaERC20WrapperContract.functions.deposit(ZERO_ADDRESS, depositAmount, 
             {gasLimit:1000000, value: depositAmount.sub(1)}
           )
-          await expect(tx).to.be.rejected
+          await expect(tx).to.be.rejectedWith( RevertError("MetaERC20Wrapper#deposit: INCORRECT_MSG_VALUE") )
           
           // Msg.value is larger than value
           tx = userMetaERC20WrapperContract.functions.deposit(ZERO_ADDRESS, depositAmount, 
             {gasLimit:1000000, value: depositAmount.add(1)}
           )
-          await expect(tx).to.be.rejected
+          await expect(tx).to.be.rejectedWith( RevertError("MetaERC20Wrapper#deposit: INCORRECT_MSG_VALUE") )          
         })
 
         it('should PASS if msg.value is equal to value', async () => {
@@ -239,7 +239,12 @@ contract('MetaERC20Wrapper', (accounts: string[]) => {
 
         it('should REVERT if user does not have sufficient wrapped tokens', async () => {
           const tx = userMetaERC20WrapperContract.functions.withdraw(tokenAddress, userAddress, depositAmount.add(1), txParam)
-          await expect(tx).to.be.rejected
+          await expect(tx).to.be.rejectedWith( RevertError("SafeMath#sub: UNDERFLOW") )
+        })
+
+        it('should REVERT if recipient is 0x0', async () => {
+          const tx = userMetaERC20WrapperContract.functions.withdraw(tokenAddress, ZERO_ADDRESS, depositAmount, txParam)
+          await expect(tx).to.be.rejected;
         })
 
         it('should PASS if user has sufficient wrapped tokens', async () => {
@@ -289,7 +294,12 @@ contract('MetaERC20Wrapper', (accounts: string[]) => {
 
         it('should REVERT if user does not have sufficient wrapped tokens', async () => {
           const tx = userMetaERC20WrapperContract.functions.withdraw(ZERO_ADDRESS, userAddress, depositAmount.add(1), txParam)
-          await expect(tx).to.be.rejected
+          await expect(tx).to.be.rejectedWith( RevertError("SafeMath#sub: UNDERFLOW") )
+        })
+
+        it('should REVERT if recipient is 0x0', async () => {
+          const tx = userMetaERC20WrapperContract.functions.withdraw(ZERO_ADDRESS, ZERO_ADDRESS, depositAmount, txParam)
+          await expect(tx).to.be.rejectedWith( RevertError("MetaERC20Wrapper#withdraw: INVALID_RECIPIENT") )
         })
 
         it('should PASS if user has sufficient wrapped tokens', async () => {

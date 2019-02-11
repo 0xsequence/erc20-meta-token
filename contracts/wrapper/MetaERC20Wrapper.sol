@@ -2,13 +2,19 @@ pragma solidity ^0.5.0;
 pragma experimental ABIEncoderV2;
 
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
-import "../token/ERC1155Meta.sol";
+import "multi-token-standard/contracts/tokens/ERC1155/ERC1155Meta.sol";
+import "multi-token-standard/contracts/tokens/ERC1155/ERC1155MintBurn.sol";
 
 
-contract MetaERC20Wrapper is ERC1155Meta {
+contract MetaERC20Wrapper is ERC1155Meta, ERC1155MintBurn {
 
   // Address for tokens representing Ether is 0x00...00
   address internal ETH_ADDRESS = address(0x0); 
+
+
+  /***********************************|
+  |         Deposit Functions         |
+  |__________________________________*/
 
   /**
    * Fallback function
@@ -39,8 +45,13 @@ contract MetaERC20Wrapper is ERC1155Meta {
     }
 
     // Mint meta tokens
-    mint(msg.sender, uint256(_token), _value);
+    _mint(msg.sender, uint256(_token), _value);
   }
+
+
+  /***********************************|
+  |         Withdraw Functions        |
+  |__________________________________*/
 
   /**
    * @dev Withdraw wrapped ERC20 tokens in this contract to receive the original ERC20s or ETH
@@ -52,18 +63,22 @@ contract MetaERC20Wrapper is ERC1155Meta {
     public 
   {
     // Burn meta tokens
-    burn(msg.sender, uint256(_token), _value);
+    _burn(msg.sender, uint256(_token), _value);
 
     // Withdraw ERC-20 tokens or ETH
     if (_token != ETH_ADDRESS) {
       IERC20(_token).transfer(_to, _value);
       require(checkSuccess(), "MetaERC20Wrapper#withdraw: TRANSFER_FAILED");
     } else {
+      require(_to != address(0), "MetaERC20Wrapper#withdraw: INVALID_RECIPIENT");
       _to.transfer(_value);
     }
   }
 
-  // ============ Private Helper-Functions ============
+
+  /***********************************|
+  |          Helper Functions         |
+  |__________________________________*/
 
   /**
     * Checks the return value of the previous function up to 32 bytes. Returns true if the previous

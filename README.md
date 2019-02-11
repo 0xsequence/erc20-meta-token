@@ -2,11 +2,33 @@
 
 Wrapper contract offering meta-transaction methods to any token compliant with the ERC-20 standard.
 
-# How to use
-1. `yarn install`    
-2. `yarn test`
+# Installation
 
-npm package coming soon. 
+Run `npm install erc20-meta-wrapper` or `yarn add erc20-meta-wrapper` 
+
+# Usage
+
+To write your custom contracts, import ours and extend them through inheritance.
+
+```solidity
+pragma solidity ^0.5.0;
+
+import 'erc20-meta-wrapper/contracts/interfaces/IMetaERC20Wrapper.sol';
+
+contract ContractA {
+  //...
+  function f(address wrapperAddress, address ERC20tokenAddress, uint256 amount) public {
+    IMetaERC20Wrapper(wrapperAddress).deposit(ERC20tokenAddress, amount);
+  }
+}
+```
+
+# Dev / running the tests
+
+1. Install node v11 and yarn (npm install -g yarn)
+2. `yarn install`
+3. `yarn ganache`
+4. in another terminal run, `yarn test` - executes test suite
 
 # How does it work?
 
