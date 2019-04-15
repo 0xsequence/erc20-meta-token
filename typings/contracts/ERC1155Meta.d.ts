@@ -9,7 +9,7 @@ import { TransactionOverrides } from ".";
 export class ERC1155Meta extends Contract {
   functions: {
     balanceOf(
-      _address: string,
+      _owner: string,
       _id: number | string | BigNumber
     ): Promise<BigNumber>;
 
@@ -40,7 +40,7 @@ export class ERC1155Meta extends Contract {
       _from: string,
       _to: string,
       _id: number | string | BigNumber,
-      _value: number | string | BigNumber,
+      _amount: number | string | BigNumber,
       _data: (string)[],
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;
@@ -49,7 +49,7 @@ export class ERC1155Meta extends Contract {
       _from: string,
       _to: string,
       _ids: (number | string | BigNumber)[],
-      _values: (number | string | BigNumber)[],
+      _amounts: (number | string | BigNumber)[],
       _data: (string)[],
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;
@@ -62,9 +62,6 @@ export class ERC1155Meta extends Contract {
       _data: (string)[],
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;
-
-    ERC1155_BATCH_RECEIVED_VALUE(): Promise<string>;
-    ERC1155_RECEIVED_VALUE(): Promise<string>;
   };
   filters: {
     TransferSingle(
@@ -72,7 +69,7 @@ export class ERC1155Meta extends Contract {
       _from: string | null,
       _to: string | null,
       _id: null,
-      _value: null
+      _amount: null
     ): EventFilter;
 
     TransferBatch(
@@ -80,7 +77,7 @@ export class ERC1155Meta extends Contract {
       _from: string | null,
       _to: string | null,
       _ids: null,
-      _values: null
+      _amounts: null
     ): EventFilter;
 
     ApprovalForAll(
@@ -88,5 +85,7 @@ export class ERC1155Meta extends Contract {
       _operator: string | null,
       _approved: null
     ): EventFilter;
+
+    URI(_uri: null, _id: number | string | BigNumber | null): EventFilter;
   };
 }
