@@ -20,15 +20,25 @@ export class ERC1155Meta extends Contract {
       _ids: (number | string | BigNumber)[]
     ): Promise<(BigNumber)[]>;
 
+    isApprovedForAll(_owner: string, _operator: string): Promise<boolean>;
+
     isValidSignature(
       _signerAddress: string,
+      _hash: string,
       _data: (string)[],
       _sig: (string)[]
     ): Promise<boolean>;
 
-    isApprovedForAll(_owner: string, _operator: string): Promise<boolean>;
-
     getNonce(_signer: string): Promise<BigNumber>;
+
+    safeBatchTransferFrom(
+      _from: string,
+      _to: string,
+      _ids: (number | string | BigNumber)[],
+      _amounts: (number | string | BigNumber)[],
+      _data: (string)[],
+      overrides?: TransactionOverrides
+    ): Promise<ContractTransaction>;
 
     setApprovalForAll(
       _operator: string,
@@ -45,11 +55,22 @@ export class ERC1155Meta extends Contract {
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;
 
-    safeBatchTransferFrom(
+    metaSafeTransferFrom(
+      _from: string,
+      _to: string,
+      _id: number | string | BigNumber,
+      _amount: number | string | BigNumber,
+      _isGasFee: boolean,
+      _data: (string)[],
+      overrides?: TransactionOverrides
+    ): Promise<ContractTransaction>;
+
+    metaSafeBatchTransferFrom(
       _from: string,
       _to: string,
       _ids: (number | string | BigNumber)[],
       _amounts: (number | string | BigNumber)[],
+      _isGasFee: boolean,
       _data: (string)[],
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;
@@ -58,7 +79,7 @@ export class ERC1155Meta extends Contract {
       _owner: string,
       _operator: string,
       _approved: boolean,
-      _isGasReimbursed: boolean,
+      _isGasFee: boolean,
       _data: (string)[],
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;

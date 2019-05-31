@@ -1,4 +1,4 @@
-pragma solidity ^0.5.0;
+pragma solidity ^0.5.9;
 
 import "multi-token-standard/contracts/interfaces/IERC20.sol";
 import "multi-token-standard/contracts/utils/SafeMath.sol";

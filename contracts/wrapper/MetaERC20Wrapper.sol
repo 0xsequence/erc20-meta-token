@@ -1,4 +1,4 @@
-pragma solidity ^0.5.0;
+pragma solidity ^0.5.9;
 pragma experimental ABIEncoderV2;
 
 import "multi-token-standard/contracts/interfaces/IERC20.sol";
@@ -8,8 +8,8 @@ import "multi-token-standard/contracts/tokens/ERC1155/ERC1155MintBurn.sol";
 
 /**
  * @dev Allows users to wrap any amount of any ERC-20 token with a 1:1 ratio of
- *      corresponding ERC-1155 tokens with native metaTransaction methods.
  *
+ *      corresponding ERC-1155 tokens with native metaTransaction methods.
  * TO DO:
  *  - Add 1 tx wrap (via CREATE2)
  *  - Review function descriptions
