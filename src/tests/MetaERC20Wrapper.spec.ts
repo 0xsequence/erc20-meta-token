@@ -44,13 +44,14 @@ contract('MetaERC20Wrapper', (accounts: string[]) => {
   const txParam = {gasLimit: 4000000}
 
   // Addresses
-  const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000' // Zero address
+  const ZERO_ADDRESS: string = '0x0000000000000000000000000000000000000000' // Zero address
+  const ETH_ADDRESS: string =  '0x0000000000000000000000000000000000000001' // One address
   let receiverAddress: string // Address of receiver
   let userAddress: string     // Address of user
   let tokenAddress: string    // Address of ERC20 token contract
   let tokenID: BigNumber      // BigNumber representation of ERC-20 token address
   let wrapperAddress: string  // Address of wrapper contract
-  let ZERO_ID = new BigNumber(0)
+  let ONE_ID = new BigNumber(1)
 
   // Contracts
   let ownerMetaERC20WrapperContract: MetaERC20Wrapper
@@ -79,7 +80,7 @@ contract('MetaERC20Wrapper', (accounts: string[]) => {
       // Mint tokens to user
       await userERC20Contract.functions.mockMint(userAddress, INIT_BALANCE)
       tokenAddress = userERC20Contract.address   
-      tokenID = new BigNumber(tokenAddress)
+      tokenID = new BigNumber(2)
 
       wrapperAddress = ownerMetaERC20WrapperContract.address
     })
@@ -121,12 +122,27 @@ contract('MetaERC20Wrapper', (accounts: string[]) => {
           it('should REVERT if msg.value is not 0', async () => {
             // @ts-ignore (https://github.com/ethereum-ts/TypeChain/issues/118)
             const tx = userMetaERC20WrapperContract.functions.deposit(tokenAddress, depositAmount, {gasLimit: 1000000, value: 1})
-            await expect(tx).to.be.rejectedWith( RevertError("MetaERC20Wrapper#deposit: INCORRECT_MSG_VALUE") )
+            await expect(tx).to.be.rejectedWith( RevertError("MetaERC20Wrapper#deposit: NON_NULL_MSG_VALUE") )
           })
           
           context('When tokens are deposited', () => {
             beforeEach(async () => {
               await userMetaERC20WrapperContract.functions.deposit(tokenAddress, depositAmount, txParam)
+            })
+
+            it('should increase nTokens value by 1', async () => {
+              const nTokens = await userMetaERC20WrapperContract.functions.getNTokens()
+              expect(nTokens).to.be.eql(new BigNumber(2))
+            })
+
+            it('should set id of token to 2', async () => {
+              const id = await userMetaERC20WrapperContract.functions.getTokenID(tokenAddress)
+              expect(id).to.be.eql(new BigNumber(2))
+            })
+
+            it('should decrease ERC20 balance of user by the right amount', async () => {
+              const balance = await userERC20Contract.functions.balanceOf(userAddress)
+              expect(balance).to.be.eql(new BigNumber(INIT_BALANCE).sub(depositAmount))
             })
 
             it('should decrease ERC20 balance of user by the right amount', async () => {
@@ -140,7 +156,7 @@ contract('MetaERC20Wrapper', (accounts: string[]) => {
             })
 
             it('should increase ERC1155 balance of user by the right amount for given token', async () => {
-              const balance = await userMetaERC20WrapperContract.functions.balanceOf(userAddress, tokenAddress)
+              const balance = await userMetaERC20WrapperContract.functions.balanceOf(userAddress, 2)
               expect(balance).to.be.eql(depositAmount)
             })
             
@@ -153,13 +169,13 @@ contract('MetaERC20Wrapper', (accounts: string[]) => {
         it('should REVERT if msg.value is not equal to value', async () => {
           
           //msg.value is smaller than value
-          let tx = userMetaERC20WrapperContract.functions.deposit(ZERO_ADDRESS, depositAmount, 
+          let tx = userMetaERC20WrapperContract.functions.deposit(ETH_ADDRESS, depositAmount, 
             {gasLimit:1000000, value: depositAmount.sub(1)}
           )
           await expect(tx).to.be.rejectedWith( RevertError("MetaERC20Wrapper#deposit: INCORRECT_MSG_VALUE") )
           
           // Msg.value is larger than value
-          tx = userMetaERC20WrapperContract.functions.deposit(ZERO_ADDRESS, depositAmount, 
+          tx = userMetaERC20WrapperContract.functions.deposit(ETH_ADDRESS, depositAmount, 
             {gasLimit:1000000, value: depositAmount.add(1)}
           )
           await expect(tx).to.be.rejectedWith( RevertError("MetaERC20Wrapper#deposit: INCORRECT_MSG_VALUE") )          
@@ -168,7 +184,7 @@ contract('MetaERC20Wrapper', (accounts: string[]) => {
         it('should PASS if msg.value is equal to value', async () => {
           
           //msg.value is smaller than value
-          let tx = userMetaERC20WrapperContract.functions.deposit(ZERO_ADDRESS, depositAmount, 
+          let tx = userMetaERC20WrapperContract.functions.deposit(ETH_ADDRESS, depositAmount, 
             {gasLimit:1000000, value: depositAmount}
           )
           await expect(tx).to.be.fulfilled
@@ -176,7 +192,7 @@ contract('MetaERC20Wrapper', (accounts: string[]) => {
 
         context('When ETH were deposited', () => {
           beforeEach(async () => {
-            await userMetaERC20WrapperContract.functions.deposit(ZERO_ADDRESS, depositAmount,
+            await userMetaERC20WrapperContract.functions.deposit(ETH_ADDRESS, depositAmount,
               {gasLimit:1000000, value: depositAmount}
             )
           })
@@ -187,7 +203,7 @@ contract('MetaERC20Wrapper', (accounts: string[]) => {
           })
 
           it('should increase ERC1155 balance of user by the right amount for given token', async () => {
-            const balance = await userMetaERC20WrapperContract.functions.balanceOf(userAddress, ZERO_ADDRESS)
+            const balance = await userMetaERC20WrapperContract.functions.balanceOf(userAddress, ETH_ADDRESS)
             expect(balance).to.be.eql(depositAmount)
           })
           
@@ -220,7 +236,7 @@ contract('MetaERC20Wrapper', (accounts: string[]) => {
         })
 
         it('should increase ERC1155 balance of user by the right amount for given token', async () => {
-          const balance = await userMetaERC20WrapperContract.functions.balanceOf(userAddress, ZERO_ADDRESS)
+          const balance = await userMetaERC20WrapperContract.functions.balanceOf(userAddress, ETH_ADDRESS)
           expect(balance).to.be.eql(depositAmount)
         })
 
@@ -288,28 +304,28 @@ contract('MetaERC20Wrapper', (accounts: string[]) => {
 
         beforeEach(async () => {
           // Depositing ETH
-          await userMetaERC20WrapperContract.functions.deposit(ZERO_ADDRESS, depositAmount, 
+          await userMetaERC20WrapperContract.functions.deposit(ETH_ADDRESS, depositAmount, 
             {gasLimit:1000000, value: depositAmount}
           )
         })
 
         it('should REVERT if user does not have sufficient wrapped tokens', async () => {
-          const tx = userMetaERC20WrapperContract.functions.withdraw(ZERO_ADDRESS, userAddress, depositAmount.add(1), txParam)
+          const tx = userMetaERC20WrapperContract.functions.withdraw(ETH_ADDRESS, userAddress, depositAmount.add(1), txParam)
           await expect(tx).to.be.rejectedWith( RevertError("SafeMath#sub: UNDERFLOW") )
         })
 
         it('should REVERT if recipient is 0x0', async () => {
-          const tx = userMetaERC20WrapperContract.functions.withdraw(ZERO_ADDRESS, ZERO_ADDRESS, depositAmount, txParam)
+          const tx = userMetaERC20WrapperContract.functions.withdraw(ETH_ADDRESS, ZERO_ADDRESS, depositAmount, txParam)
           await expect(tx).to.be.rejectedWith( RevertError("MetaERC20Wrapper#withdraw: INVALID_RECIPIENT") )
         })
 
         it('should PASS if user has sufficient wrapped tokens', async () => {
-          const tx = userMetaERC20WrapperContract.functions.withdraw(ZERO_ADDRESS, userAddress, depositAmount, txParam)
+          const tx = userMetaERC20WrapperContract.functions.withdraw(ETH_ADDRESS, userAddress, depositAmount, txParam)
           await expect(tx).to.be.fulfilled
         })
 
         it('should PASS when withdrawing to another address', async () => {
-          const tx = userMetaERC20WrapperContract.functions.withdraw(ZERO_ADDRESS, receiverAddress, depositAmount, txParam)
+          const tx = userMetaERC20WrapperContract.functions.withdraw(ETH_ADDRESS, receiverAddress, depositAmount, txParam)
           await expect(tx).to.be.fulfilled
         })
 
@@ -318,7 +334,7 @@ contract('MetaERC20Wrapper', (accounts: string[]) => {
 
           beforeEach(async () => {
             receiverPreBalance = await provider.getBalance(receiverAddress)
-            await userMetaERC20WrapperContract.functions.withdraw(ZERO_ADDRESS, receiverAddress, depositAmount, txParam)
+            await userMetaERC20WrapperContract.functions.withdraw(ETH_ADDRESS, receiverAddress, depositAmount, txParam)
           })
 
           it('should decrease ETH balance of wrapper contract by the right amount', async () => {
@@ -395,20 +411,20 @@ contract('MetaERC20Wrapper', (accounts: string[]) => {
 
         beforeEach(async () => {
           // Depositing ETH
-          await userMetaERC20WrapperContract.functions.deposit(ZERO_ADDRESS, depositAmount, 
+          await userMetaERC20WrapperContract.functions.deposit(ETH_ADDRESS, depositAmount, 
             {gasLimit:1000000, value: depositAmount}
           )
         })
 
         it('should REVERT if user does not have sufficient wrapped tokens', async () => {
           //@ts-ignore
-          const tx = userMetaERC20WrapperContract.functions.safeTransferFrom(userAddress, wrapperAddress, ZERO_ID, depositAmount.add(1), data)
+          const tx = userMetaERC20WrapperContract.functions.safeTransferFrom(userAddress, wrapperAddress, ONE_ID, depositAmount.add(1), data)
           await expect(tx).to.be.rejectedWith( RevertError("SafeMath#sub: UNDERFLOW") )
         })
 
         it('should PASS if user has sufficient wrapped tokens', async () => {
           //@ts-ignore
-          const tx = userMetaERC20WrapperContract.functions.safeTransferFrom(userAddress, wrapperAddress, ZERO_ID, depositAmount, data)
+          const tx = userMetaERC20WrapperContract.functions.safeTransferFrom(userAddress, wrapperAddress, ONE_ID, depositAmount, data)
           await expect(tx).to.be.fulfilled
         })
 
@@ -418,7 +434,7 @@ contract('MetaERC20Wrapper', (accounts: string[]) => {
           beforeEach(async () => {
             receiverPreBalance = await provider.getBalance(receiverAddress)
             //@ts-ignore
-            await userMetaERC20WrapperContract.functions.safeTransferFrom(userAddress, wrapperAddress, ZERO_ID, depositAmount, data) 
+            await userMetaERC20WrapperContract.functions.safeTransferFrom(userAddress, wrapperAddress, ONE_ID, depositAmount, data) 
           })
 
           it('should decrease ETH balance of wrapper contract by the right amount', async () => {
@@ -455,7 +471,7 @@ contract('MetaERC20Wrapper', (accounts: string[]) => {
         for (let i = 0; i < noTokens; i++) {
           const userERC20Contract = await abstractERC20Mock.deploy(userWallet) as ERC20Mock
           await userERC20Contract.functions.mockMint(userAddress, INIT_BALANCE)
-          tokenIDs.push(new BigNumber(userERC20Contract.address))   
+          tokenIDs.push(new BigNumber(2 + i))
           tokenContracts.push(userERC20Contract)
           depositAmounts.push(depositAmount)
         }

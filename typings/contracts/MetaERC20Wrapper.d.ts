@@ -31,6 +31,10 @@ export class MetaERC20Wrapper extends Contract {
       _sig: (string)[]
     ): Promise<boolean>;
 
+    getTokenID(_token: string): Promise<BigNumber>;
+
+    getIdAddress(_id: number | string | BigNumber): Promise<string>;
+
     safeBatchTransferFrom(
       _from: string,
       _to: string,
@@ -114,6 +118,9 @@ export class MetaERC20Wrapper extends Contract {
       _data: (string)[],
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;
+
+    getETHaddress(): Promise<string>;
+    getNTokens(): Promise<BigNumber>;
   };
   filters: {
     TransferSingle(
