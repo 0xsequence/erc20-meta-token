@@ -86,7 +86,6 @@ contract MetaERC20Wrapper is ERC1155Meta, ERC1155MintBurn {
       }
 
     } else {
-
       require(_value == msg.value, "MetaERC20Wrapper#deposit: INCORRECT_MSG_VALUE");
       id = 1;
     }
@@ -139,8 +138,8 @@ contract MetaERC20Wrapper is ERC1155Meta, ERC1155MintBurn {
       _to.transfer(_value);
     }
 
-  }
 
+  }
   /**
    * @notice Withdraw ERC-20 tokens when receiving their ERC-1155 counterpart
    * @param _operator  The address which called the `safeTransferFrom` function
@@ -197,7 +196,7 @@ contract MetaERC20Wrapper is ERC1155Meta, ERC1155MintBurn {
    */
   function getTokenID(address _token) public view returns (uint256 tokenID) {
     tokenID = addressToID[_token];
-    require(tokenID != 0, "MetaERC20Wrapper#_withdraw: UNREGISTERED_TOKEN");
+    require(tokenID != 0, "MetaERC20Wrapper#getTokenID: UNREGISTERED_TOKEN");
     return tokenID;
   }
 
@@ -208,7 +207,7 @@ contract MetaERC20Wrapper is ERC1155Meta, ERC1155MintBurn {
    */
   function getIdAddress(uint256 _id) public view returns (address token) {
     token = IDtoAddress[_id];
-    require(token != address(0x0), "MetaERC20Wrapper#_withdraw: UNREGISTERED_TOKEN");
+    require(token != address(0x0), "MetaERC20Wrapper#getIdAddress: UNREGISTERED_TOKEN");
     return token;
   }
 

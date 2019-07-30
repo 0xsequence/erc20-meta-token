@@ -8,6 +8,12 @@ import { TransactionOverrides } from ".";
 
 export class IMetaERC20Wrapper extends Contract {
   functions: {
+    getTokenID(_token: string): Promise<void>;
+
+    getIdAddress(_id: number | string | BigNumber): Promise<void>;
+
+    getNTokens(): Promise<void>;
+
     deposit(
       _token: string,
       _value: number | string | BigNumber,
@@ -18,6 +24,24 @@ export class IMetaERC20Wrapper extends Contract {
       _token: string,
       _to: string,
       _value: number | string | BigNumber,
+      overrides?: TransactionOverrides
+    ): Promise<ContractTransaction>;
+
+    onERC1155Received(
+      _operator: string,
+      _from: string,
+      _id: number | string | BigNumber,
+      _value: number | string | BigNumber,
+      _data: (string)[],
+      overrides?: TransactionOverrides
+    ): Promise<ContractTransaction>;
+
+    onERC1155BatchReceived(
+      _operator: string,
+      _from: string,
+      _ids: (number | string | BigNumber)[],
+      _values: (number | string | BigNumber)[],
+      _data: (string)[],
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;
   };

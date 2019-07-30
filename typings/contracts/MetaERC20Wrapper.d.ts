@@ -119,7 +119,6 @@ export class MetaERC20Wrapper extends Contract {
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;
 
-    getETHaddress(): Promise<string>;
     getNTokens(): Promise<BigNumber>;
   };
   filters: {

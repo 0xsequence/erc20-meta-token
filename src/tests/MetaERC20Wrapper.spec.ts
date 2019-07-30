@@ -259,6 +259,11 @@ contract('MetaERC20Wrapper', (accounts: string[]) => {
           await expect(tx).to.be.rejectedWith( RevertError("SafeMath#sub: UNDERFLOW") )
         })
 
+        it('should REVERT if token is not registered', async () => {
+          const tx = userMetaERC20WrapperContract.functions.withdraw(userAddress, userAddress, depositAmount, txParam)
+          await expect(tx).to.be.rejectedWith(RevertError('MetaERC20Wrapper#getTokenID: UNREGISTERED_TOKEN'))
+        })
+
         it('should REVERT if recipient is 0x0', async () => {
           const tx = userMetaERC20WrapperContract.functions.withdraw(tokenAddress, ZERO_ADDRESS, depositAmount, txParam)
           await expect(tx).to.be.rejected;
@@ -373,6 +378,12 @@ contract('MetaERC20Wrapper', (accounts: string[]) => {
           //@ts-ignore
           const tx = userMetaERC20WrapperContract.functions.safeTransferFrom(userAddress, wrapperAddress, tokenID, depositAmount.add(1), data)
           await expect(tx).to.be.rejectedWith( RevertError("SafeMath#sub: UNDERFLOW") )
+        })
+
+        it('should REVERT if token is not registered', async () => {
+          //@ts-ignore
+          const tx = userMetaERC20WrapperContract.functions.safeTransferFrom(userAddress, wrapperAddress, 666, 0, data)
+          await expect(tx).to.be.rejectedWith(RevertError('MetaERC20Wrapper#getIdAddress: UNREGISTERED_TOKEN'))
         })
 
         it('should PASS if user has sufficient wrapped tokens', async () => {
