@@ -91,7 +91,7 @@ contract MetaERC20Wrapper is ERC1155Meta, ERC1155MintBurn {
     }
 
     // Mint meta tokens
-    _mint(msg.sender, id, _value);
+    _mint(msg.sender, id, _value, "");
   }
 
 
