@@ -53,7 +53,7 @@ contract MetaERC20Wrapper is ERC1155Meta, ERC1155MintBurn {
 
   /**
    * @dev Deposit ERC20 tokens or ETH in this contract to receive wrapped ERC20s
-   * @param _token The addess of the token to deposit in this contract
+   * @param _token The address of the token to deposit in this contract
    * @param _value The amount of token to deposit in this contract
    * Note: Users must first approve this contract addres on the contract of the ERC20 to be deposited
    */
@@ -101,7 +101,7 @@ contract MetaERC20Wrapper is ERC1155Meta, ERC1155MintBurn {
 
   /**
    * @dev Withdraw wrapped ERC20 tokens in this contract to receive the original ERC20s or ETH
-   * @param _token The addess of the token to withdrww from this contract
+   * @param _token The addess of the token to withdraw from this contract
    * @param _to The address where the withdrawn tokens will go to
    * @param _value The amount of tokens to withdraw
    */
