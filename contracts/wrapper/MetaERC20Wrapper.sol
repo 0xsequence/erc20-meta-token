@@ -14,10 +14,6 @@ import "multi-token-standard/contracts/tokens/ERC1155/ERC1155MintBurn.sol";
  *
  * TO DO:
  *  - Add 1 tx wrap (via CREATE2)
- *  - Review function descriptions
- *  - Add events
- *  - ERC-1155 receiver 165
- *
  */
 contract MetaERC20Wrapper is ERC1155Meta, ERC1155MintBurn {
 
@@ -31,11 +27,23 @@ contract MetaERC20Wrapper is ERC1155Meta, ERC1155MintBurn {
   bytes4 constant internal ERC1155_RECEIVED_VALUE = 0xf23a6e61;
   bytes4 constant internal ERC1155_BATCH_RECEIVED_VALUE = 0xbc197c81;
 
-  // Register ETH address + ID
+  /***********************************|
+  |               Events              |
+  |__________________________________*/
+
+  event TokenRegistration(address token_address, uint256 token_id);
+
+
+  /***********************************|
+  |            Constructor            |
+  |__________________________________*/
+
+  // Register ETH as ID #1 and address 0x1
   constructor() public {
     addressToID[ETH_ADDRESS] = 1;
     IDtoAddress[1] = ETH_ADDRESS;
   }
+
 
   /***********************************|
   |         Deposit Functions         |
@@ -80,6 +88,9 @@ contract MetaERC20Wrapper is ERC1155Meta, ERC1155MintBurn {
         id = nTokens;             // id of token is the current # of tokens
         IDtoAddress[id] = _token; // Map id to token address
         addressToID[_token] = id; // Register token
+
+        // Emit registration event
+        emit TokenRegistration(_token, id);
 
       } else {
         id = addressId;
@@ -259,6 +270,18 @@ contract MetaERC20Wrapper is ERC1155Meta, ERC1155MintBurn {
     }
 
     return returnValue != 0;
+  }
+
+  /**
+   * @notice Indicates whether a contract implements the `ERC1155TokenReceiver` functions and so can accept ERC1155 token types.
+   * @param  interfaceID The ERC-165 interface ID that is queried for support.s
+   * @dev This function MUST return true if it implements the ERC1155TokenReceiver interface and ERC-165 interface.
+   *      This function MUST NOT consume more than 5,000 gas.
+   * @return Wheter ERC-165 or ERC1155TokenReceiver interfaces are supported.
+   */
+  function supportsInterface(bytes4 interfaceID) external view returns (bool) {
+    return  interfaceID == 0x01ffc9a7 || // ERC-165 support (i.e. `bytes4(keccak256('supportsInterface(bytes4)'))`).
+      interfaceID == 0x4e2312e0;         // ERC-1155 `ERC1155TokenReceiver` support (i.e. `bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)")) ^ bytes4(keccak256("onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)"))`).
   }
 
 }

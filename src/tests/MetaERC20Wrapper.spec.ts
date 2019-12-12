@@ -113,21 +113,20 @@ contract('MetaERC20Wrapper', (accounts: string[]) => {
             await expect(tx).to.be.rejected;
           })
 
-          it('should PASS if user has sufficient funds', async () => {
-            // @ts-ignore (https://github.com/ethereum-ts/TypeChain/issues/118)
-            const tx = userMetaERC20WrapperContract.functions.deposit(tokenAddress, depositAmount, txParam)
-            await expect(tx).to.be.fulfilled
-          })
-
           it('should REVERT if msg.value is not 0', async () => {
-            // @ts-ignore (https://github.com/ethereum-ts/TypeChain/issues/118)
             const tx = userMetaERC20WrapperContract.functions.deposit(tokenAddress, depositAmount, {gasLimit: 1000000, value: 1})
             await expect(tx).to.be.rejectedWith( RevertError("MetaERC20Wrapper#deposit: NON_NULL_MSG_VALUE") )
           })
+
+          it('should PASS if user has sufficient funds', async () => {
+            const tx = userMetaERC20WrapperContract.functions.deposit(tokenAddress, depositAmount, txParam)
+            await expect(tx).to.be.fulfilled
+          })
           
           context('When tokens are deposited', () => {
+            let tx;
             beforeEach(async () => {
-              await userMetaERC20WrapperContract.functions.deposit(tokenAddress, depositAmount, txParam)
+              tx = await userMetaERC20WrapperContract.functions.deposit(tokenAddress, depositAmount, txParam)
             })
 
             it('should increase nTokens value by 1', async () => {
@@ -159,7 +158,36 @@ contract('MetaERC20Wrapper', (accounts: string[]) => {
               const balance = await userMetaERC20WrapperContract.functions.balanceOf(userAddress, 2)
               expect(balance).to.be.eql(depositAmount)
             })
-            
+
+            it('should emit a TokenRegistration events for new token', async () => {
+              const receipt = await tx.wait(1)
+              const ev = receipt.events[2]
+              expect(ev.event).to.be.eql('TokenRegistration')
+            })
+
+            it('should have token address as `token_address` field in TokenRegistration event', async () => {
+              const receipt = await tx.wait(1)
+              const ev = receipt.events[2]
+              const args = ev.args! as any
+              expect(args.token_address).to.be.eql(tokenAddress)
+            })
+
+            it('should have 2 as `token_id` field in TokenRegistration event', async () => {
+              const receipt = await tx.wait(1)
+              const ev = receipt.events[2]
+              const args = ev.args! as any
+              expect(args.token_id).to.be.eql(new BigNumber(2))
+            })
+
+            it('should NOT emit a TokenRegistration events for already registered token', async () => {
+              let tx2 = await userMetaERC20WrapperContract.functions.deposit(tokenAddress, depositAmount, txParam)
+              const receipt = await tx2.wait(1)
+              const events = receipt.events!
+
+              for (let i = 0; i < events.length; i++) {
+                expect(events[i].event).to.be.not.eql('TokenRegistration')
+              }
+            })
           })
         })    
       })
@@ -191,8 +219,9 @@ contract('MetaERC20Wrapper', (accounts: string[]) => {
         })
 
         context('When ETH were deposited', () => {
+          let tx
           beforeEach(async () => {
-            await userMetaERC20WrapperContract.functions.deposit(ETH_ADDRESS, depositAmount,
+            tx = await userMetaERC20WrapperContract.functions.deposit(ETH_ADDRESS, depositAmount,
               {gasLimit:1000000, value: depositAmount}
             )
           })
@@ -205,6 +234,15 @@ contract('MetaERC20Wrapper', (accounts: string[]) => {
           it('should increase ERC1155 balance of user by the right amount for given token', async () => {
             const balance = await userMetaERC20WrapperContract.functions.balanceOf(userAddress, ETH_ADDRESS)
             expect(balance).to.be.eql(depositAmount)
+          })
+
+          it('should NOT emit a TokenRegistration event', async () => {
+            const receipt = await tx.wait(1)
+            const events = receipt.events!
+
+            for (let i = 0; i < events.length; i++) {
+              expect(events[i].event).to.be.not.eql('TokenRegistration')
+            }
           })
           
         })

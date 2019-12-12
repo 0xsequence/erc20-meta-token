@@ -110,6 +110,10 @@ interface MetaERC20WrapperInterface extends Interface {
       encodeTopics([signer, newNonce]: [string | null, null]): string[];
     }>;
 
+    TokenRegistration: TypedEventDescription<{
+      encodeTopics([token_address, token_id]: [null, null]): string[];
+    }>;
+
     TransferBatch: TypedEventDescription<{
       encodeTopics([_operator, _from, _to, _ids, _amounts]: [
         string | null,
@@ -171,11 +175,11 @@ export class MetaERC20Wrapper extends Contract {
       _sig: Arrayish
     ): Promise<boolean>;
 
-    supportsInterface(_interfaceID: Arrayish): Promise<boolean>;
-
     getTokenID(_token: string): Promise<BigNumber>;
 
     getIdAddress(_id: BigNumberish): Promise<string>;
+
+    supportsInterface(interfaceID: Arrayish): Promise<boolean>;
 
     metaSafeBatchTransferFrom(
       _from: string,
@@ -272,6 +276,8 @@ export class MetaERC20Wrapper extends Contract {
     ): EventFilter;
 
     NonceChange(signer: string | null, newNonce: null): EventFilter;
+
+    TokenRegistration(token_address: null, token_id: null): EventFilter;
 
     TransferBatch(
       _operator: string | null,
