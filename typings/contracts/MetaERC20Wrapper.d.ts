@@ -12,20 +12,6 @@ import {
 
 interface MetaERC20WrapperInterface extends Interface {
   functions: {
-    safeBatchTransferFrom: TypedFunctionDescription<{
-      encode([_from, _to, _ids, _amounts, _data]: [
-        string,
-        string,
-        (BigNumberish)[],
-        (BigNumberish)[],
-        Arrayish
-      ]): string;
-    }>;
-
-    setApprovalForAll: TypedFunctionDescription<{
-      encode([_operator, _approved]: [string, boolean]): string;
-    }>;
-
     metaSafeBatchTransferFrom: TypedFunctionDescription<{
       encode([_from, _to, _ids, _amounts, _isGasFee, _data]: [
         string,
@@ -48,6 +34,26 @@ interface MetaERC20WrapperInterface extends Interface {
       ]): string;
     }>;
 
+    metaSetApprovalForAll: TypedFunctionDescription<{
+      encode([_owner, _operator, _approved, _isGasFee, _data]: [
+        string,
+        string,
+        boolean,
+        boolean,
+        Arrayish
+      ]): string;
+    }>;
+
+    safeBatchTransferFrom: TypedFunctionDescription<{
+      encode([_from, _to, _ids, _amounts, _data]: [
+        string,
+        string,
+        (BigNumberish)[],
+        (BigNumberish)[],
+        Arrayish
+      ]): string;
+    }>;
+
     safeTransferFrom: TypedFunctionDescription<{
       encode([_from, _to, _id, _amount, _data]: [
         string,
@@ -58,14 +64,8 @@ interface MetaERC20WrapperInterface extends Interface {
       ]): string;
     }>;
 
-    metaSetApprovalForAll: TypedFunctionDescription<{
-      encode([_owner, _operator, _approved, _isGasFee, _data]: [
-        string,
-        string,
-        boolean,
-        boolean,
-        Arrayish
-      ]): string;
+    setApprovalForAll: TypedFunctionDescription<{
+      encode([_operator, _approved]: [string, boolean]): string;
     }>;
 
     deposit: TypedFunctionDescription<{
@@ -98,14 +98,16 @@ interface MetaERC20WrapperInterface extends Interface {
   };
 
   events: {
-    TransferSingle: TypedEventDescription<{
-      encodeTopics([_operator, _from, _to, _id, _amount]: [
+    ApprovalForAll: TypedEventDescription<{
+      encodeTopics([_owner, _operator, _approved]: [
         string | null,
         string | null,
-        string | null,
-        null,
         null
       ]): string[];
+    }>;
+
+    NonceChange: TypedEventDescription<{
+      encodeTopics([signer, newNonce]: [string | null, null]): string[];
     }>;
 
     TransferBatch: TypedEventDescription<{
@@ -118,10 +120,12 @@ interface MetaERC20WrapperInterface extends Interface {
       ]): string[];
     }>;
 
-    ApprovalForAll: TypedEventDescription<{
-      encodeTopics([_owner, _operator, _approved]: [
+    TransferSingle: TypedEventDescription<{
+      encodeTopics([_operator, _from, _to, _id, _amount]: [
         string | null,
         string | null,
+        string | null,
+        null,
         null
       ]): string[];
     }>;
@@ -151,14 +155,12 @@ export class MetaERC20Wrapper extends Contract {
   functions: {
     balanceOf(_owner: string, _id: BigNumberish): Promise<BigNumber>;
 
-    supportsInterface(_interfaceID: Arrayish): Promise<boolean>;
-
-    getNonce(_signer: string): Promise<BigNumber>;
-
     balanceOfBatch(
       _owners: (string)[],
       _ids: (BigNumberish)[]
     ): Promise<(BigNumber)[]>;
+
+    getNonce(_signer: string): Promise<BigNumber>;
 
     isApprovedForAll(_owner: string, _operator: string): Promise<boolean>;
 
@@ -169,24 +171,11 @@ export class MetaERC20Wrapper extends Contract {
       _sig: Arrayish
     ): Promise<boolean>;
 
+    supportsInterface(_interfaceID: Arrayish): Promise<boolean>;
+
     getTokenID(_token: string): Promise<BigNumber>;
 
     getIdAddress(_id: BigNumberish): Promise<string>;
-
-    safeBatchTransferFrom(
-      _from: string,
-      _to: string,
-      _ids: (BigNumberish)[],
-      _amounts: (BigNumberish)[],
-      _data: Arrayish,
-      overrides?: TransactionOverrides
-    ): Promise<ContractTransaction>;
-
-    setApprovalForAll(
-      _operator: string,
-      _approved: boolean,
-      overrides?: TransactionOverrides
-    ): Promise<ContractTransaction>;
 
     metaSafeBatchTransferFrom(
       _from: string,
@@ -208,6 +197,24 @@ export class MetaERC20Wrapper extends Contract {
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;
 
+    metaSetApprovalForAll(
+      _owner: string,
+      _operator: string,
+      _approved: boolean,
+      _isGasFee: boolean,
+      _data: Arrayish,
+      overrides?: TransactionOverrides
+    ): Promise<ContractTransaction>;
+
+    safeBatchTransferFrom(
+      _from: string,
+      _to: string,
+      _ids: (BigNumberish)[],
+      _amounts: (BigNumberish)[],
+      _data: Arrayish,
+      overrides?: TransactionOverrides
+    ): Promise<ContractTransaction>;
+
     safeTransferFrom(
       _from: string,
       _to: string,
@@ -217,12 +224,9 @@ export class MetaERC20Wrapper extends Contract {
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;
 
-    metaSetApprovalForAll(
-      _owner: string,
+    setApprovalForAll(
       _operator: string,
       _approved: boolean,
-      _isGasFee: boolean,
-      _data: Arrayish,
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;
 
@@ -261,13 +265,13 @@ export class MetaERC20Wrapper extends Contract {
   };
 
   filters: {
-    TransferSingle(
+    ApprovalForAll(
+      _owner: string | null,
       _operator: string | null,
-      _from: string | null,
-      _to: string | null,
-      _id: null,
-      _amount: null
+      _approved: null
     ): EventFilter;
+
+    NonceChange(signer: string | null, newNonce: null): EventFilter;
 
     TransferBatch(
       _operator: string | null,
@@ -277,29 +281,18 @@ export class MetaERC20Wrapper extends Contract {
       _amounts: null
     ): EventFilter;
 
-    ApprovalForAll(
-      _owner: string | null,
+    TransferSingle(
       _operator: string | null,
-      _approved: null
+      _from: string | null,
+      _to: string | null,
+      _id: null,
+      _amount: null
     ): EventFilter;
 
     URI(_uri: null, _id: BigNumberish | null): EventFilter;
   };
 
   estimate: {
-    safeBatchTransferFrom(
-      _from: string,
-      _to: string,
-      _ids: (BigNumberish)[],
-      _amounts: (BigNumberish)[],
-      _data: Arrayish
-    ): Promise<BigNumber>;
-
-    setApprovalForAll(
-      _operator: string,
-      _approved: boolean
-    ): Promise<BigNumber>;
-
     metaSafeBatchTransferFrom(
       _from: string,
       _to: string,
@@ -318,6 +311,22 @@ export class MetaERC20Wrapper extends Contract {
       _data: Arrayish
     ): Promise<BigNumber>;
 
+    metaSetApprovalForAll(
+      _owner: string,
+      _operator: string,
+      _approved: boolean,
+      _isGasFee: boolean,
+      _data: Arrayish
+    ): Promise<BigNumber>;
+
+    safeBatchTransferFrom(
+      _from: string,
+      _to: string,
+      _ids: (BigNumberish)[],
+      _amounts: (BigNumberish)[],
+      _data: Arrayish
+    ): Promise<BigNumber>;
+
     safeTransferFrom(
       _from: string,
       _to: string,
@@ -326,12 +335,9 @@ export class MetaERC20Wrapper extends Contract {
       _data: Arrayish
     ): Promise<BigNumber>;
 
-    metaSetApprovalForAll(
-      _owner: string,
+    setApprovalForAll(
       _operator: string,
-      _approved: boolean,
-      _isGasFee: boolean,
-      _data: Arrayish
+      _approved: boolean
     ): Promise<BigNumber>;
 
     deposit(_token: string, _value: BigNumberish): Promise<BigNumber>;
