@@ -11,17 +11,15 @@ import "multi-token-standard/contracts/tokens/ERC1155/ERC1155MintBurn.sol";
  *   of corresponding ERC-1155 tokens with native metaTransaction methods. Each
  *   ERC-20 is assigned an ERC-1155 id for more efficient CALLDATA usage when
  *   doing transfers.
- *
- * TO DO:
- *  - Add 1 tx wrap (via CREATE2)
  */
 contract MetaERC20Wrapper is ERC1155Meta, ERC1155MintBurn {
 
   // Variables
-  uint256 internal nTokens = 1;                      // Number of ERC-20 tokens registered
-  address internal ETH_ADDRESS = address(0x1);       // Address for tokens representing Ether is 0x00...01
-  mapping (address => uint256) internal addressToID; // Maps the ERC-20 addresses to their metaERC20 id
-  mapping (uint256 => address) internal IDtoAddress; // Maps the metaERC20 ids to their ERC-20 address
+  uint256 internal nTokens = 1;                         // Number of ERC-20 tokens registered
+  uint256 constant internal ETH_ID = 0x1;               // Address for tokens representing Ether is 0x00...01
+  address constant internal ETH_ADDRESS = address(0x1); // Address for tokens representing Ether is 0x00...01
+  mapping (address => uint256) internal addressToID;    // Maps the ERC-20 addresses to their metaERC20 id
+  mapping (uint256 => address) internal IDtoAddress;    // Maps the metaERC20 ids to their ERC-20 address
 
   // onReceive function signatures
   bytes4 constant internal ERC1155_RECEIVED_VALUE = 0xf23a6e61;
@@ -40,8 +38,8 @@ contract MetaERC20Wrapper is ERC1155Meta, ERC1155MintBurn {
 
   // Register ETH as ID #1 and address 0x1
   constructor() public {
-    addressToID[ETH_ADDRESS] = 1;
-    IDtoAddress[1] = ETH_ADDRESS;
+    addressToID[ETH_ADDRESS] = ETH_ID;
+    IDtoAddress[ETH_ID] = ETH_ADDRESS;
   }
 
 
@@ -98,7 +96,7 @@ contract MetaERC20Wrapper is ERC1155Meta, ERC1155MintBurn {
 
     } else {
       require(_value == msg.value, "MetaERC20Wrapper#deposit: INCORRECT_MSG_VALUE");
-      id = 1;
+      id = ETH_ID;
     }
 
     // Mint meta tokens
@@ -139,7 +137,7 @@ contract MetaERC20Wrapper is ERC1155Meta, ERC1155MintBurn {
     _burn(_from, _tokenID, _value);
 
      // Withdraw ERC-20 tokens or ETH
-    if (_tokenID != 1) {
+    if (_tokenID != ETH_ID) {
       address token = IDtoAddress[_tokenID];
       IERC20(token).transfer(_to, _value);
       require(checkSuccess(), "MetaERC20Wrapper#withdraw: TRANSFER_FAILED");
@@ -276,7 +274,7 @@ contract MetaERC20Wrapper is ERC1155Meta, ERC1155MintBurn {
    * @notice Indicates whether a contract implements the `ERC1155TokenReceiver` functions and so can accept ERC1155 token types.
    * @param  interfaceID The ERC-165 interface ID that is queried for support.s
    * @dev This function MUST return true if it implements the ERC1155TokenReceiver interface and ERC-165 interface.
-   *      This function MUST NOT consume more than 5,000 gas.
+   *      This function MUST NOT consume more thsan 5,000 gas.
    * @return Wheter ERC-165 or ERC1155TokenReceiver interfaces are supported.
    */
   function supportsInterface(bytes4 interfaceID) external view returns (bool) {

@@ -85,6 +85,20 @@ contract('MetaERC20Wrapper', (accounts: string[]) => {
       wrapperAddress = ownerMetaERC20WrapperContract.address
     })
 
+    describe('getter functions', () => {
+      describe('supportsInterface()', () => {
+        it('should return true for 0x01ffc9a7 (ERC165)', async () => {
+          const support = await ownerMetaERC20WrapperContract.functions.supportsInterface('0x01ffc9a7')
+          expect(support).to.be.eql(true)
+        })
+  
+        it('should return true for 0x4e2312e0 (ERC1155Receiver)', async () => {
+          const support = await ownerMetaERC20WrapperContract.functions.supportsInterface('0x4e2312e0')
+          expect(support).to.be.eql(true)
+        })
+      })
+    })
+
     describe('deposit() function', () => {
 
       const depositAmount = new BigNumber(20)
