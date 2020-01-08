@@ -152,14 +152,12 @@ contract MetaERC20Wrapper is ERC1155Meta, ERC1155MintBurn {
   }
   /**
    * @notice Withdraw ERC-20 tokens when receiving their ERC-1155 counterpart
-   * @param _operator  The address which called the `safeTransferFrom` function
    * @param _from      The address which previously owned the token
    * @param _id        The id of the token being transferred
    * @param _value     The amount of tokens being transferred
-   * @param _data      Additional data with no specified format
-   * @return           `bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)"))`
+   * @return `bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)"))`
    */
-  function onERC1155Received(address _operator, address payable _from, uint256 _id, uint256 _value, bytes memory _data )
+  function onERC1155Received(address, address payable _from, uint256 _id, uint256 _value, bytes memory)
     public returns(bytes4)
   {
     // Only ERC-1155 from this contract are valid
@@ -174,14 +172,12 @@ contract MetaERC20Wrapper is ERC1155Meta, ERC1155MintBurn {
 
   /**
    * @notice Withdraw ERC-20 tokens when receiving their ERC-1155 counterpart
-   * @param _operator  The address which called the `safeBatchTransferFrom` function
    * @param _from      The address which previously owned the token
    * @param _ids       An array containing ids of each token being transferred
    * @param _values    An array containing amounts of each token being transferred
-   * @param _data      Additional data with no specified format
-   * @return           `bytes4(keccak256("onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)"))`
+   * @return `bytes4(keccak256("onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)"))`
    */
-  function onERC1155BatchReceived(address _operator, address payable _from, uint256[] memory _ids, uint256[] memory _values, bytes memory _data)
+  function onERC1155BatchReceived(address, address payable _from, uint256[] memory _ids, uint256[] memory _values, bytes memory)
     public returns(bytes4)
   {
     // Only ERC-1155 from this contract are valid

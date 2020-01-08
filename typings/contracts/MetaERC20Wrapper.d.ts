@@ -77,7 +77,7 @@ interface MetaERC20WrapperInterface extends Interface {
     }>;
 
     onERC1155Received: TypedFunctionDescription<{
-      encode([_operator, _from, _id, _value, _data]: [
+      encode([, _from, _id, _value]: [
         string,
         string,
         BigNumberish,
@@ -87,7 +87,7 @@ interface MetaERC20WrapperInterface extends Interface {
     }>;
 
     onERC1155BatchReceived: TypedFunctionDescription<{
-      encode([_operator, _from, _ids, _values, _data]: [
+      encode([, _from, _ids, _values]: [
         string,
         string,
         (BigNumberish)[],
@@ -248,20 +248,20 @@ export class MetaERC20Wrapper extends Contract {
     ): Promise<ContractTransaction>;
 
     onERC1155Received(
-      _operator: string,
+      arg0: string,
       _from: string,
       _id: BigNumberish,
       _value: BigNumberish,
-      _data: Arrayish,
+      arg4: Arrayish,
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;
 
     onERC1155BatchReceived(
-      _operator: string,
+      arg0: string,
       _from: string,
       _ids: (BigNumberish)[],
       _values: (BigNumberish)[],
-      _data: Arrayish,
+      arg4: Arrayish,
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;
 
@@ -355,19 +355,19 @@ export class MetaERC20Wrapper extends Contract {
     ): Promise<BigNumber>;
 
     onERC1155Received(
-      _operator: string,
+      arg0: string,
       _from: string,
       _id: BigNumberish,
       _value: BigNumberish,
-      _data: Arrayish
+      arg4: Arrayish
     ): Promise<BigNumber>;
 
     onERC1155BatchReceived(
-      _operator: string,
+      arg0: string,
       _from: string,
       _ids: (BigNumberish)[],
       _values: (BigNumberish)[],
-      _data: Arrayish
+      arg4: Arrayish
     ): Promise<BigNumber>;
   };
 }
