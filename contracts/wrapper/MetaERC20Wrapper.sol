@@ -1,4 +1,4 @@
-pragma solidity ^0.5.9;
+pragma solidity ^0.5.16;
 pragma experimental ABIEncoderV2;
 
 import "multi-token-standard/contracts/interfaces/IERC20.sol";
@@ -144,7 +144,8 @@ contract MetaERC20Wrapper is ERC1155Meta, ERC1155MintBurn {
 
     } else {
       require(_to != address(0), "MetaERC20Wrapper#withdraw: INVALID_RECIPIENT");
-      _to.transfer(_value);
+      (bool success, ) = _to.call.value(_value)("");
+      require(success, "MetaERC20Wrapper#withdraw: TRANSFER_FAILED");
     }
 
 
