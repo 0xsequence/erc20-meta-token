@@ -1,6 +1,6 @@
 {
   "name": "erc20-meta-wrapper",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "General Meta Transaction Wrapper Contract for ERC20s",
   "repository": "https://github.com/horizon-games/ERC20-meta-wrapper",
   "license": "MIT",
@@ -66,6 +66,6 @@
     "typescript": "3.7.3"
   },
   "dependencies": {
-    "multi-token-standard": "^0.8.9"
+    "multi-token-standard": "^0.8.10"
   }
 }
