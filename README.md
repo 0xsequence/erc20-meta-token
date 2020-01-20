@@ -25,10 +25,11 @@ contract ContractA {
 
 # Dev / running the tests
 
-1. Install node v11 and yarn (npm install -g yarn)
+1. Install node v11, yarn (npm install -g yarn) and truffle (npm install -g truffle)
 2. `yarn install`
-3. `yarn ganache`
-4. in another terminal run, `yarn test` - executes test suite
+3. `truffle compile`
+4. `yarn ganache`
+5. in another terminal run, `yarn test` - executes test suite
 
 # How does it work?
 
