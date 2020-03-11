@@ -1,5 +1,5 @@
 {
-  "name": "erc20-meta-wrapper",
+  "name": "erc20-meta-token",
   "version": "0.2.2",
   "description": "General Meta Transaction Wrapper Contract for ERC20s",
   "repository": "https://github.com/horizon-games/ERC20-meta-wrapper",
