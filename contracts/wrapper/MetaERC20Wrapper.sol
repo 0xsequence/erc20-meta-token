@@ -50,7 +50,7 @@ contract MetaERC20Wrapper is ERC1155Meta, ERC1155MintBurn {
    * @dev Deposit ETH in this contract to receive wrapped ETH
    * No parameters provided
    */
-  fallback () external payable {
+  receive () external payable {
     // Deposit ETH sent with transaction
     deposit(ETH_ADDRESS, msg.sender, msg.value);
   }
