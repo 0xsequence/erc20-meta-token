@@ -12,6 +12,29 @@ import {
 
 interface MetaERC20WrapperInterface extends Interface {
   functions: {
+    balanceOf: TypedFunctionDescription<{
+      encode([_owner, _id]: [string, BigNumberish]): string;
+    }>;
+
+    balanceOfBatch: TypedFunctionDescription<{
+      encode([_owners, _ids]: [(string)[], (BigNumberish)[]]): string;
+    }>;
+
+    getNonce: TypedFunctionDescription<{ encode([_signer]: [string]): string }>;
+
+    isApprovedForAll: TypedFunctionDescription<{
+      encode([_owner, _operator]: [string, string]): string;
+    }>;
+
+    isValidSignature: TypedFunctionDescription<{
+      encode([_signerAddress, _hash, _data, _sig]: [
+        string,
+        Arrayish,
+        Arrayish,
+        Arrayish
+      ]): string;
+    }>;
+
     metaSafeBatchTransferFrom: TypedFunctionDescription<{
       encode([_from, _to, _ids, _amounts, _isGasFee, _data]: [
         string,
@@ -99,6 +122,20 @@ interface MetaERC20WrapperInterface extends Interface {
         Arrayish
       ]): string;
     }>;
+
+    getTokenID: TypedFunctionDescription<{
+      encode([_token]: [string]): string;
+    }>;
+
+    getIdAddress: TypedFunctionDescription<{
+      encode([_id]: [BigNumberish]): string;
+    }>;
+
+    getNTokens: TypedFunctionDescription<{ encode([]: []): string }>;
+
+    supportsInterface: TypedFunctionDescription<{
+      encode([interfaceID]: [Arrayish]): string;
+    }>;
   };
 
   events: {
@@ -179,12 +216,6 @@ export class MetaERC20Wrapper extends Contract {
       _sig: Arrayish
     ): Promise<boolean>;
 
-    getTokenID(_token: string): Promise<BigNumber>;
-
-    getIdAddress(_id: BigNumberish): Promise<string>;
-
-    supportsInterface(interfaceID: Arrayish): Promise<boolean>;
-
     metaSafeBatchTransferFrom(
       _from: string,
       _to: string,
@@ -270,8 +301,125 @@ export class MetaERC20Wrapper extends Contract {
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;
 
+    getTokenID(_token: string): Promise<BigNumber>;
+
+    getIdAddress(_id: BigNumberish): Promise<string>;
+
     getNTokens(): Promise<BigNumber>;
+
+    supportsInterface(interfaceID: Arrayish): Promise<boolean>;
   };
+
+  balanceOf(_owner: string, _id: BigNumberish): Promise<BigNumber>;
+
+  balanceOfBatch(
+    _owners: (string)[],
+    _ids: (BigNumberish)[]
+  ): Promise<(BigNumber)[]>;
+
+  getNonce(_signer: string): Promise<BigNumber>;
+
+  isApprovedForAll(_owner: string, _operator: string): Promise<boolean>;
+
+  isValidSignature(
+    _signerAddress: string,
+    _hash: Arrayish,
+    _data: Arrayish,
+    _sig: Arrayish
+  ): Promise<boolean>;
+
+  metaSafeBatchTransferFrom(
+    _from: string,
+    _to: string,
+    _ids: (BigNumberish)[],
+    _amounts: (BigNumberish)[],
+    _isGasFee: boolean,
+    _data: Arrayish,
+    overrides?: TransactionOverrides
+  ): Promise<ContractTransaction>;
+
+  metaSafeTransferFrom(
+    _from: string,
+    _to: string,
+    _id: BigNumberish,
+    _amount: BigNumberish,
+    _isGasFee: boolean,
+    _data: Arrayish,
+    overrides?: TransactionOverrides
+  ): Promise<ContractTransaction>;
+
+  metaSetApprovalForAll(
+    _owner: string,
+    _operator: string,
+    _approved: boolean,
+    _isGasFee: boolean,
+    _data: Arrayish,
+    overrides?: TransactionOverrides
+  ): Promise<ContractTransaction>;
+
+  safeBatchTransferFrom(
+    _from: string,
+    _to: string,
+    _ids: (BigNumberish)[],
+    _amounts: (BigNumberish)[],
+    _data: Arrayish,
+    overrides?: TransactionOverrides
+  ): Promise<ContractTransaction>;
+
+  safeTransferFrom(
+    _from: string,
+    _to: string,
+    _id: BigNumberish,
+    _amount: BigNumberish,
+    _data: Arrayish,
+    overrides?: TransactionOverrides
+  ): Promise<ContractTransaction>;
+
+  setApprovalForAll(
+    _operator: string,
+    _approved: boolean,
+    overrides?: TransactionOverrides
+  ): Promise<ContractTransaction>;
+
+  deposit(
+    _token: string,
+    _recipient: string,
+    _value: BigNumberish,
+    overrides?: TransactionOverrides
+  ): Promise<ContractTransaction>;
+
+  withdraw(
+    _token: string,
+    _to: string,
+    _value: BigNumberish,
+    overrides?: TransactionOverrides
+  ): Promise<ContractTransaction>;
+
+  onERC1155Received(
+    arg0: string,
+    _from: string,
+    _id: BigNumberish,
+    _value: BigNumberish,
+    arg4: Arrayish,
+    overrides?: TransactionOverrides
+  ): Promise<ContractTransaction>;
+
+  onERC1155BatchReceived(
+    arg0: string,
+    _from: string,
+    _ids: (BigNumberish)[],
+    _values: (BigNumberish)[],
+    arg4: Arrayish,
+    overrides?: TransactionOverrides
+  ): Promise<ContractTransaction>;
+
+  getTokenID(_token: string): Promise<BigNumber>;
+
+  getIdAddress(_id: BigNumberish): Promise<string>;
+
+  getNTokens(): Promise<BigNumber>;
+
+  supportsInterface(interfaceID: Arrayish): Promise<boolean>;
 
   filters: {
     ApprovalForAll(
@@ -304,6 +452,24 @@ export class MetaERC20Wrapper extends Contract {
   };
 
   estimate: {
+    balanceOf(_owner: string, _id: BigNumberish): Promise<BigNumber>;
+
+    balanceOfBatch(
+      _owners: (string)[],
+      _ids: (BigNumberish)[]
+    ): Promise<BigNumber>;
+
+    getNonce(_signer: string): Promise<BigNumber>;
+
+    isApprovedForAll(_owner: string, _operator: string): Promise<BigNumber>;
+
+    isValidSignature(
+      _signerAddress: string,
+      _hash: Arrayish,
+      _data: Arrayish,
+      _sig: Arrayish
+    ): Promise<BigNumber>;
+
     metaSafeBatchTransferFrom(
       _from: string,
       _to: string,
@@ -378,5 +544,13 @@ export class MetaERC20Wrapper extends Contract {
       _values: (BigNumberish)[],
       arg4: Arrayish
     ): Promise<BigNumber>;
+
+    getTokenID(_token: string): Promise<BigNumber>;
+
+    getIdAddress(_id: BigNumberish): Promise<BigNumber>;
+
+    getNTokens(): Promise<BigNumber>;
+
+    supportsInterface(interfaceID: Arrayish): Promise<BigNumber>;
   };
 }

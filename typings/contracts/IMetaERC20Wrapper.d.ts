@@ -20,6 +20,16 @@ interface IMetaERC20WrapperInterface extends Interface {
       encode([_token, _to, _value]: [string, string, BigNumberish]): string;
     }>;
 
+    getTokenID: TypedFunctionDescription<{
+      encode([_token]: [string]): string;
+    }>;
+
+    getIdAddress: TypedFunctionDescription<{
+      encode([_id]: [BigNumberish]): string;
+    }>;
+
+    getNTokens: TypedFunctionDescription<{ encode([]: []): string }>;
+
     onERC1155Received: TypedFunctionDescription<{
       encode([_operator, _from, _id, _value, _data]: [
         string,
@@ -61,12 +71,6 @@ export class IMetaERC20Wrapper extends Contract {
   interface: IMetaERC20WrapperInterface;
 
   functions: {
-    getTokenID(_token: string): Promise<void>;
-
-    getIdAddress(_id: BigNumberish): Promise<void>;
-
-    getNTokens(): Promise<void>;
-
     deposit(
       _token: string,
       _value: BigNumberish,
@@ -79,6 +83,12 @@ export class IMetaERC20Wrapper extends Contract {
       _value: BigNumberish,
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;
+
+    getTokenID(_token: string): Promise<BigNumber>;
+
+    getIdAddress(_id: BigNumberish): Promise<string>;
+
+    getNTokens(): Promise<void>;
 
     onERC1155Received(
       _operator: string,
@@ -99,6 +109,43 @@ export class IMetaERC20Wrapper extends Contract {
     ): Promise<ContractTransaction>;
   };
 
+  deposit(
+    _token: string,
+    _value: BigNumberish,
+    overrides?: TransactionOverrides
+  ): Promise<ContractTransaction>;
+
+  withdraw(
+    _token: string,
+    _to: string,
+    _value: BigNumberish,
+    overrides?: TransactionOverrides
+  ): Promise<ContractTransaction>;
+
+  getTokenID(_token: string): Promise<BigNumber>;
+
+  getIdAddress(_id: BigNumberish): Promise<string>;
+
+  getNTokens(): Promise<void>;
+
+  onERC1155Received(
+    _operator: string,
+    _from: string,
+    _id: BigNumberish,
+    _value: BigNumberish,
+    _data: Arrayish,
+    overrides?: TransactionOverrides
+  ): Promise<ContractTransaction>;
+
+  onERC1155BatchReceived(
+    _operator: string,
+    _from: string,
+    _ids: (BigNumberish)[],
+    _values: (BigNumberish)[],
+    _data: Arrayish,
+    overrides?: TransactionOverrides
+  ): Promise<ContractTransaction>;
+
   filters: {};
 
   estimate: {
@@ -109,6 +156,12 @@ export class IMetaERC20Wrapper extends Contract {
       _to: string,
       _value: BigNumberish
     ): Promise<BigNumber>;
+
+    getTokenID(_token: string): Promise<BigNumber>;
+
+    getIdAddress(_id: BigNumberish): Promise<BigNumber>;
+
+    getNTokens(): Promise<BigNumber>;
 
     onERC1155Received(
       _operator: string,

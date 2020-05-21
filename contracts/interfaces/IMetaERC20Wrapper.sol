@@ -1,4 +1,4 @@
-pragma solidity ^0.5.16;
+pragma solidity ^0.6.8;
 
 interface IMetaERC20Wrapper {
 
@@ -11,7 +11,7 @@ interface IMetaERC20Wrapper {
    * @dev Deposit ETH in this contract to receive wrapped ETH
    * No parameters provided
    */
-  function() external payable;
+  fallback () external payable;
 
   /**
    * @dev Deposit ERC20 tokens or ETH in this contract to receive wrapped ERC20s
@@ -42,16 +42,16 @@ interface IMetaERC20Wrapper {
   /**
    * @notice Return the Meta-ERC20 token ID for the given ERC-20 token address
    * @param _token ERC-20 token address to get the corresponding Meta-ERC20 token ID
-   * @return Meta-ERC20 token ID
+   * @return tokenID Meta-ERC20 token ID
    */
-  function getTokenID(address _token) external view;
+  function getTokenID(address _token) external view returns (uint256 tokenID);
 
   /**
    * @notice Return the ERC-20 token address for the given Meta-ERC20 token ID
    * @param _id Meta-ERC20 token ID to get the corresponding ERC-20 token address
-   * @return ERC-20 token address
+   * @return token ERC-20 token address
    */
-  function getIdAddress(uint256 _id) external view;
+  function getIdAddress(uint256 _id) external view returns (address token) ;
 
   /**
    * @notice Returns number of tokens currently registered
@@ -72,7 +72,7 @@ interface IMetaERC20Wrapper {
    * @param _data      Additional data with no specified format
    * @return           `bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)"))`
    */
-  function onERC1155Received(address _operator, address payable _from, uint256 _id, uint256 _value, bytes calldata _data ) external;
+  function onERC1155Received(address _operator, address payable _from, uint256 _id, uint256 _value, bytes calldata _data ) external returns(bytes4);
 
   /**
    * @notice Withdraw ERC-20 tokens when receiving their ERC-1155 counterpart
@@ -83,5 +83,5 @@ interface IMetaERC20Wrapper {
    * @param _data      Additional data with no specified format
    * @return           `bytes4(keccak256("onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)"))`
    */
-  function onERC1155BatchReceived(address _operator, address payable _from, uint256[] calldata _ids, uint256[] calldata _values, bytes calldata _data) external;
+  function onERC1155BatchReceived(address _operator, address payable _from, uint256[] calldata _ids, uint256[] calldata _values, bytes calldata _data) external returns(bytes4);
 }
