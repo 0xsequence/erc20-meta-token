@@ -1,7 +1,10 @@
-pragma solidity ^0.5.16;
+pragma solidity ^0.6.8;
 pragma experimental ABIEncoderV2;
 
 import "multi-token-standard/contracts/interfaces/IERC20.sol";
+import "multi-token-standard/contracts/interfaces/IERC165.sol";
+import "multi-token-standard/contracts/interfaces/IERC1155.sol";
+import "multi-token-standard/contracts/interfaces/IERC1155TokenReceiver.sol";
 import "multi-token-standard/contracts/tokens/ERC1155/ERC1155Meta.sol";
 import "multi-token-standard/contracts/tokens/ERC1155/ERC1155MintBurn.sol";
 
@@ -21,16 +24,12 @@ contract MetaERC20Wrapper is ERC1155Meta, ERC1155MintBurn {
   mapping (address => uint256) internal addressToID;    // Maps the ERC-20 addresses to their metaERC20 id
   mapping (uint256 => address) internal IDtoAddress;    // Maps the metaERC20 ids to their ERC-20 address
 
-  // onReceive function signatures
-  bytes4 constant internal ERC1155_RECEIVED_VALUE = 0xf23a6e61;
-  bytes4 constant internal ERC1155_BATCH_RECEIVED_VALUE = 0xbc197c81;
 
   /***********************************|
   |               Events              |
   |__________________________________*/
 
   event TokenRegistration(address token_address, uint256 token_id);
-
 
   /***********************************|
   |            Constructor            |
@@ -42,7 +41,6 @@ contract MetaERC20Wrapper is ERC1155Meta, ERC1155MintBurn {
     IDtoAddress[ETH_ID] = ETH_ADDRESS;
   }
 
-
   /***********************************|
   |         Deposit Functions         |
   |__________________________________*/
@@ -52,7 +50,7 @@ contract MetaERC20Wrapper is ERC1155Meta, ERC1155MintBurn {
    * @dev Deposit ETH in this contract to receive wrapped ETH
    * No parameters provided
    */
-  function() external payable {
+  receive () external payable {
     // Deposit ETH sent with transaction
     deposit(ETH_ADDRESS, msg.sender, msg.value);
   }
@@ -147,7 +145,7 @@ contract MetaERC20Wrapper is ERC1155Meta, ERC1155MintBurn {
 
     } else {
       require(_to != address(0), "MetaERC20Wrapper#withdraw: INVALID_RECIPIENT");
-      (bool success, ) = _to.call.value(_value)("");
+      (bool success, ) = _to.call{value: _value}("");
       require(success, "MetaERC20Wrapper#withdraw: TRANSFER_FAILED");
     }
 
@@ -201,7 +199,7 @@ contract MetaERC20Wrapper is ERC1155Meta, ERC1155MintBurn {
   /**
    * @notice Return the Meta-ERC20 token ID for the given ERC-20 token address
    * @param _token ERC-20 token address to get the corresponding Meta-ERC20 token ID
-   * @return Meta-ERC20 token ID
+   * @return tokenID Meta-ERC20 token ID
    */
   function getTokenID(address _token) public view returns (uint256 tokenID) {
     tokenID = addressToID[_token];
@@ -212,7 +210,7 @@ contract MetaERC20Wrapper is ERC1155Meta, ERC1155MintBurn {
   /**
    * @notice Return the ERC-20 token address for the given Meta-ERC20 token ID
    * @param _id Meta-ERC20 token ID to get the corresponding ERC-20 token address
-   * @return ERC-20 token address
+   * @return token ERC-20 token address
    */
   function getIdAddress(uint256 _id) public view returns (address token) {
     token = IDtoAddress[_id];
@@ -247,24 +245,25 @@ contract MetaERC20Wrapper is ERC1155Meta, ERC1155MintBurn {
     /* solium-disable-next-line security/no-inline-assembly */
     assembly {
       // check number of bytes returned from last function call
-      switch returndatasize
+      switch returndatasize()
 
-      // no bytes returned: assume success
-      case 0x0 {
-        returnValue := 1
-      }
+        // no bytes returned: assume success
+        case 0x0 {
+          returnValue := 1
+        }
 
-      // 32 bytes returned: check if non-zero
-      case 0x20 {
-        // copy 32 bytes into scratch space
-        returndatacopy(0x0, 0x0, 0x20)
+        // 32 bytes returned: check if non-zero
+        case 0x20 {
+          // copy 32 bytes into scratch space
+          returndatacopy(0x0, 0x0, 0x20)
 
-        // load those bytes into returnValue
-        returnValue := mload(0x0)
-      }
+          // load those bytes into returnValue
+          returnValue := mload(0x0)
+        }
 
-      // not sure what was returned: dont mark as success
-      default { }
+        // not sure what was returned: dont mark as success
+        default { }
+      
     }
 
     return returnValue != 0;
@@ -277,9 +276,10 @@ contract MetaERC20Wrapper is ERC1155Meta, ERC1155MintBurn {
    *      This function MUST NOT consume more thsan 5,000 gas.
    * @return Wheter ERC-165 or ERC1155TokenReceiver interfaces are supported.
    */
-  function supportsInterface(bytes4 interfaceID) external view returns (bool) {
-    return  interfaceID == 0x01ffc9a7 || // ERC-165 support (i.e. `bytes4(keccak256('supportsInterface(bytes4)'))`).
-      interfaceID == 0x4e2312e0;         // ERC-1155 `ERC1155TokenReceiver` support (i.e. `bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)")) ^ bytes4(keccak256("onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)"))`).
+  function supportsInterface(bytes4 interfaceID) external override pure returns (bool) {
+    return  interfaceID == type(IERC165).interfaceId ||
+      interfaceID == type(IERC1155).interfaceId || 
+      interfaceID == type(IERC1155TokenReceiver).interfaceId;        
   }
 
 }
