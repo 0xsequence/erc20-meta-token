@@ -2,6 +2,9 @@ pragma solidity ^0.6.8;
 pragma experimental ABIEncoderV2;
 
 import "multi-token-standard/contracts/interfaces/IERC20.sol";
+import "multi-token-standard/contracts/interfaces/IERC165.sol";
+import "multi-token-standard/contracts/interfaces/IERC1155.sol";
+import "multi-token-standard/contracts/interfaces/IERC1155TokenReceiver.sol";
 import "multi-token-standard/contracts/tokens/ERC1155/ERC1155Meta.sol";
 import "multi-token-standard/contracts/tokens/ERC1155/ERC1155MintBurn.sol";
 
@@ -273,9 +276,10 @@ contract MetaERC20Wrapper is ERC1155Meta, ERC1155MintBurn {
    *      This function MUST NOT consume more thsan 5,000 gas.
    * @return Wheter ERC-165 or ERC1155TokenReceiver interfaces are supported.
    */
-  function supportsInterface(bytes4 interfaceID) external override view returns (bool) {
-    return  interfaceID == 0x01ffc9a7 || // ERC-165 support (i.e. `bytes4(keccak256('supportsInterface(bytes4)'))`).
-      interfaceID == 0x4e2312e0;         // ERC-1155 `ERC1155TokenReceiver` support (i.e. `bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)")) ^ bytes4(keccak256("onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)"))`).
+  function supportsInterface(bytes4 interfaceID) external override pure returns (bool) {
+    return  interfaceID == type(IERC165).interfaceId ||
+      interfaceID == type(IERC1155).interfaceId || 
+      interfaceID == type(IERC1155TokenReceiver).interfaceId;        
   }
 
 }

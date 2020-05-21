@@ -4918,10 +4918,10 @@ ms@^2.1.1:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
 
-multi-token-standard@^0.9.2:
-  version "0.9.2"
-  resolved "https://registry.yarnpkg.com/multi-token-standard/-/multi-token-standard-0.9.2.tgz#2c9fcbb1d3cfe2a2965d3840f4fbe42c03b78d2d"
-  integrity sha512-jg3H84sq6oJJ1AQRidPm4ueMEO0oMoecM+maHMIYlnPHi7HBRcmXx77D7PKJCsOmYFX8/7hfdveij74b3mdmDQ==
+multi-token-standard@^0.9.3:
+  version "0.9.3"
+  resolved "https://registry.yarnpkg.com/multi-token-standard/-/multi-token-standard-0.9.3.tgz#2921fae4af9e7addbd6f2aac01a5e63c29a93a6a"
+  integrity sha512-ycQv7RMB1UK+0KE+vGvzOCIjysbB6zj11QRIVmFEykyQ1lTiOtMz115Ed+WZmFGomXEkJ/w2CHbSx+cgRH6kwQ==
 
 mz@^2.6.0:
   version "2.7.0"

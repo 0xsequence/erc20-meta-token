@@ -31,10 +31,6 @@ interface IERC1155TokenReceiverInterface extends Interface {
         Arrayish
       ]): string;
     }>;
-
-    supportsInterface: TypedFunctionDescription<{
-      encode([interfaceID]: [Arrayish]): string;
-    }>;
   };
 
   events: {};
@@ -74,8 +70,6 @@ export class IERC1155TokenReceiver extends Contract {
       _data: Arrayish,
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;
-
-    supportsInterface(interfaceID: Arrayish): Promise<boolean>;
   };
 
   onERC1155Received(
@@ -96,8 +90,6 @@ export class IERC1155TokenReceiver extends Contract {
     overrides?: TransactionOverrides
   ): Promise<ContractTransaction>;
 
-  supportsInterface(interfaceID: Arrayish): Promise<boolean>;
-
   filters: {};
 
   estimate: {
@@ -116,7 +108,5 @@ export class IERC1155TokenReceiver extends Contract {
       _amounts: (BigNumberish)[],
       _data: Arrayish
     ): Promise<BigNumber>;
-
-    supportsInterface(interfaceID: Arrayish): Promise<BigNumber>;
   };
 }
