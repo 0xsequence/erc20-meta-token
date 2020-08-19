@@ -70,6 +70,6 @@
     "typescript": "3.9.2"
   },
   "dependencies": {
-    "multi-token-standard": "^0.9.3"
+    "multi-token-standard": "^0.9.6"
   }
 }
