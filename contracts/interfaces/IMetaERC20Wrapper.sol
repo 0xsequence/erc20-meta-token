@@ -1,6 +1,7 @@
 pragma solidity ^0.6.8;
+import "multi-token-standard/contracts/interfaces/IERC1155.sol";
 
-interface IMetaERC20Wrapper {
+interface IMetaERC20Wrapper is IERC1155 {
 
   /***********************************|
   |         Deposit Functions         |
@@ -9,17 +10,17 @@ interface IMetaERC20Wrapper {
   /**
    * Fallback function
    * @dev Deposit ETH in this contract to receive wrapped ETH
-   * No parameters provided
    */
-  fallback () external payable;
+  receive () external payable;
 
   /**
    * @dev Deposit ERC20 tokens or ETH in this contract to receive wrapped ERC20s
-   * @param _token The addess of the token to deposit in this contract
-   * @param _value The amount of token to deposit in this cosntract
+   * @param _token     The addess of the token to deposit in this contract
+   * @param _recipient Address that will receive the ERC-1155 tokens
+   * @param _value     The amount of token to deposit in this contract
    * Note: Users must first approve this contract addres on the contract of the ERC20 to be deposited
    */
-  function deposit(address _token, uint256 _value) external payable;
+  function deposit(address _token, address _recipient, uint256 _value) external payable;
 
 
   /***********************************|
