@@ -32,10 +32,10 @@ export class Web3DebugProvider extends ethers.providers.JsonRpcProvider {
   public reqCounter = 0
   public reqLog: JSONRPCRequest[] = []
 
-  readonly _web3Provider: ethers.providers.AsyncSendable
+  readonly _web3Provider: ethers.providers.ExternalProvider
   private _sendAsync: (request: any, callback: (error: any, response: any) => void) => void
 
-  constructor(web3Provider: ethers.providers.AsyncSendable, network?: ethers.utils.Networkish) {
+  constructor(web3Provider: ethers.providers.ExternalProvider, network?: ethers.providers.Networkish) {
       // HTTP has a host; IPC has a path.
       super(web3Provider.host || web3Provider.path || '', network)
 
@@ -48,11 +48,7 @@ export class Web3DebugProvider extends ethers.providers.JsonRpcProvider {
       }
 
       if (!web3Provider || !this._sendAsync) {
-        ethers.errors.throwError(
-          'invalid web3Provider',
-          ethers.errors.INVALID_ARGUMENT,
-          { arg: 'web3Provider', value: web3Provider }
-        )
+          console.error(ethers.errors.INVALID_ARGUMENT)
       }
 
       ethers.utils.defineReadOnly(this, '_web3Provider', web3Provider)
@@ -97,5 +93,4 @@ export class Web3DebugProvider extends ethers.providers.JsonRpcProvider {
     }
     return this.reqLog[this.reqLog.length-reverseIndex-1]
   }
-
 }
