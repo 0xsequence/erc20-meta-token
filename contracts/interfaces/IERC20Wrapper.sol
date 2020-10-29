@@ -1,7 +1,7 @@
 pragma solidity ^0.6.8;
 import "multi-token-standard/contracts/interfaces/IERC1155.sol";
 
-interface IMetaERC20Wrapper is IERC1155 {
+interface IERC20Wrapper is IERC1155 {
 
   /***********************************|
   |         Deposit Functions         |
