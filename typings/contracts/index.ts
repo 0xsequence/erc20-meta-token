@@ -5,5 +5,6 @@ export * from "./Erc1155MetaFactory";
 export * from "./Erc1155MintBurnFactory";
 export * from "./Erc20Factory";
 export * from "./Erc20MockFactory";
+export * from "./Erc20WrapperFactory";
 export * from "./MetaErc20WrapperFactory";
 export * from "./SignatureValidatorFactory";
