@@ -183,7 +183,6 @@ interface MetaErc20WrapperInterface extends ethers.utils.Interface {
     "TokenRegistration(address,uint256)": EventFragment;
     "TransferBatch(address,address,address,uint256[],uint256[])": EventFragment;
     "TransferSingle(address,address,address,uint256,uint256)": EventFragment;
-    "URI(string,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
@@ -191,7 +190,6 @@ interface MetaErc20WrapperInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "TokenRegistration"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TransferBatch"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TransferSingle"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "URI"): EventFragment;
 }
 
 export class MetaErc20Wrapper extends Contract {
@@ -264,7 +262,7 @@ export class MetaErc20Wrapper extends Contract {
      * Verifies that a hash has been signed by the given signer.
      * @param _data Full EIP-712 data structure that was hashed and signed
      * @param _hash Hash of the EIP-712 encoded data
-     * @param _sig Proof that the hash has been signed by signer.     For non wallet signatures, _sig is expected to be an array tightly encoded as     (bytes32 r, bytes32 s, uint8 v, uint256 nonce, SignatureType sigType)
+     * @param _sig Proof that the hash has been signed by signer.      For non wallet signatures, _sig is expected to be an array tightly encoded as      (bytes32 r, bytes32 s, uint8 v, uint256 nonce, SignatureType sigType)
      * @param _signerAddress Address that should have signed the given hash.
      */
     isValidSignature(
@@ -281,7 +279,7 @@ export class MetaErc20Wrapper extends Contract {
     /**
      * Allows anyone with a valid signature to transfer multiple types of tokens on the bahalf of _from
      * @param _amounts Transfer amounts per token type
-     * @param _data Encodes a meta transfer indicator, signature, gas payment receipt and extra transfer data  _data should be encoded as (  (bytes32 r, bytes32 s, uint8 v, uint256 nonce, SignatureType sigType),  (GasReceipt g, ?bytes transferData) )  i.e. high level encoding should be (bytes, bytes), where the latter bytes array is a nested bytes array
+     * @param _data Encodes a meta transfer indicator, signature, gas payment receipt and extra transfer data   _data should be encoded as (   (bytes32 r, bytes32 s, uint8 v, uint256 nonce, SignatureType sigType),   (GasReceipt g, ?bytes transferData) )   i.e. high level encoding should be (bytes, bytes), where the latter bytes array is a nested bytes array
      * @param _from Source addresses
      * @param _ids IDs of each token type
      * @param _isGasFee Whether gas is reimbursed to executor or not
@@ -300,7 +298,7 @@ export class MetaErc20Wrapper extends Contract {
     /**
      * Allows anyone with a valid signature to transfer _amount amount of a token _id on the bahalf of _from
      * @param _amount Transfered amount
-     * @param _data Encodes a meta transfer indicator, signature, gas payment receipt and extra transfer data  _data should be encoded as (  (bytes32 r, bytes32 s, uint8 v, uint256 nonce, SignatureType sigType),  (GasReceipt g, ?bytes transferData) )  i.e. high level encoding should be (bytes, bytes), where the latter bytes array is a nested bytes array
+     * @param _data Encodes a meta transfer indicator, signature, gas payment receipt and extra transfer data   _data should be encoded as (   (bytes32 r, bytes32 s, uint8 v, uint256 nonce, SignatureType sigType),   (GasReceipt g, ?bytes transferData) )   i.e. high level encoding should be (bytes, bytes), where the latter bytes array is a nested bytes array
      * @param _from Source address
      * @param _id ID of the token type
      * @param _isGasFee Whether gas is reimbursed to executor or not
@@ -319,7 +317,7 @@ export class MetaErc20Wrapper extends Contract {
     /**
      * Approve the passed address to spend on behalf of _from if valid signature is provided
      * @param _approved True if the operator is approved, false to revoke approval
-     * @param _data Encodes signature and gas payment receipt  _data should be encoded as (    (bytes32 r, bytes32 s, uint8 v, uint256 nonce, SignatureType sigType),    (GasReceipt g)  )  i.e. high level encoding should be (bytes, bytes), where the latter bytes array is a nested bytes array
+     * @param _data Encodes signature and gas payment receipt   _data should be encoded as (     (bytes32 r, bytes32 s, uint8 v, uint256 nonce, SignatureType sigType),     (GasReceipt g)   )   i.e. high level encoding should be (bytes, bytes), where the latter bytes array is a nested bytes array
      * @param _isGasFee Whether gas will be reimbursed or not, with vlid signature
      * @param _operator Address to add to the set of authorized operators
      * @param _owner Address that wants to set operator status  _spender
@@ -468,7 +466,7 @@ export class MetaErc20Wrapper extends Contract {
     }>;
 
     /**
-     * This function MUST return true if it implements the ERC1155TokenReceiver interface and ERC-165 interface.     This function MUST NOT consume more than 5,000 gas.
+     * This function MUST return true if it implements the ERC1155TokenReceiver interface and ERC-165 interface.      This function MUST NOT consume more than 5,000 gas.
      * Indicates whether a contract implements the `ERC1155TokenReceiver` functions and so can accept ERC1155 token types.
      * @param interfaceID The ERC-165 interface ID that is queried for support.s
      */
@@ -523,7 +521,7 @@ export class MetaErc20Wrapper extends Contract {
    * Verifies that a hash has been signed by the given signer.
    * @param _data Full EIP-712 data structure that was hashed and signed
    * @param _hash Hash of the EIP-712 encoded data
-   * @param _sig Proof that the hash has been signed by signer.     For non wallet signatures, _sig is expected to be an array tightly encoded as     (bytes32 r, bytes32 s, uint8 v, uint256 nonce, SignatureType sigType)
+   * @param _sig Proof that the hash has been signed by signer.      For non wallet signatures, _sig is expected to be an array tightly encoded as      (bytes32 r, bytes32 s, uint8 v, uint256 nonce, SignatureType sigType)
    * @param _signerAddress Address that should have signed the given hash.
    */
   isValidSignature(
@@ -537,7 +535,7 @@ export class MetaErc20Wrapper extends Contract {
   /**
    * Allows anyone with a valid signature to transfer multiple types of tokens on the bahalf of _from
    * @param _amounts Transfer amounts per token type
-   * @param _data Encodes a meta transfer indicator, signature, gas payment receipt and extra transfer data  _data should be encoded as (  (bytes32 r, bytes32 s, uint8 v, uint256 nonce, SignatureType sigType),  (GasReceipt g, ?bytes transferData) )  i.e. high level encoding should be (bytes, bytes), where the latter bytes array is a nested bytes array
+   * @param _data Encodes a meta transfer indicator, signature, gas payment receipt and extra transfer data   _data should be encoded as (   (bytes32 r, bytes32 s, uint8 v, uint256 nonce, SignatureType sigType),   (GasReceipt g, ?bytes transferData) )   i.e. high level encoding should be (bytes, bytes), where the latter bytes array is a nested bytes array
    * @param _from Source addresses
    * @param _ids IDs of each token type
    * @param _isGasFee Whether gas is reimbursed to executor or not
@@ -556,7 +554,7 @@ export class MetaErc20Wrapper extends Contract {
   /**
    * Allows anyone with a valid signature to transfer _amount amount of a token _id on the bahalf of _from
    * @param _amount Transfered amount
-   * @param _data Encodes a meta transfer indicator, signature, gas payment receipt and extra transfer data  _data should be encoded as (  (bytes32 r, bytes32 s, uint8 v, uint256 nonce, SignatureType sigType),  (GasReceipt g, ?bytes transferData) )  i.e. high level encoding should be (bytes, bytes), where the latter bytes array is a nested bytes array
+   * @param _data Encodes a meta transfer indicator, signature, gas payment receipt and extra transfer data   _data should be encoded as (   (bytes32 r, bytes32 s, uint8 v, uint256 nonce, SignatureType sigType),   (GasReceipt g, ?bytes transferData) )   i.e. high level encoding should be (bytes, bytes), where the latter bytes array is a nested bytes array
    * @param _from Source address
    * @param _id ID of the token type
    * @param _isGasFee Whether gas is reimbursed to executor or not
@@ -575,7 +573,7 @@ export class MetaErc20Wrapper extends Contract {
   /**
    * Approve the passed address to spend on behalf of _from if valid signature is provided
    * @param _approved True if the operator is approved, false to revoke approval
-   * @param _data Encodes signature and gas payment receipt  _data should be encoded as (    (bytes32 r, bytes32 s, uint8 v, uint256 nonce, SignatureType sigType),    (GasReceipt g)  )  i.e. high level encoding should be (bytes, bytes), where the latter bytes array is a nested bytes array
+   * @param _data Encodes signature and gas payment receipt   _data should be encoded as (     (bytes32 r, bytes32 s, uint8 v, uint256 nonce, SignatureType sigType),     (GasReceipt g)   )   i.e. high level encoding should be (bytes, bytes), where the latter bytes array is a nested bytes array
    * @param _isGasFee Whether gas will be reimbursed or not, with vlid signature
    * @param _operator Address to add to the set of authorized operators
    * @param _owner Address that wants to set operator status  _spender
@@ -708,7 +706,7 @@ export class MetaErc20Wrapper extends Contract {
   getNTokens(overrides?: CallOverrides): Promise<BigNumber>;
 
   /**
-   * This function MUST return true if it implements the ERC1155TokenReceiver interface and ERC-165 interface.     This function MUST NOT consume more than 5,000 gas.
+   * This function MUST return true if it implements the ERC1155TokenReceiver interface and ERC-165 interface.      This function MUST NOT consume more than 5,000 gas.
    * Indicates whether a contract implements the `ERC1155TokenReceiver` functions and so can accept ERC1155 token types.
    * @param interfaceID The ERC-165 interface ID that is queried for support.s
    */
@@ -761,7 +759,7 @@ export class MetaErc20Wrapper extends Contract {
      * Verifies that a hash has been signed by the given signer.
      * @param _data Full EIP-712 data structure that was hashed and signed
      * @param _hash Hash of the EIP-712 encoded data
-     * @param _sig Proof that the hash has been signed by signer.     For non wallet signatures, _sig is expected to be an array tightly encoded as     (bytes32 r, bytes32 s, uint8 v, uint256 nonce, SignatureType sigType)
+     * @param _sig Proof that the hash has been signed by signer.      For non wallet signatures, _sig is expected to be an array tightly encoded as      (bytes32 r, bytes32 s, uint8 v, uint256 nonce, SignatureType sigType)
      * @param _signerAddress Address that should have signed the given hash.
      */
     isValidSignature(
@@ -775,7 +773,7 @@ export class MetaErc20Wrapper extends Contract {
     /**
      * Allows anyone with a valid signature to transfer multiple types of tokens on the bahalf of _from
      * @param _amounts Transfer amounts per token type
-     * @param _data Encodes a meta transfer indicator, signature, gas payment receipt and extra transfer data  _data should be encoded as (  (bytes32 r, bytes32 s, uint8 v, uint256 nonce, SignatureType sigType),  (GasReceipt g, ?bytes transferData) )  i.e. high level encoding should be (bytes, bytes), where the latter bytes array is a nested bytes array
+     * @param _data Encodes a meta transfer indicator, signature, gas payment receipt and extra transfer data   _data should be encoded as (   (bytes32 r, bytes32 s, uint8 v, uint256 nonce, SignatureType sigType),   (GasReceipt g, ?bytes transferData) )   i.e. high level encoding should be (bytes, bytes), where the latter bytes array is a nested bytes array
      * @param _from Source addresses
      * @param _ids IDs of each token type
      * @param _isGasFee Whether gas is reimbursed to executor or not
@@ -794,7 +792,7 @@ export class MetaErc20Wrapper extends Contract {
     /**
      * Allows anyone with a valid signature to transfer _amount amount of a token _id on the bahalf of _from
      * @param _amount Transfered amount
-     * @param _data Encodes a meta transfer indicator, signature, gas payment receipt and extra transfer data  _data should be encoded as (  (bytes32 r, bytes32 s, uint8 v, uint256 nonce, SignatureType sigType),  (GasReceipt g, ?bytes transferData) )  i.e. high level encoding should be (bytes, bytes), where the latter bytes array is a nested bytes array
+     * @param _data Encodes a meta transfer indicator, signature, gas payment receipt and extra transfer data   _data should be encoded as (   (bytes32 r, bytes32 s, uint8 v, uint256 nonce, SignatureType sigType),   (GasReceipt g, ?bytes transferData) )   i.e. high level encoding should be (bytes, bytes), where the latter bytes array is a nested bytes array
      * @param _from Source address
      * @param _id ID of the token type
      * @param _isGasFee Whether gas is reimbursed to executor or not
@@ -813,7 +811,7 @@ export class MetaErc20Wrapper extends Contract {
     /**
      * Approve the passed address to spend on behalf of _from if valid signature is provided
      * @param _approved True if the operator is approved, false to revoke approval
-     * @param _data Encodes signature and gas payment receipt  _data should be encoded as (    (bytes32 r, bytes32 s, uint8 v, uint256 nonce, SignatureType sigType),    (GasReceipt g)  )  i.e. high level encoding should be (bytes, bytes), where the latter bytes array is a nested bytes array
+     * @param _data Encodes signature and gas payment receipt   _data should be encoded as (     (bytes32 r, bytes32 s, uint8 v, uint256 nonce, SignatureType sigType),     (GasReceipt g)   )   i.e. high level encoding should be (bytes, bytes), where the latter bytes array is a nested bytes array
      * @param _isGasFee Whether gas will be reimbursed or not, with vlid signature
      * @param _operator Address to add to the set of authorized operators
      * @param _owner Address that wants to set operator status  _spender
@@ -946,7 +944,7 @@ export class MetaErc20Wrapper extends Contract {
     getNTokens(overrides?: CallOverrides): Promise<BigNumber>;
 
     /**
-     * This function MUST return true if it implements the ERC1155TokenReceiver interface and ERC-165 interface.     This function MUST NOT consume more than 5,000 gas.
+     * This function MUST return true if it implements the ERC1155TokenReceiver interface and ERC-165 interface.      This function MUST NOT consume more than 5,000 gas.
      * Indicates whether a contract implements the `ERC1155TokenReceiver` functions and so can accept ERC1155 token types.
      * @param interfaceID The ERC-165 interface ID that is queried for support.s
      */
@@ -982,8 +980,6 @@ export class MetaErc20Wrapper extends Contract {
       _id: null,
       _amount: null
     ): EventFilter;
-
-    URI(_amount: null, _id: BigNumberish | null): EventFilter;
   };
 
   estimateGas: {

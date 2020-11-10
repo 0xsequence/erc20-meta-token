@@ -20,7 +20,7 @@ import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
-interface Erc20WrapperInterface extends ethers.utils.Interface {
+interface Ierc20WrapperInterface extends ethers.utils.Interface {
   functions: {
     "balanceOf(address,uint256)": FunctionFragment;
     "balanceOfBatch(address[],uint256[])": FunctionFragment;
@@ -30,12 +30,11 @@ interface Erc20WrapperInterface extends ethers.utils.Interface {
     "setApprovalForAll(address,bool)": FunctionFragment;
     "deposit(address,address,uint256)": FunctionFragment;
     "withdraw(address,address,uint256)": FunctionFragment;
-    "onERC1155Received(address,address,uint256,uint256,bytes)": FunctionFragment;
-    "onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)": FunctionFragment;
     "getTokenID(address)": FunctionFragment;
     "getIdAddress(uint256)": FunctionFragment;
     "getNTokens()": FunctionFragment;
-    "supportsInterface(bytes4)": FunctionFragment;
+    "onERC1155Received(address,address,uint256,uint256,bytes)": FunctionFragment;
+    "onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -70,14 +69,6 @@ interface Erc20WrapperInterface extends ethers.utils.Interface {
     functionFragment: "withdraw",
     values: [string, string, BigNumberish]
   ): string;
-  encodeFunctionData(
-    functionFragment: "onERC1155Received",
-    values: [string, string, BigNumberish, BigNumberish, BytesLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "onERC1155BatchReceived",
-    values: [string, string, (BigNumberish)[], (BigNumberish)[], BytesLike]
-  ): string;
   encodeFunctionData(functionFragment: "getTokenID", values: [string]): string;
   encodeFunctionData(
     functionFragment: "getIdAddress",
@@ -85,8 +76,12 @@ interface Erc20WrapperInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "getNTokens", values?: void): string;
   encodeFunctionData(
-    functionFragment: "supportsInterface",
-    values: [BytesLike]
+    functionFragment: "onERC1155Received",
+    values: [string, string, BigNumberish, BigNumberish, BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "onERC1155BatchReceived",
+    values: [string, string, (BigNumberish)[], (BigNumberish)[], BytesLike]
   ): string;
 
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
@@ -112,6 +107,12 @@ interface Erc20WrapperInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "getTokenID", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getIdAddress",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "getNTokens", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "onERC1155Received",
     data: BytesLike
@@ -120,31 +121,19 @@ interface Erc20WrapperInterface extends ethers.utils.Interface {
     functionFragment: "onERC1155BatchReceived",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "getTokenID", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "getIdAddress",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "getNTokens", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "supportsInterface",
-    data: BytesLike
-  ): Result;
 
   events: {
     "ApprovalForAll(address,address,bool)": EventFragment;
-    "TokenRegistration(address,uint256)": EventFragment;
     "TransferBatch(address,address,address,uint256[],uint256[])": EventFragment;
     "TransferSingle(address,address,address,uint256,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "TokenRegistration"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TransferBatch"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TransferSingle"): EventFragment;
 }
 
-export class Erc20Wrapper extends Contract {
+export class Ierc20Wrapper extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -155,7 +144,7 @@ export class Erc20Wrapper extends Contract {
   removeAllListeners(eventName: EventFilter | string): this;
   removeListener(eventName: any, listener: Listener): this;
 
-  interface: Erc20WrapperInterface;
+  interface: Ierc20WrapperInterface;
 
   functions: {
     /**
@@ -199,6 +188,7 @@ export class Erc20Wrapper extends Contract {
     }>;
 
     /**
+     * MUST emit TransferBatch event on success Caller must be approved to manage the _from account's tokens (see isApprovedForAll) MUST throw if `_to` is the zero address MUST throw if length of `_ids` is not the same as length of `_amounts` MUST throw if any of the balance of sender for token `_ids` is lower than the respective `_amounts` sent MUST throw on any other error When transfer is complete, this function MUST check if `_to` is a smart contract (code size > 0). If so, it MUST call `onERC1155BatchReceived` on `_to` and revert if the return amount is not `bytes4(keccak256("onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)"))` Transfers and events MUST occur in the array order they were submitted (_ids[0] before _ids[1], etc)
      * Send multiple types of Tokens from the _from address to the _to address (with safety call)
      * @param _amounts Transfer amounts per token type
      * @param _data Additional data with no specified format, sent in call to `_to`
@@ -216,7 +206,8 @@ export class Erc20Wrapper extends Contract {
     ): Promise<ContractTransaction>;
 
     /**
-     * Transfers amount amount of an _id from the _from address to the _to address specified
+     * MUST emit TransferSingle event on success Caller must be approved to manage the _from account's tokens (see isApprovedForAll) MUST throw if `_to` is the zero address MUST throw if balance of sender for token `_id` is lower than the `_amount` sent MUST throw on any other error When transfer is complete, this function MUST check if `_to` is a smart contract (code size > 0). If so, it MUST call `onERC1155Received` on `_to` and revert if the return amount is not `bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)"))`
+     * Transfers amount of an _id from the _from address to the _to address specified
      * @param _amount Transfered amount
      * @param _data Additional data with no specified format, sent in call to `_to`
      * @param _from Source address
@@ -233,6 +224,7 @@ export class Erc20Wrapper extends Contract {
     ): Promise<ContractTransaction>;
 
     /**
+     * MUST emit the ApprovalForAll event on success
      * Enable or disable approval for a third party ("operator") to manage all of caller's tokens
      * @param _approved True if the operator is approved, false to revoke approval
      * @param _operator Address to add to the set of authorized operators
@@ -270,36 +262,6 @@ export class Erc20Wrapper extends Contract {
     ): Promise<ContractTransaction>;
 
     /**
-     * Withdraw ERC-20 tokens when receiving their ERC-1155 counterpart
-     * @param _from The address which previously owned the token
-     * @param _id The id of the token being transferred
-     * @param _value The amount of tokens being transferred
-     */
-    onERC1155Received(
-      arg0: string,
-      _from: string,
-      _id: BigNumberish,
-      _value: BigNumberish,
-      arg4: BytesLike,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    /**
-     * Withdraw ERC-20 tokens when receiving their ERC-1155 counterpart
-     * @param _from The address which previously owned the token
-     * @param _ids An array containing ids of each token being transferred
-     * @param _values An array containing amounts of each token being transferred
-     */
-    onERC1155BatchReceived(
-      arg0: string,
-      _from: string,
-      _ids: (BigNumberish)[],
-      _values: (BigNumberish)[],
-      arg4: BytesLike,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    /**
      * Return the Meta-ERC20 token ID for the given ERC-20 token address
      * @param _token ERC-20 token address to get the corresponding Meta-ERC20 token ID
      */
@@ -329,20 +291,42 @@ export class Erc20Wrapper extends Contract {
     getNTokens(
       overrides?: CallOverrides
     ): Promise<{
-      0: BigNumber;
+      0: void;
     }>;
 
     /**
-     * This function MUST return true if it implements the ERC1155TokenReceiver interface and ERC-165 interface.      This function MUST NOT consume more than 5,000 gas.
-     * Indicates whether a contract implements the `ERC1155TokenReceiver` functions and so can accept ERC1155 token types.
-     * @param interfaceID The ERC-165 interface ID that is queried for support.s
+     * Withdraw ERC-20 tokens when receiving their ERC-1155 counterpart
+     * @param _data Additional data with no specified format
+     * @param _from The address which previously owned the token
+     * @param _id The id of the token being transferred
+     * @param _operator The address which called the `safeTransferFrom` function
+     * @param _value The amount of tokens being transferred
      */
-    supportsInterface(
-      interfaceID: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<{
-      0: boolean;
-    }>;
+    onERC1155Received(
+      _operator: string,
+      _from: string,
+      _id: BigNumberish,
+      _value: BigNumberish,
+      _data: BytesLike,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    /**
+     * Withdraw ERC-20 tokens when receiving their ERC-1155 counterpart
+     * @param _data Additional data with no specified format
+     * @param _from The address which previously owned the token
+     * @param _ids An array containing ids of each token being transferred
+     * @param _operator The address which called the `safeBatchTransferFrom` function
+     * @param _values An array containing amounts of each token being transferred
+     */
+    onERC1155BatchReceived(
+      _operator: string,
+      _from: string,
+      _ids: (BigNumberish)[],
+      _values: (BigNumberish)[],
+      _data: BytesLike,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
   };
 
   /**
@@ -379,6 +363,7 @@ export class Erc20Wrapper extends Contract {
   ): Promise<boolean>;
 
   /**
+   * MUST emit TransferBatch event on success Caller must be approved to manage the _from account's tokens (see isApprovedForAll) MUST throw if `_to` is the zero address MUST throw if length of `_ids` is not the same as length of `_amounts` MUST throw if any of the balance of sender for token `_ids` is lower than the respective `_amounts` sent MUST throw on any other error When transfer is complete, this function MUST check if `_to` is a smart contract (code size > 0). If so, it MUST call `onERC1155BatchReceived` on `_to` and revert if the return amount is not `bytes4(keccak256("onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)"))` Transfers and events MUST occur in the array order they were submitted (_ids[0] before _ids[1], etc)
    * Send multiple types of Tokens from the _from address to the _to address (with safety call)
    * @param _amounts Transfer amounts per token type
    * @param _data Additional data with no specified format, sent in call to `_to`
@@ -396,7 +381,8 @@ export class Erc20Wrapper extends Contract {
   ): Promise<ContractTransaction>;
 
   /**
-   * Transfers amount amount of an _id from the _from address to the _to address specified
+   * MUST emit TransferSingle event on success Caller must be approved to manage the _from account's tokens (see isApprovedForAll) MUST throw if `_to` is the zero address MUST throw if balance of sender for token `_id` is lower than the `_amount` sent MUST throw on any other error When transfer is complete, this function MUST check if `_to` is a smart contract (code size > 0). If so, it MUST call `onERC1155Received` on `_to` and revert if the return amount is not `bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)"))`
+   * Transfers amount of an _id from the _from address to the _to address specified
    * @param _amount Transfered amount
    * @param _data Additional data with no specified format, sent in call to `_to`
    * @param _from Source address
@@ -413,6 +399,7 @@ export class Erc20Wrapper extends Contract {
   ): Promise<ContractTransaction>;
 
   /**
+   * MUST emit the ApprovalForAll event on success
    * Enable or disable approval for a third party ("operator") to manage all of caller's tokens
    * @param _approved True if the operator is approved, false to revoke approval
    * @param _operator Address to add to the set of authorized operators
@@ -450,36 +437,6 @@ export class Erc20Wrapper extends Contract {
   ): Promise<ContractTransaction>;
 
   /**
-   * Withdraw ERC-20 tokens when receiving their ERC-1155 counterpart
-   * @param _from The address which previously owned the token
-   * @param _id The id of the token being transferred
-   * @param _value The amount of tokens being transferred
-   */
-  onERC1155Received(
-    arg0: string,
-    _from: string,
-    _id: BigNumberish,
-    _value: BigNumberish,
-    arg4: BytesLike,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  /**
-   * Withdraw ERC-20 tokens when receiving their ERC-1155 counterpart
-   * @param _from The address which previously owned the token
-   * @param _ids An array containing ids of each token being transferred
-   * @param _values An array containing amounts of each token being transferred
-   */
-  onERC1155BatchReceived(
-    arg0: string,
-    _from: string,
-    _ids: (BigNumberish)[],
-    _values: (BigNumberish)[],
-    arg4: BytesLike,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  /**
    * Return the Meta-ERC20 token ID for the given ERC-20 token address
    * @param _token ERC-20 token address to get the corresponding Meta-ERC20 token ID
    */
@@ -494,17 +451,41 @@ export class Erc20Wrapper extends Contract {
   /**
    * Returns number of tokens currently registered
    */
-  getNTokens(overrides?: CallOverrides): Promise<BigNumber>;
+  getNTokens(overrides?: CallOverrides): Promise<void>;
 
   /**
-   * This function MUST return true if it implements the ERC1155TokenReceiver interface and ERC-165 interface.      This function MUST NOT consume more than 5,000 gas.
-   * Indicates whether a contract implements the `ERC1155TokenReceiver` functions and so can accept ERC1155 token types.
-   * @param interfaceID The ERC-165 interface ID that is queried for support.s
+   * Withdraw ERC-20 tokens when receiving their ERC-1155 counterpart
+   * @param _data Additional data with no specified format
+   * @param _from The address which previously owned the token
+   * @param _id The id of the token being transferred
+   * @param _operator The address which called the `safeTransferFrom` function
+   * @param _value The amount of tokens being transferred
    */
-  supportsInterface(
-    interfaceID: BytesLike,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
+  onERC1155Received(
+    _operator: string,
+    _from: string,
+    _id: BigNumberish,
+    _value: BigNumberish,
+    _data: BytesLike,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  /**
+   * Withdraw ERC-20 tokens when receiving their ERC-1155 counterpart
+   * @param _data Additional data with no specified format
+   * @param _from The address which previously owned the token
+   * @param _ids An array containing ids of each token being transferred
+   * @param _operator The address which called the `safeBatchTransferFrom` function
+   * @param _values An array containing amounts of each token being transferred
+   */
+  onERC1155BatchReceived(
+    _operator: string,
+    _from: string,
+    _ids: (BigNumberish)[],
+    _values: (BigNumberish)[],
+    _data: BytesLike,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
 
   staticCall: {
     /**
@@ -541,6 +522,7 @@ export class Erc20Wrapper extends Contract {
     ): Promise<boolean>;
 
     /**
+     * MUST emit TransferBatch event on success Caller must be approved to manage the _from account's tokens (see isApprovedForAll) MUST throw if `_to` is the zero address MUST throw if length of `_ids` is not the same as length of `_amounts` MUST throw if any of the balance of sender for token `_ids` is lower than the respective `_amounts` sent MUST throw on any other error When transfer is complete, this function MUST check if `_to` is a smart contract (code size > 0). If so, it MUST call `onERC1155BatchReceived` on `_to` and revert if the return amount is not `bytes4(keccak256("onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)"))` Transfers and events MUST occur in the array order they were submitted (_ids[0] before _ids[1], etc)
      * Send multiple types of Tokens from the _from address to the _to address (with safety call)
      * @param _amounts Transfer amounts per token type
      * @param _data Additional data with no specified format, sent in call to `_to`
@@ -558,7 +540,8 @@ export class Erc20Wrapper extends Contract {
     ): Promise<void>;
 
     /**
-     * Transfers amount amount of an _id from the _from address to the _to address specified
+     * MUST emit TransferSingle event on success Caller must be approved to manage the _from account's tokens (see isApprovedForAll) MUST throw if `_to` is the zero address MUST throw if balance of sender for token `_id` is lower than the `_amount` sent MUST throw on any other error When transfer is complete, this function MUST check if `_to` is a smart contract (code size > 0). If so, it MUST call `onERC1155Received` on `_to` and revert if the return amount is not `bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)"))`
+     * Transfers amount of an _id from the _from address to the _to address specified
      * @param _amount Transfered amount
      * @param _data Additional data with no specified format, sent in call to `_to`
      * @param _from Source address
@@ -575,6 +558,7 @@ export class Erc20Wrapper extends Contract {
     ): Promise<void>;
 
     /**
+     * MUST emit the ApprovalForAll event on success
      * Enable or disable approval for a third party ("operator") to manage all of caller's tokens
      * @param _approved True if the operator is approved, false to revoke approval
      * @param _operator Address to add to the set of authorized operators
@@ -612,36 +596,6 @@ export class Erc20Wrapper extends Contract {
     ): Promise<void>;
 
     /**
-     * Withdraw ERC-20 tokens when receiving their ERC-1155 counterpart
-     * @param _from The address which previously owned the token
-     * @param _id The id of the token being transferred
-     * @param _value The amount of tokens being transferred
-     */
-    onERC1155Received(
-      arg0: string,
-      _from: string,
-      _id: BigNumberish,
-      _value: BigNumberish,
-      arg4: BytesLike,
-      overrides?: Overrides
-    ): Promise<string>;
-
-    /**
-     * Withdraw ERC-20 tokens when receiving their ERC-1155 counterpart
-     * @param _from The address which previously owned the token
-     * @param _ids An array containing ids of each token being transferred
-     * @param _values An array containing amounts of each token being transferred
-     */
-    onERC1155BatchReceived(
-      arg0: string,
-      _from: string,
-      _ids: (BigNumberish)[],
-      _values: (BigNumberish)[],
-      arg4: BytesLike,
-      overrides?: Overrides
-    ): Promise<string>;
-
-    /**
      * Return the Meta-ERC20 token ID for the given ERC-20 token address
      * @param _token ERC-20 token address to get the corresponding Meta-ERC20 token ID
      */
@@ -656,17 +610,41 @@ export class Erc20Wrapper extends Contract {
     /**
      * Returns number of tokens currently registered
      */
-    getNTokens(overrides?: CallOverrides): Promise<BigNumber>;
+    getNTokens(overrides?: CallOverrides): Promise<void>;
 
     /**
-     * This function MUST return true if it implements the ERC1155TokenReceiver interface and ERC-165 interface.      This function MUST NOT consume more than 5,000 gas.
-     * Indicates whether a contract implements the `ERC1155TokenReceiver` functions and so can accept ERC1155 token types.
-     * @param interfaceID The ERC-165 interface ID that is queried for support.s
+     * Withdraw ERC-20 tokens when receiving their ERC-1155 counterpart
+     * @param _data Additional data with no specified format
+     * @param _from The address which previously owned the token
+     * @param _id The id of the token being transferred
+     * @param _operator The address which called the `safeTransferFrom` function
+     * @param _value The amount of tokens being transferred
      */
-    supportsInterface(
-      interfaceID: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    onERC1155Received(
+      _operator: string,
+      _from: string,
+      _id: BigNumberish,
+      _value: BigNumberish,
+      _data: BytesLike,
+      overrides?: Overrides
+    ): Promise<string>;
+
+    /**
+     * Withdraw ERC-20 tokens when receiving their ERC-1155 counterpart
+     * @param _data Additional data with no specified format
+     * @param _from The address which previously owned the token
+     * @param _ids An array containing ids of each token being transferred
+     * @param _operator The address which called the `safeBatchTransferFrom` function
+     * @param _values An array containing amounts of each token being transferred
+     */
+    onERC1155BatchReceived(
+      _operator: string,
+      _from: string,
+      _ids: (BigNumberish)[],
+      _values: (BigNumberish)[],
+      _data: BytesLike,
+      overrides?: Overrides
+    ): Promise<string>;
   };
 
   filters: {
@@ -675,8 +653,6 @@ export class Erc20Wrapper extends Contract {
       _operator: string | null,
       _approved: null
     ): EventFilter;
-
-    TokenRegistration(token_address: null, token_id: null): EventFilter;
 
     TransferBatch(
       _operator: string | null,
@@ -730,24 +706,23 @@ export class Erc20Wrapper extends Contract {
       _to: string,
       _value: BigNumberish
     ): Promise<BigNumber>;
-    onERC1155Received(
-      arg0: string,
-      _from: string,
-      _id: BigNumberish,
-      _value: BigNumberish,
-      arg4: BytesLike
-    ): Promise<BigNumber>;
-    onERC1155BatchReceived(
-      arg0: string,
-      _from: string,
-      _ids: (BigNumberish)[],
-      _values: (BigNumberish)[],
-      arg4: BytesLike
-    ): Promise<BigNumber>;
     getTokenID(_token: string): Promise<BigNumber>;
     getIdAddress(_id: BigNumberish): Promise<BigNumber>;
     getNTokens(): Promise<BigNumber>;
-    supportsInterface(interfaceID: BytesLike): Promise<BigNumber>;
+    onERC1155Received(
+      _operator: string,
+      _from: string,
+      _id: BigNumberish,
+      _value: BigNumberish,
+      _data: BytesLike
+    ): Promise<BigNumber>;
+    onERC1155BatchReceived(
+      _operator: string,
+      _from: string,
+      _ids: (BigNumberish)[],
+      _values: (BigNumberish)[],
+      _data: BytesLike
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -788,23 +763,22 @@ export class Erc20Wrapper extends Contract {
       _to: string,
       _value: BigNumberish
     ): Promise<PopulatedTransaction>;
-    onERC1155Received(
-      arg0: string,
-      _from: string,
-      _id: BigNumberish,
-      _value: BigNumberish,
-      arg4: BytesLike
-    ): Promise<PopulatedTransaction>;
-    onERC1155BatchReceived(
-      arg0: string,
-      _from: string,
-      _ids: (BigNumberish)[],
-      _values: (BigNumberish)[],
-      arg4: BytesLike
-    ): Promise<PopulatedTransaction>;
     getTokenID(_token: string): Promise<PopulatedTransaction>;
     getIdAddress(_id: BigNumberish): Promise<PopulatedTransaction>;
     getNTokens(): Promise<PopulatedTransaction>;
-    supportsInterface(interfaceID: BytesLike): Promise<PopulatedTransaction>;
+    onERC1155Received(
+      _operator: string,
+      _from: string,
+      _id: BigNumberish,
+      _value: BigNumberish,
+      _data: BytesLike
+    ): Promise<PopulatedTransaction>;
+    onERC1155BatchReceived(
+      _operator: string,
+      _from: string,
+      _ids: (BigNumberish)[],
+      _values: (BigNumberish)[],
+      _data: BytesLike
+    ): Promise<PopulatedTransaction>;
   };
 }

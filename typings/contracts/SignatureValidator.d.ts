@@ -54,7 +54,7 @@ export class SignatureValidator extends Contract {
      * Verifies that a hash has been signed by the given signer.
      * @param _data Full EIP-712 data structure that was hashed and signed
      * @param _hash Hash of the EIP-712 encoded data
-     * @param _sig Proof that the hash has been signed by signer.     For non wallet signatures, _sig is expected to be an array tightly encoded as     (bytes32 r, bytes32 s, uint8 v, uint256 nonce, SignatureType sigType)
+     * @param _sig Proof that the hash has been signed by signer.      For non wallet signatures, _sig is expected to be an array tightly encoded as      (bytes32 r, bytes32 s, uint8 v, uint256 nonce, SignatureType sigType)
      * @param _signerAddress Address that should have signed the given hash.
      */
     isValidSignature(
@@ -73,7 +73,7 @@ export class SignatureValidator extends Contract {
    * Verifies that a hash has been signed by the given signer.
    * @param _data Full EIP-712 data structure that was hashed and signed
    * @param _hash Hash of the EIP-712 encoded data
-   * @param _sig Proof that the hash has been signed by signer.     For non wallet signatures, _sig is expected to be an array tightly encoded as     (bytes32 r, bytes32 s, uint8 v, uint256 nonce, SignatureType sigType)
+   * @param _sig Proof that the hash has been signed by signer.      For non wallet signatures, _sig is expected to be an array tightly encoded as      (bytes32 r, bytes32 s, uint8 v, uint256 nonce, SignatureType sigType)
    * @param _signerAddress Address that should have signed the given hash.
    */
   isValidSignature(
@@ -89,7 +89,7 @@ export class SignatureValidator extends Contract {
      * Verifies that a hash has been signed by the given signer.
      * @param _data Full EIP-712 data structure that was hashed and signed
      * @param _hash Hash of the EIP-712 encoded data
-     * @param _sig Proof that the hash has been signed by signer.     For non wallet signatures, _sig is expected to be an array tightly encoded as     (bytes32 r, bytes32 s, uint8 v, uint256 nonce, SignatureType sigType)
+     * @param _sig Proof that the hash has been signed by signer.      For non wallet signatures, _sig is expected to be an array tightly encoded as      (bytes32 r, bytes32 s, uint8 v, uint256 nonce, SignatureType sigType)
      * @param _signerAddress Address that should have signed the given hash.
      */
     isValidSignature(

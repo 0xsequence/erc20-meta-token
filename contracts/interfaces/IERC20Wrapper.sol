@@ -1,4 +1,4 @@
-pragma solidity ^0.6.8;
+pragma solidity 0.7.4;
 import "multi-token-standard/contracts/interfaces/IERC1155.sol";
 
 interface IERC20Wrapper is IERC1155 {

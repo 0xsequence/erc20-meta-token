@@ -3495,6 +3495,11 @@ flat@^4.1.0:
   dependencies:
     is-buffer "~2.0.3"
 
+follow-redirects@^1.12.1:
+  version "1.13.0"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.13.0.tgz#b42e8d93a2a7eea5ed88633676d6597bc8e384db"
+  integrity sha512-aq6gF1BEKje4a9i9+5jimNFIpq4Q1WiwBToeRK5NvZBd/TRsmW8BsJfOEGkr76TbOyPVD3OVDN910EcUNtRYEA==
+
 for-each@^0.3.2, for-each@~0.3.3:
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/for-each/-/for-each-0.3.3.tgz#69b447e88a0a5d32c3e7084f3f1710034b21376e"
@@ -5323,10 +5328,10 @@ ms@2.1.2, ms@^2.1.1:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
 
-multi-token-standard@^0.9.6:
-  version "0.9.6"
-  resolved "https://registry.yarnpkg.com/multi-token-standard/-/multi-token-standard-0.9.6.tgz#8a6238b567e6ff069f6122ebfbfdcc71e0b641ce"
-  integrity sha512-i00XDym35De70g4gvify5v5J8mqKGFOdmWsCaMGH7UnE5jyPrH3DIjoLTC+6mVFx3N9/Ovm23QdUeKduYwvAkQ==
+multi-token-standard@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/multi-token-standard/-/multi-token-standard-1.0.0.tgz#74118cdb02b44ae57994a54c0885e112a74fc83d"
+  integrity sha512-C+kZsNDY9jfu/ZWyqMyUfbUUe9cT24mzJ+OlNLIMp1PYK7owBgQWrv3J6PB9rVMTF09CzHXhcGCkjKVp9Fx00A==
 
 mz@^2.6.0:
   version "2.7.0"
@@ -6797,6 +6802,21 @@ sol-explore@1.6.1:
   resolved "https://registry.yarnpkg.com/sol-explore/-/sol-explore-1.6.1.tgz#b59f073c69fe332560d5a10c32ba8ca7f2986cfb"
   integrity sha1-tZ8HPGn+MyVg1aEMMrqMp/KYbPs=
 
+solc@0.7.4:
+  version "0.7.4"
+  resolved "https://registry.yarnpkg.com/solc/-/solc-0.7.4.tgz#9c5ed81ae0692e3e614e47cd5b500b0f9485b98d"
+  integrity sha512-IVLqAfUkJqgTS0JIgFPeC50ehUeBXu2eE+iU+rqb6UeOyf6w/BB/EsNcTSTpjtUti8BTG/sCd2qVhrWVYy7p0g==
+  dependencies:
+    command-exists "^1.2.8"
+    commander "3.0.2"
+    follow-redirects "^1.12.1"
+    fs-extra "^0.30.0"
+    js-sha3 "0.8.0"
+    memorystream "^0.3.1"
+    require-from-string "^2.0.0"
+    semver "^5.5.0"
+    tmp "0.0.33"
+
 solc@^0.4.2:
   version "0.4.25"
   resolved "https://registry.yarnpkg.com/solc/-/solc-0.4.25.tgz#06b8321f7112d95b4b903639b1138a4d292f5faa"
@@ -6807,20 +6827,6 @@ solc@^0.4.2:
     require-from-string "^1.1.0"
     semver "^5.3.0"
     yargs "^4.7.1"
-
-solc@^0.6.8:
-  version "0.6.8"
-  resolved "https://registry.yarnpkg.com/solc/-/solc-0.6.8.tgz#accf03634554938e166ba9b9853d17ca5c728131"
-  integrity sha512-7URBAisWVjO7dwWNpEkQ5dpRSpSF4Wm0aD5EB82D5BQKh+q7jhOxhgkG4K5gax/geM0kPZUAxnaLcgl2ZXBgMQ==
-  dependencies:
-    command-exists "^1.2.8"
-    commander "3.0.2"
-    fs-extra "^0.30.0"
-    js-sha3 "0.8.0"
-    memorystream "^0.3.1"
-    require-from-string "^2.0.0"
-    semver "^5.5.0"
-    tmp "0.0.33"
 
 solium-plugin-security@0.1.1:
   version "0.1.1"

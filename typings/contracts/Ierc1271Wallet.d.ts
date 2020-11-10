@@ -51,7 +51,7 @@ export class Ierc1271Wallet extends Contract {
 
   functions: {
     /**
-     * MUST return the correct magic value if the signature provided is valid for the provided hash  > The bytes4 magic value to return when signature is valid is 0x20c13b0b : bytes4(keccak256("isValidSignature(bytes,bytes)")  > This function MAY modify Ethereum's state
+     * MUST return the correct magic value if the signature provided is valid for the provided hash   > The bytes4 magic value to return when signature is valid is 0x20c13b0b : bytes4(keccak256("isValidSignature(bytes,bytes)")   > This function MAY modify Ethereum's state
      * Verifies whether the provided signature is valid with respect to the provided hash
      * @param _hash keccak256 hash that was signed
      * @param _signature Signature byte array associated with _data
@@ -66,7 +66,7 @@ export class Ierc1271Wallet extends Contract {
     }>;
 
     /**
-     * MUST return the correct magic value if the signature provided is valid for the provided data  > The bytes4 magic value to return when signature is valid is 0x20c13b0b : bytes4(keccak256("isValidSignature(bytes,bytes)")  > This function MAY modify Ethereum's state
+     * MUST return the correct magic value if the signature provided is valid for the provided data   > The bytes4 magic value to return when signature is valid is 0x20c13b0b : bytes4(keccak256("isValidSignature(bytes,bytes)")   > This function MAY modify Ethereum's state
      * Verifies whether the provided signature is valid with respect to the provided data
      * @param _data Arbitrary length data signed on the behalf of address(this)
      * @param _signature Signature byte array associated with _data
@@ -82,7 +82,7 @@ export class Ierc1271Wallet extends Contract {
   };
 
   /**
-   * MUST return the correct magic value if the signature provided is valid for the provided hash  > The bytes4 magic value to return when signature is valid is 0x20c13b0b : bytes4(keccak256("isValidSignature(bytes,bytes)")  > This function MAY modify Ethereum's state
+   * MUST return the correct magic value if the signature provided is valid for the provided hash   > The bytes4 magic value to return when signature is valid is 0x20c13b0b : bytes4(keccak256("isValidSignature(bytes,bytes)")   > This function MAY modify Ethereum's state
    * Verifies whether the provided signature is valid with respect to the provided hash
    * @param _hash keccak256 hash that was signed
    * @param _signature Signature byte array associated with _data
@@ -94,7 +94,7 @@ export class Ierc1271Wallet extends Contract {
   ): Promise<string>;
 
   /**
-   * MUST return the correct magic value if the signature provided is valid for the provided data  > The bytes4 magic value to return when signature is valid is 0x20c13b0b : bytes4(keccak256("isValidSignature(bytes,bytes)")  > This function MAY modify Ethereum's state
+   * MUST return the correct magic value if the signature provided is valid for the provided data   > The bytes4 magic value to return when signature is valid is 0x20c13b0b : bytes4(keccak256("isValidSignature(bytes,bytes)")   > This function MAY modify Ethereum's state
    * Verifies whether the provided signature is valid with respect to the provided data
    * @param _data Arbitrary length data signed on the behalf of address(this)
    * @param _signature Signature byte array associated with _data
@@ -107,7 +107,7 @@ export class Ierc1271Wallet extends Contract {
 
   staticCall: {
     /**
-     * MUST return the correct magic value if the signature provided is valid for the provided hash  > The bytes4 magic value to return when signature is valid is 0x20c13b0b : bytes4(keccak256("isValidSignature(bytes,bytes)")  > This function MAY modify Ethereum's state
+     * MUST return the correct magic value if the signature provided is valid for the provided hash   > The bytes4 magic value to return when signature is valid is 0x20c13b0b : bytes4(keccak256("isValidSignature(bytes,bytes)")   > This function MAY modify Ethereum's state
      * Verifies whether the provided signature is valid with respect to the provided hash
      * @param _hash keccak256 hash that was signed
      * @param _signature Signature byte array associated with _data
@@ -119,7 +119,7 @@ export class Ierc1271Wallet extends Contract {
     ): Promise<string>;
 
     /**
-     * MUST return the correct magic value if the signature provided is valid for the provided data  > The bytes4 magic value to return when signature is valid is 0x20c13b0b : bytes4(keccak256("isValidSignature(bytes,bytes)")  > This function MAY modify Ethereum's state
+     * MUST return the correct magic value if the signature provided is valid for the provided data   > The bytes4 magic value to return when signature is valid is 0x20c13b0b : bytes4(keccak256("isValidSignature(bytes,bytes)")   > This function MAY modify Ethereum's state
      * Verifies whether the provided signature is valid with respect to the provided data
      * @param _data Arbitrary length data signed on the behalf of address(this)
      * @param _signature Signature byte array associated with _data
