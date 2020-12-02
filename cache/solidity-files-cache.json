@@ -36,418 +36,6 @@
         "IERC20Wrapper"
       ]
     },
-    "/home/michael/Projects/horizon-games/erc20-meta-token/node_modules/multi-token-standard/contracts/interfaces/IERC1155.sol": {
-      "lastModificationDate": 1605890883495,
-      "sourceName": "multi-token-standard/contracts/interfaces/IERC1155.sol",
-      "solcConfig": {
-        "version": "0.7.4",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 10000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "0.7.4"
-      ],
-      "artifacts": [
-        "IERC1155"
-      ]
-    },
-    "/home/michael/Projects/horizon-games/erc20-meta-token/node_modules/multi-token-standard/contracts/tokens/ERC1155/ERC1155Meta.sol": {
-      "lastModificationDate": 1605890883675,
-      "sourceName": "multi-token-standard/contracts/tokens/ERC1155/ERC1155Meta.sol",
-      "solcConfig": {
-        "version": "0.7.4",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 10000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./ERC1155.sol",
-        "../../interfaces/IERC20.sol",
-        "../../interfaces/IERC1155.sol",
-        "../../utils/LibBytes.sol",
-        "../../utils/SignatureValidator.sol"
-      ],
-      "versionPragmas": [
-        "0.7.4"
-      ],
-      "artifacts": [
-        "ERC1155Meta"
-      ]
-    },
-    "/home/michael/Projects/horizon-games/erc20-meta-token/node_modules/multi-token-standard/contracts/tokens/ERC1155/ERC1155.sol": {
-      "lastModificationDate": 1605890883675,
-      "sourceName": "multi-token-standard/contracts/tokens/ERC1155/ERC1155.sol",
-      "solcConfig": {
-        "version": "0.7.4",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 10000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../../utils/SafeMath.sol",
-        "../../interfaces/IERC1155TokenReceiver.sol",
-        "../../interfaces/IERC1155.sol",
-        "../../utils/Address.sol",
-        "../../utils/ERC165.sol"
-      ],
-      "versionPragmas": [
-        "0.7.4"
-      ],
-      "artifacts": [
-        "ERC1155"
-      ]
-    },
-    "/home/michael/Projects/horizon-games/erc20-meta-token/node_modules/multi-token-standard/contracts/interfaces/IERC20.sol": {
-      "lastModificationDate": 1605890883495,
-      "sourceName": "multi-token-standard/contracts/interfaces/IERC20.sol",
-      "solcConfig": {
-        "version": "0.7.4",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 10000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "0.7.4"
-      ],
-      "artifacts": [
-        "IERC20"
-      ]
-    },
-    "/home/michael/Projects/horizon-games/erc20-meta-token/node_modules/multi-token-standard/contracts/utils/LibBytes.sol": {
-      "lastModificationDate": 1605890883495,
-      "sourceName": "multi-token-standard/contracts/utils/LibBytes.sol",
-      "solcConfig": {
-        "version": "0.7.4",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 10000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "0.7.4"
-      ],
-      "artifacts": [
-        "LibBytes"
-      ]
-    },
-    "/home/michael/Projects/horizon-games/erc20-meta-token/node_modules/multi-token-standard/contracts/utils/SignatureValidator.sol": {
-      "lastModificationDate": 1605890883495,
-      "sourceName": "multi-token-standard/contracts/utils/SignatureValidator.sol",
-      "solcConfig": {
-        "version": "0.7.4",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 10000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../interfaces/IERC1271Wallet.sol",
-        "./LibBytes.sol",
-        "./LibEIP712.sol"
-      ],
-      "versionPragmas": [
-        "0.7.4"
-      ],
-      "artifacts": [
-        "SignatureValidator"
-      ]
-    },
-    "/home/michael/Projects/horizon-games/erc20-meta-token/node_modules/multi-token-standard/contracts/utils/SafeMath.sol": {
-      "lastModificationDate": 1605890883495,
-      "sourceName": "multi-token-standard/contracts/utils/SafeMath.sol",
-      "solcConfig": {
-        "version": "0.7.4",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 10000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "0.7.4"
-      ],
-      "artifacts": [
-        "SafeMath"
-      ]
-    },
-    "/home/michael/Projects/horizon-games/erc20-meta-token/node_modules/multi-token-standard/contracts/interfaces/IERC1155TokenReceiver.sol": {
-      "lastModificationDate": 1605890883495,
-      "sourceName": "multi-token-standard/contracts/interfaces/IERC1155TokenReceiver.sol",
-      "solcConfig": {
-        "version": "0.7.4",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 10000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "0.7.4"
-      ],
-      "artifacts": [
-        "IERC1155TokenReceiver"
-      ]
-    },
-    "/home/michael/Projects/horizon-games/erc20-meta-token/node_modules/multi-token-standard/contracts/utils/Address.sol": {
-      "lastModificationDate": 1605890883495,
-      "sourceName": "multi-token-standard/contracts/utils/Address.sol",
-      "solcConfig": {
-        "version": "0.7.4",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 10000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "0.7.4"
-      ],
-      "artifacts": [
-        "Address"
-      ]
-    },
-    "/home/michael/Projects/horizon-games/erc20-meta-token/node_modules/multi-token-standard/contracts/utils/ERC165.sol": {
-      "lastModificationDate": 1605890883495,
-      "sourceName": "multi-token-standard/contracts/utils/ERC165.sol",
-      "solcConfig": {
-        "version": "0.7.4",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 10000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "0.7.4"
-      ],
-      "artifacts": [
-        "ERC165"
-      ]
-    },
-    "/home/michael/Projects/horizon-games/erc20-meta-token/node_modules/multi-token-standard/contracts/interfaces/IERC1271Wallet.sol": {
-      "lastModificationDate": 1605890883495,
-      "sourceName": "multi-token-standard/contracts/interfaces/IERC1271Wallet.sol",
-      "solcConfig": {
-        "version": "0.7.4",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 10000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "0.7.4"
-      ],
-      "artifacts": [
-        "IERC1271Wallet"
-      ]
-    },
-    "/home/michael/Projects/horizon-games/erc20-meta-token/node_modules/multi-token-standard/contracts/utils/LibEIP712.sol": {
-      "lastModificationDate": 1605890883495,
-      "sourceName": "multi-token-standard/contracts/utils/LibEIP712.sol",
-      "solcConfig": {
-        "version": "0.7.4",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 10000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "0.7.4"
-      ],
-      "artifacts": [
-        "LibEIP712"
-      ]
-    },
     "/home/michael/Projects/horizon-games/erc20-meta-token/contracts/wrapper/MetaERC20Wrapper.sol": {
       "lastModificationDate": 1605890512119,
       "sourceName": "contracts/wrapper/MetaERC20Wrapper.sol",
@@ -486,74 +74,6 @@
       ],
       "artifacts": [
         "MetaERC20Wrapper"
-      ]
-    },
-    "/home/michael/Projects/horizon-games/erc20-meta-token/node_modules/multi-token-standard/contracts/interfaces/IERC165.sol": {
-      "lastModificationDate": 1605890883495,
-      "sourceName": "multi-token-standard/contracts/interfaces/IERC165.sol",
-      "solcConfig": {
-        "version": "0.7.4",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 10000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "0.7.4"
-      ],
-      "artifacts": [
-        "IERC165"
-      ]
-    },
-    "/home/michael/Projects/horizon-games/erc20-meta-token/node_modules/multi-token-standard/contracts/tokens/ERC1155/ERC1155MintBurn.sol": {
-      "lastModificationDate": 1605890883675,
-      "sourceName": "multi-token-standard/contracts/tokens/ERC1155/ERC1155MintBurn.sol",
-      "solcConfig": {
-        "version": "0.7.4",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 10000
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./ERC1155.sol"
-      ],
-      "versionPragmas": [
-        "0.7.4"
-      ],
-      "artifacts": [
-        "ERC1155MintBurn"
       ]
     },
     "/home/michael/Projects/horizon-games/erc20-meta-token/contracts/wrapper/ERC20Wrapper.sol": {
@@ -631,6 +151,486 @@
       "artifacts": [
         "ERC20",
         "ERC20Mock"
+      ]
+    },
+    "/home/michael/Projects/horizon-games/erc20-meta-token/node_modules/multi-token-standard/contracts/interfaces/IERC1155.sol": {
+      "lastModificationDate": 1606879176256,
+      "sourceName": "multi-token-standard/contracts/interfaces/IERC1155.sol",
+      "solcConfig": {
+        "version": "0.7.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 10000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.7.4"
+      ],
+      "artifacts": [
+        "IERC1155"
+      ]
+    },
+    "/home/michael/Projects/horizon-games/erc20-meta-token/node_modules/multi-token-standard/contracts/tokens/ERC1155/ERC1155Meta.sol": {
+      "lastModificationDate": 1606879176620,
+      "sourceName": "multi-token-standard/contracts/tokens/ERC1155/ERC1155Meta.sol",
+      "solcConfig": {
+        "version": "0.7.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 10000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./ERC1155.sol",
+        "../../interfaces/IERC20.sol",
+        "../../interfaces/IERC1155.sol",
+        "../../utils/LibBytes.sol",
+        "../../utils/SignatureValidator.sol"
+      ],
+      "versionPragmas": [
+        "0.7.4"
+      ],
+      "artifacts": [
+        "ERC1155Meta"
+      ]
+    },
+    "/home/michael/Projects/horizon-games/erc20-meta-token/node_modules/multi-token-standard/contracts/tokens/ERC1155/ERC1155.sol": {
+      "lastModificationDate": 1606879176620,
+      "sourceName": "multi-token-standard/contracts/tokens/ERC1155/ERC1155.sol",
+      "solcConfig": {
+        "version": "0.7.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 10000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../../utils/SafeMath.sol",
+        "../../interfaces/IERC1155TokenReceiver.sol",
+        "../../interfaces/IERC1155.sol",
+        "../../utils/Address.sol",
+        "../../utils/ERC165.sol"
+      ],
+      "versionPragmas": [
+        "0.7.4"
+      ],
+      "artifacts": [
+        "ERC1155"
+      ]
+    },
+    "/home/michael/Projects/horizon-games/erc20-meta-token/node_modules/multi-token-standard/contracts/interfaces/IERC20.sol": {
+      "lastModificationDate": 1606879176257,
+      "sourceName": "multi-token-standard/contracts/interfaces/IERC20.sol",
+      "solcConfig": {
+        "version": "0.7.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 10000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.7.4"
+      ],
+      "artifacts": [
+        "IERC20"
+      ]
+    },
+    "/home/michael/Projects/horizon-games/erc20-meta-token/node_modules/multi-token-standard/contracts/utils/LibBytes.sol": {
+      "lastModificationDate": 1606879176262,
+      "sourceName": "multi-token-standard/contracts/utils/LibBytes.sol",
+      "solcConfig": {
+        "version": "0.7.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 10000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.7.4"
+      ],
+      "artifacts": [
+        "LibBytes"
+      ]
+    },
+    "/home/michael/Projects/horizon-games/erc20-meta-token/node_modules/multi-token-standard/contracts/utils/SignatureValidator.sol": {
+      "lastModificationDate": 1606879176262,
+      "sourceName": "multi-token-standard/contracts/utils/SignatureValidator.sol",
+      "solcConfig": {
+        "version": "0.7.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 10000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../interfaces/IERC1271Wallet.sol",
+        "./LibBytes.sol",
+        "./LibEIP712.sol"
+      ],
+      "versionPragmas": [
+        "0.7.4"
+      ],
+      "artifacts": [
+        "SignatureValidator"
+      ]
+    },
+    "/home/michael/Projects/horizon-games/erc20-meta-token/node_modules/multi-token-standard/contracts/utils/SafeMath.sol": {
+      "lastModificationDate": 1606879176262,
+      "sourceName": "multi-token-standard/contracts/utils/SafeMath.sol",
+      "solcConfig": {
+        "version": "0.7.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 10000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.7.4"
+      ],
+      "artifacts": [
+        "SafeMath"
+      ]
+    },
+    "/home/michael/Projects/horizon-games/erc20-meta-token/node_modules/multi-token-standard/contracts/interfaces/IERC1155TokenReceiver.sol": {
+      "lastModificationDate": 1606879176256,
+      "sourceName": "multi-token-standard/contracts/interfaces/IERC1155TokenReceiver.sol",
+      "solcConfig": {
+        "version": "0.7.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 10000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.7.4"
+      ],
+      "artifacts": [
+        "IERC1155TokenReceiver"
+      ]
+    },
+    "/home/michael/Projects/horizon-games/erc20-meta-token/node_modules/multi-token-standard/contracts/utils/Address.sol": {
+      "lastModificationDate": 1606879176262,
+      "sourceName": "multi-token-standard/contracts/utils/Address.sol",
+      "solcConfig": {
+        "version": "0.7.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 10000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.7.4"
+      ],
+      "artifacts": [
+        "Address"
+      ]
+    },
+    "/home/michael/Projects/horizon-games/erc20-meta-token/node_modules/multi-token-standard/contracts/utils/ERC165.sol": {
+      "lastModificationDate": 1606879176262,
+      "sourceName": "multi-token-standard/contracts/utils/ERC165.sol",
+      "solcConfig": {
+        "version": "0.7.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 10000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.7.4"
+      ],
+      "artifacts": [
+        "ERC165"
+      ]
+    },
+    "/home/michael/Projects/horizon-games/erc20-meta-token/node_modules/multi-token-standard/contracts/interfaces/IERC1271Wallet.sol": {
+      "lastModificationDate": 1606879176256,
+      "sourceName": "multi-token-standard/contracts/interfaces/IERC1271Wallet.sol",
+      "solcConfig": {
+        "version": "0.7.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 10000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.7.4"
+      ],
+      "artifacts": [
+        "IERC1271Wallet"
+      ]
+    },
+    "/home/michael/Projects/horizon-games/erc20-meta-token/node_modules/multi-token-standard/contracts/utils/LibEIP712.sol": {
+      "lastModificationDate": 1606879176262,
+      "sourceName": "multi-token-standard/contracts/utils/LibEIP712.sol",
+      "solcConfig": {
+        "version": "0.7.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 10000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.7.4"
+      ],
+      "artifacts": [
+        "LibEIP712"
+      ]
+    },
+    "/home/michael/Projects/horizon-games/erc20-meta-token/node_modules/multi-token-standard/contracts/interfaces/IERC165.sol": {
+      "lastModificationDate": 1606879176256,
+      "sourceName": "multi-token-standard/contracts/interfaces/IERC165.sol",
+      "solcConfig": {
+        "version": "0.7.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 10000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.7.4"
+      ],
+      "artifacts": [
+        "IERC165"
+      ]
+    },
+    "/home/michael/Projects/horizon-games/erc20-meta-token/node_modules/multi-token-standard/contracts/tokens/ERC1155/ERC1155MintBurn.sol": {
+      "lastModificationDate": 1606879176621,
+      "sourceName": "multi-token-standard/contracts/tokens/ERC1155/ERC1155MintBurn.sol",
+      "solcConfig": {
+        "version": "0.7.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 10000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./ERC1155.sol"
+      ],
+      "versionPragmas": [
+        "0.7.4"
+      ],
+      "artifacts": [
+        "ERC1155MintBurn"
       ]
     }
   }
