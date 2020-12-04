@@ -1,6 +1,6 @@
 {
   "name": "erc20-meta-token",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "General ERC-1155 Transaction Wrapper Contract for ERC20s",
   "repository": "https://github.com/horizon-games/ERC20-meta-wrapper",
   "license": "MIT",
@@ -13,12 +13,12 @@
     "ethereum"
   ],
   "files": [
-    "build",
+    "artifacts",
     "contracts",
     "typings"
   ],
   "scripts": {
-    "build": "yarn compile && yarn gen:typings && tsc -b",
+    "build": "rm -rf typings/contracts && hardhat clean && yarn compile && yarn gen:typings",
     "compile": "hardhat --max-memory 4096 compile",
     "clean": "rm -rf build test typings/contracts",
     "test": "hardhat --network ganache test ./test/*.spec.ts",
