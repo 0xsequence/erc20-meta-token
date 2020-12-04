@@ -4798,10 +4798,10 @@ ms@2.1.2, ms@^2.1.1:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
 
-multi-token-standard@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/multi-token-standard/-/multi-token-standard-1.0.0.tgz#74118cdb02b44ae57994a54c0885e112a74fc83d"
-  integrity sha512-C+kZsNDY9jfu/ZWyqMyUfbUUe9cT24mzJ+OlNLIMp1PYK7owBgQWrv3J6PB9rVMTF09CzHXhcGCkjKVp9Fx00A==
+multi-token-standard@2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/multi-token-standard/-/multi-token-standard-2.0.1.tgz#91d9888c0508691389829d1b67434c5f2e991697"
+  integrity sha512-Fhwu+hCufS4AAiBxO+v0uYQp298R69xo1Diprqee8gew2Oh4FgsqtuBwELFhngTy4rmRUM85A+RwbAgmmZliWg==
 
 multibase@^0.7.0:
   version "0.7.0"
