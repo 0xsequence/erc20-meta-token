@@ -1,6 +1,8 @@
-# General Meta Transaction Wrapper Contract for ERC20
+# General Meta Wrapper Contract for ERC20
 
 Wrapper contract offering meta-transaction methods to any token compliant with the ERC-20 standard.
+
+As well, it allows any ERC-20 token to function with an ERC-1155 contract.
 
 ## How does it work?
 
@@ -30,10 +32,8 @@ erc20-meta-token has been audited by two independant parties and all issues disc
 # Usage
 
 ## Dependencies
-1. Install node v11, 
-2. Install yarn : `npm install -g yarn`
-3. Install Truffle npm package: `npm install truffle` or `yarn add truffle`
-2. Install the erc20-meta-token npm package `npm install erc20-meta-token` or `yarn add erc20-meta-token` 
+
+Install the erc20-meta-token npm package `npm install erc20-meta-token` or `yarn add erc20-meta-token` 
 
 ## Dev / running the tests
 1. `yarn install`
@@ -45,7 +45,7 @@ erc20-meta-token has been audited by two independant parties and all issues disc
 To write your custom contracts, import ours and extend them through inheritance.
 
 ```solidity
-pragma solidity ^0.5.0;
+pragma solidity ^0.7.4;
 
 import 'erc20-meta-token/contracts/interfaces/IMetaERC20Wrapper.sol';
 

@@ -59,7 +59,7 @@ describe('ERC20Wrapper', () => {
   let userERC20Contract: ERC20Mock
 
   // Provider
-  var provider = new ethers.providers.JsonRpcProvider()
+  let provider = new ethers.providers.JsonRpcProvider()
 
   context('When Erc20Wrapper contract is deployed', () => {
     before(async () => {
