@@ -1,8 +1,8 @@
-# General Meta Wrapper Contract for ERC20
+General ERC20 -> ERC1155 Token Wrapper Contract
+===============================================
 
-Wrapper contract offering meta-transaction methods to any token compliant with the ERC-20 standard.
-
-As well, it allows any ERC-20 token to function with an ERC-1155 contract.
+Allows any ERC-20 token to be wrapped inside of an ERC-1155 contract, and thereby
+allows an ERC-20 token to function as an ERC-1155 contract.
 
 ## How does it work?
 
