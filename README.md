@@ -1,4 +1,4 @@
-General ERC20 -> ERC1155 Token Wrapper Contract
+General ERC20 to ERC1155 Token Wrapper Contract
 ===============================================
 
 Allows any ERC-20 token to be wrapped inside of an ERC-1155 contract, and thereby allows
@@ -43,7 +43,8 @@ There are a few reasons why the ERC-1155 standard interface was chosen for this 
 
 In addition, it becomes easier to have multiple version of wrapper contracts. Indeed, if 5 versions exists, you only need 5 contracts to support all ERC20s in the five different versions, compared for 5N contracts, where N is the number of ERC-20 contracts. 
 
-# Security
+# Security Review
+
 erc20-meta-token has been audited by two independant parties and all issues discovered were addressed. 
 - [Agustín Aguilar**](https://github.com/arcadeum/erc20-meta-token/blob/master/audits/Security_Audit_Horizon_Games_23-12-19_2.pdf)
 - [Consensys Diligence](https://github.com/arcadeum/erc20-meta-token/blob/master/audits/horizon-games-audit-2020-02.pdf) 
