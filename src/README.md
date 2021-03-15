@@ -4,7 +4,7 @@
 Allows any ERC-20 token to be wrapped inside of an ERC-1155 contract, and thereby
 allows an ERC-20 token to function as an ERC-1155 contract.
 
-For more information see, [github.com/0xsequence/erc-1155](https://github.com/0xsequence/erc20-meta-token)
+For more information see, [github.com/0xsequence/erc20-meta-token](https://github.com/0xsequence/erc20-meta-token)
 
 
 ## Getting started
