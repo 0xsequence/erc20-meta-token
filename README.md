@@ -57,9 +57,9 @@ This repository is configured as a yarn workspace, and has multiple pacakge.json
 we have the root ./package.json for the development environment, contract compilation and testing. Contract
 source code and distribution files are packaged in "src/package.json".
 
-To release a new version, make sure to the version, tag it, and run `yarn release`. The `release` command
+To release a new version, make sure to bump the version, tag it, and run `yarn release`. The `release` command
 will publish the `0xsequence/erc20-meta-token` package in the "src/" folder, separate from the root package. The advantage
-here is that application developers who consume `0xsequence/erc20-meta-token` aren't required to install any of the devDependenies
+here is that application developers who consume `0xsequence/erc20-meta-token` aren't required to install any of the devDependencies
 in their toolchains as our build and contract packages are separated.
 
 ## LICENSE
