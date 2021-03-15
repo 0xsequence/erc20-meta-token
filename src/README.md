@@ -1,6 +1,8 @@
 @0xsequence/erc20-meta-token
 ============================
 
+General ERC20 to ERC1155 Token Wrapper Contract.
+
 Allows any ERC-20 token to be wrapped inside of an ERC-1155 contract, and thereby allows
 an ERC-20 token to function as an ERC-1155 contract.
 

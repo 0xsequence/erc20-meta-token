@@ -1,9 +1,7 @@
 {
-  "name": "erc20-meta-token",
+  "name": "root",
   "private": true,
   "workspaces": ["src"],
-  "description": "General ERC-1155 Transaction Wrapper Contract for ERC20 Tokens",
-  "repository": "https://github.com/0xsequence/erc20-meta-token",
   "license": "Apache-2.0",
   "scripts": {
     "build": "yarn clean && yarn compile && yarn gen:typings",
