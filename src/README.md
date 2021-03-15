@@ -1,8 +1,8 @@
 @0xsequence/erc20-meta-token
 ============================
 
-Allows any ERC-20 token to be wrapped inside of an ERC-1155 contract, and thereby
-allows an ERC-20 token to function as an ERC-1155 contract.
+Allows any ERC-20 token to be wrapped inside of an ERC-1155 contract, and thereby allows
+an ERC-20 token to function as an ERC-1155 contract.
 
 For more information see, [github.com/0xsequence/erc20-meta-token](https://github.com/0xsequence/erc20-meta-token)
 
@@ -11,17 +11,20 @@ For more information see, [github.com/0xsequence/erc20-meta-token](https://githu
 
 ### Install
 
-`npm install @0xsequence/erc20-meta-token` or `yarn add @0xsequence/erc20-meta-token`
+`yarn add @0xsequence/erc20-meta-token` or `npm install @0xsequence/erc20-meta-token`
 
 ### Usage from Solidity
 
 ```solidity
 pragma solidity ^0.7.4;
 
-import '@0xsequence/erc20-meta-token/contracts/wrapper/ERC20Wrapper.sol';
+import '@0xsequence/erc20-meta-token/contracts/interfaces/IMetaERC20Wrapper.sol';
 
-contract MyERC20MetaToken is ERC20Wrapper {
-  ...
+contract ContractA {
+  //...
+  function f(address wrapperAddress, address ERC20tokenAddress, uint256 amount) public {
+    IMetaERC20Wrapper(wrapperAddress).deposit(ERC20tokenAddress, amount);
+  }
 }
 ```
 

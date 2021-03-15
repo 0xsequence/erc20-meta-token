@@ -1,8 +1,29 @@
 General ERC20 -> ERC1155 Token Wrapper Contract
 ===============================================
 
-Allows any ERC-20 token to be wrapped inside of an ERC-1155 contract, and thereby
-allows an ERC-20 token to function as an ERC-1155 contract.
+Allows any ERC-20 token to be wrapped inside of an ERC-1155 contract, and thereby allows
+an ERC-20 token to function as an ERC-1155 contract.
+
+## Getting started
+
+### Install
+
+`yarn add @0xsequence/erc20-meta-token` or `npm install @0xsequence/erc20-meta-token`
+
+### Usage from Solidity
+
+```solidity
+pragma solidity ^0.7.4;
+
+import '@0xsequence/erc20-meta-token/contracts/interfaces/IMetaERC20Wrapper.sol';
+
+contract ContractA {
+  //...
+  function f(address wrapperAddress, address ERC20tokenAddress, uint256 amount) public {
+    IMetaERC20Wrapper(wrapperAddress).deposit(ERC20tokenAddress, amount);
+  }
+}
+```
 
 ## How does it work?
 
@@ -29,30 +50,19 @@ erc20-meta-token has been audited by two independant parties and all issues disc
 
 ** Agustín was hired as a full-time employee at Horizon after the audit was completed. Agustín did not take part in the writing of erc20-meta-token contracts.
 
-# Usage
+## Dev env & release
 
-## Dependencies
+This repository is configured as a yarn workspace, and has multiple pacakge.json files. Specifically,
+we have the root ./package.json for the development environment, contract compilation and testing. Contract
+source code and distribution files are packaged in "src/package.json".
 
-Install the erc20-meta-token npm package `npm install erc20-meta-token` or `yarn add erc20-meta-token` 
+To release a new version, make sure to the version, tag it, and run `yarn release`. The `release` command
+will publish the `0xsequence/erc20-meta-token` package in the "src/" folder, separate from the root package. The advantage
+here is that application developers who consume `0xsequence/erc20-meta-token` aren't required to install any of the devDependenies
+in their toolchains as our build and contract packages are separated.
 
-## Dev / running the tests
-1. `yarn install`
-2. `yarn build`
-3. `yarn ganache`
-4. in another terminal run, `yarn test` - executes test suite
+## LICENSE
 
-## Importing into your Contracts
-To write your custom contracts, import ours and extend them through inheritance.
+Copyright (c) 2017-present [Horizon Blockchain Games Inc](https://horizon.io).
 
-```solidity
-pragma solidity ^0.7.4;
-
-import 'erc20-meta-token/contracts/interfaces/IMetaERC20Wrapper.sol';
-
-contract ContractA {
-  //...
-  function f(address wrapperAddress, address ERC20tokenAddress, uint256 amount) public {
-    IMetaERC20Wrapper(wrapperAddress).deposit(ERC20tokenAddress, amount);
-  }
-}
-```
+Licensed under [Apache-2.0](./LICENSE)
