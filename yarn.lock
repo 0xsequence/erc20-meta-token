@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@0xsequence/erc-1155@^3.0.2":
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/@0xsequence/erc-1155/-/erc-1155-3.0.2.tgz#879cd4241bfd226fc0ca3d868d31c477506fd226"
-  integrity sha512-DN5aeNrbwhPUXSKR9cKCzUfRSMrafGN/ZhjcZfk7OdvDDhBwvoE0y7ggoxQdL+aGjNXYKxjeQzDMtEf7smBCgg==
+"@0xsequence/erc-1155@^3.0.3":
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/@0xsequence/erc-1155/-/erc-1155-3.0.3.tgz#264aca7369135dd33cae144d872c214705eff68f"
+  integrity sha512-FTwaEYLLc9ugvbD/l1Wb0PcX4vmrZuj1giVWUZHbg8MEdf8hsUDzegFMPBcGvCUu4B4pDMSPNiawwLdnd9NtyA==
 
 "@babel/code-frame@7.12.11":
   version "7.12.11"
