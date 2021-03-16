@@ -3,9 +3,12 @@ import * as ethers from 'ethers'
 import { AbstractContract, RevertError, expect } from './utils'
 import * as utils from './utils'
 
-import { ERC20Wrapper } from 'typings/contracts/ERC20Wrapper'
-import { ERC20Mock } from 'typings/contracts/ERC20Mock'
-import { BigNumber } from 'ethers';
+import {
+  ERC20Wrapper,
+  ERC20Mock
+} from 'src/gen/typechain'
+
+import { BigNumber } from 'ethers'
 
 // init test wallets from package.json mnemonic
 import { web3 } from 'hardhat'

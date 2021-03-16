@@ -1,12 +1,12 @@
 {
   "name": "@0xsequence/erc20-meta-token",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "General ERC20 to ERC1155 Token Wrapper Contract",
   "repository": "https://github.com/0xsequence/erc20-meta-token",
   "homepage": "https://sequence.build",
   "license": "Apache-2.0",
-  "source": "typings/contracts/index.ts",
-  "types": "typings/contracts/index.ts",
+  "main": "gen/adapter/index.js",
+  "types": "gen/typechain/index.ts",
   "scripts": {
   },
   "keywords": [
@@ -15,8 +15,11 @@
     "ERC1155",
     "ethereum"
   ],
+  "peerDependencies": {
+    "ethers": "^5.0.32"
+  },
   "dependencies": {
-    "@0xsequence/erc-1155": "^3.0.3"
+    "@0xsequence/erc-1155": "^3.0.4"
   },
   "devDependencies": {}
 }

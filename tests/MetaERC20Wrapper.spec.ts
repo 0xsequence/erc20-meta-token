@@ -3,8 +3,11 @@ import * as ethers from 'ethers'
 import { AbstractContract, RevertError, expect } from './utils'
 import * as utils from './utils'
 
-import { MetaERC20Wrapper } from 'typings/contracts/MetaERC20Wrapper'
-import { ERC20Mock } from 'typings/contracts/ERC20Mock'
+import {
+  MetaERC20Wrapper,
+  ERC20Mock
+} from 'src/gen/typechain'
+
 import { BigNumber } from 'ethers';
 
 // init test wallets from package.json mnemonic
