@@ -8,7 +8,7 @@
     "clean": "rimraf src/artifacts && rimraf src/gen && rimraf cache",
     "compile": "hardhat --max-memory 4096 compile",
     "adapter": "yarn adapter:gen && yarn adapter:build",
-    "adapter:gen": "rimraf src/gen/typechain && typechain --target ethers-v5 --outDir src/gen/typechain './src/artifacts/!(build-info)/**/*[^dbg].json'",
+    "adapter:gen": "rimraf src/gen/typechain && typechain --target ethers-v5 --outDir src/gen/typechain './src/artifacts/contracts/**/*[^dbg].json'",
     "adapter:build": "rimraf src/gen/adapter && tsc ./src/gen/typechain/index.ts --outDir ./src/gen/adapter",
     "test": "yarn build && yarn concurrently -k --success first 'yarn start:ganache' 'yarn test:ganache'",
     "test:hardhat": "hardhat test tests/*.spec.ts",
