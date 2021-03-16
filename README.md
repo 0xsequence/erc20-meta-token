@@ -46,8 +46,8 @@ In addition, it becomes easier to have multiple version of wrapper contracts. In
 # Security Review
 
 erc20-meta-token has been audited by two independant parties and all issues discovered were addressed. 
-- [Agustín Aguilar**](https://github.com/arcadeum/erc20-meta-token/blob/master/audits/Security_Audit_Horizon_Games_23-12-19_2.pdf)
-- [Consensys Diligence](https://github.com/arcadeum/erc20-meta-token/blob/master/audits/horizon-games-audit-2020-02.pdf) 
+- [Agustín Aguilar**](https://github.com/0xsequence/erc20-meta-token/blob/master/audits/Security_Audit_Horizon_Games_23-12-19_2.pdf)
+- [Consensys Diligence](https://github.com/0xsequence/erc20-meta-token/blob/master/audits/horizon-games-audit-2020-02.pdf)
 
 ** Agustín was hired as a full-time employee at Horizon after the audit was completed. Agustín did not take part in the writing of erc20-meta-token contracts.
 

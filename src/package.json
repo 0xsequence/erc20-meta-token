@@ -1,10 +1,12 @@
 {
   "name": "@0xsequence/erc20-meta-token",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "General ERC20 to ERC1155 Token Wrapper Contract",
   "repository": "https://github.com/0xsequence/erc20-meta-token",
   "homepage": "https://sequence.build",
   "license": "Apache-2.0",
+  "source": "typings/contracts/index.ts",
+  "types": "typings/contracts/index.ts",
   "scripts": {
   },
   "keywords": [
