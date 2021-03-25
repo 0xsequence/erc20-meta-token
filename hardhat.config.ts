@@ -2,9 +2,9 @@ import { HardhatUserConfig } from 'hardhat/config'
 
 import '@nomiclabs/hardhat-truffle5'
 import '@nomiclabs/hardhat-ethers'
-// import "@nomiclabs/hardhat-web3"
 import 'hardhat-gas-reporter'
 import 'solidity-coverage'
+import '@tenderly/hardhat-tenderly'
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -28,6 +28,9 @@ const config: HardhatUserConfig = {
     ganache: {
       url: 'http://127.0.0.1:8545',
       blockGasLimit: 10000000
+    },
+    matic: {
+      url: 'https://rpc-mainnet.matic.network'
     },
     coverage: {
       url: 'http://localhost:8555'

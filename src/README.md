@@ -15,6 +15,10 @@ For more information see, [github.com/0xsequence/erc20-meta-token](https://githu
 
 `yarn add @0xsequence/erc20-meta-token` or `npm install @0xsequence/erc20-meta-token`
 
+### Contract Verification
+
+`yarn verify --network {NETWORK_NAME} "{CONTRACT_NAME}={CONTRACT_ADDRESS}"`
+
 ### Usage from Solidity
 
 ```solidity
