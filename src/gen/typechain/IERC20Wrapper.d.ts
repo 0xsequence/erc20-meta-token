@@ -34,6 +34,7 @@ interface IERC20WrapperInterface extends ethers.utils.Interface {
     "safeBatchTransferFrom(address,address,uint256[],uint256[],bytes)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,uint256,bytes)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
+    "supportsInterface(bytes4)": FunctionFragment;
     "withdraw(address,address,uint256)": FunctionFragment;
   };
 
@@ -83,6 +84,10 @@ interface IERC20WrapperInterface extends ethers.utils.Interface {
     values: [string, boolean]
   ): string;
   encodeFunctionData(
+    functionFragment: "supportsInterface",
+    values: [BytesLike]
+  ): string;
+  encodeFunctionData(
     functionFragment: "withdraw",
     values: [string, string, BigNumberish]
   ): string;
@@ -121,6 +126,10 @@ interface IERC20WrapperInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "setApprovalForAll",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "supportsInterface",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
@@ -338,6 +347,16 @@ export class IERC20Wrapper extends Contract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    supportsInterface(
+      _interfaceId: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    "supportsInterface(bytes4)"(
+      _interfaceId: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     withdraw(
       _token: string,
       _to: string,
@@ -505,6 +524,16 @@ export class IERC20Wrapper extends Contract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  supportsInterface(
+    _interfaceId: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  "supportsInterface(bytes4)"(
+    _interfaceId: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   withdraw(
     _token: string,
     _to: string,
@@ -671,6 +700,16 @@ export class IERC20Wrapper extends Contract {
       _approved: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    supportsInterface(
+      _interfaceId: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "supportsInterface(bytes4)"(
+      _interfaceId: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
 
     withdraw(
       _token: string,
@@ -888,6 +927,16 @@ export class IERC20Wrapper extends Contract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    supportsInterface(
+      _interfaceId: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "supportsInterface(bytes4)"(
+      _interfaceId: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     withdraw(
       _token: string,
       _to: string,
@@ -1060,6 +1109,16 @@ export class IERC20Wrapper extends Contract {
       _operator: string,
       _approved: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    supportsInterface(
+      _interfaceId: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "supportsInterface(bytes4)"(
+      _interfaceId: BytesLike,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     withdraw(

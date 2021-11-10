@@ -421,6 +421,25 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "bytes4",
+        name: "_interfaceId",
+        type: "bytes4",
+      },
+    ],
+    name: "supportsInterface",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "address",
         name: "_token",
         type: "address",

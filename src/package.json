@@ -1,6 +1,6 @@
 {
   "name": "@0xsequence/erc20-meta-token",
-  "version": "3.0.5",
+  "version": "3.2.0",
   "description": "General ERC20 to ERC1155 Token Wrapper Contract",
   "repository": "https://github.com/0xsequence/erc20-meta-token",
   "homepage": "https://sequence.build",
@@ -19,7 +19,7 @@
     "ethers": "^5.0.32"
   },
   "dependencies": {
-    "@0xsequence/erc-1155": "^3.0.4"
+    "@0xsequence/erc-1155": "^3.1.0"
   },
   "devDependencies": {}
 }
