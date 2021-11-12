@@ -19,7 +19,7 @@ import '@0xsequence/erc20-meta-token/contracts/interfaces/IERC20Wrapper.sol';
 
 contract ContractA {
   //...
-  function f(address wrapperAddress, address ERC20tokenAddress, uint256 amount) public {
+  function f(address payable wrapperAddress, address ERC20tokenAddress, uint256 amount) public {
     IERC20Wrapper(wrapperAddress).deposit(ERC20tokenAddress, msg.sender, amount);
   }
 }
