@@ -15,12 +15,12 @@ an ERC-20 token to function as an ERC-1155 contract.
 ```solidity
 pragma solidity ^0.7.4;
 
-import '@0xsequence/erc20-meta-token/contracts/interfaces/IMetaERC20Wrapper.sol';
+import '@0xsequence/erc20-meta-token/contracts/interfaces/IERC20Wrapper.sol';
 
 contract ContractA {
   //...
   function f(address wrapperAddress, address ERC20tokenAddress, uint256 amount) public {
-    IMetaERC20Wrapper(wrapperAddress).deposit(ERC20tokenAddress, amount);
+    IERC20Wrapper(wrapperAddress).deposit(ERC20tokenAddress, amount);
   }
 }
 ```
