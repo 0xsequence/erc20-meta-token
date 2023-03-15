@@ -12,7 +12,7 @@
     "adapter": "yarn adapter:gen && yarn adapter:build",
     "adapter:gen": "rimraf src/gen/typechain && typechain --target ethers-v5 --out-dir src/gen/typechain './src/artifacts/contracts/**/*[^dbg].json'",
     "adapter:build": "rimraf src/gen/adapter && tsc ./src/gen/typechain/index.ts --outDir ./src/gen/adapter",
-    "test": "yarn build && yarn concurrently -k --success first 'yarn start:ganache' 'yarn test:ganache'",
+    "test": "yarn build && yarn test:hardhat",
     "test:hardhat": "hardhat test",
     "test:ganache": "hardhat --network ganache test",
     "test:gas-report": "REPORT_GAS=true yarn test",
