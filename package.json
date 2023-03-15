@@ -54,7 +54,7 @@
     "eslint-plugin-prettier": "^3.3.1",
     "ethers": "^5.0.32",
     "ganache-cli": "6.12.2",
-    "hardhat": "2.1.1",
+    "hardhat": "2.12.2",
     "hardhat-gas-reporter": "^1.0.4",
     "rimraf": "^3.0.2",
     "solhint": "^3.3.2",
