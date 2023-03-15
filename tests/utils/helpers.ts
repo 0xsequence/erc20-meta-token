@@ -15,8 +15,15 @@ export const createTestWallet = (web3: any, addressIndex: number = 0) => {
 
 // Check if tx was Reverted with specified message
 export function RevertError(errorMessage?: string) {
-  let prefix = 'VM Exception while processing transaction: revert'
-  return errorMessage ? RegExp(`^${prefix + ' ' + errorMessage}$`) : RegExp(`^${prefix}$`)
+  if (!errorMessage) {
+    return /Transaction reverted and Hardhat couldn't infer the reason/
+  } else {
+    return new RegExp(`VM Exception while processing transaction: reverted with reason string ["']${errorMessage}["']`)
+  }
+}
+
+export function RevertUnsafeMathError() {
+  return /Arithmetic operation .*flowed/
 }
 
 

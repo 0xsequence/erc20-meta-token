@@ -1,4 +1,4 @@
-import { AbstractContract, RevertError, expect } from './utils'
+import { AbstractContract, RevertError, expect, RevertUnsafeMathError } from './utils'
 import * as utils from './utils'
 
 import {
@@ -353,7 +353,7 @@ describe('ERC20Wrapper', () => {
 
         it('should REVERT if user does not have sufficient wrapped tokens', async () => {
           const tx = userErc20WrapperContract.functions.withdraw(tokenAddress, userAddress, depositAmount.add(1), txParam)
-          await expect(tx).to.be.rejectedWith( RevertError("SafeMath#sub: UNDERFLOW") )
+          await expect(tx).to.be.rejectedWith( RevertUnsafeMathError() )
         })
 
         it('should REVERT if token is not registered', async () => {
@@ -413,7 +413,7 @@ describe('ERC20Wrapper', () => {
 
         it('should REVERT if user does not have sufficient wrapped tokens', async () => {
           const tx = userErc20WrapperContract.functions.withdraw(ETH_ADDRESS, userAddress, depositAmount.add(1), txParam)
-          await expect(tx).to.be.rejectedWith( RevertError("SafeMath#sub: UNDERFLOW") )
+          await expect(tx).to.be.rejectedWith( RevertUnsafeMathError() )
         })
 
         it('should REVERT if recipient is 0x0', async () => {
@@ -473,7 +473,7 @@ describe('ERC20Wrapper', () => {
 
         it('should REVERT if user does not have sufficient wrapped tokens', async () => {
           const tx = userErc20WrapperContract.functions.safeTransferFrom(userAddress, wrapperAddress, tokenID, depositAmount.add(1), data)
-          await expect(tx).to.be.rejectedWith( RevertError("SafeMath#sub: UNDERFLOW") )
+          await expect(tx).to.be.rejectedWith( RevertUnsafeMathError() )
         })
 
         it('should REVERT if token is not registered', async () => {
@@ -526,7 +526,7 @@ describe('ERC20Wrapper', () => {
         it('should REVERT if user does not have sufficient wrapped tokens', async () => {
           //@ts-ignore
           const tx = userErc20WrapperContract.functions.safeTransferFrom(userAddress, wrapperAddress, ONE_ID, depositAmount.add(1), data)
-          await expect(tx).to.be.rejectedWith( RevertError("SafeMath#sub: UNDERFLOW") )
+          await expect(tx).to.be.rejectedWith( RevertUnsafeMathError() )
         })
 
         it('should PASS if user has sufficient wrapped tokens', async () => {
@@ -595,7 +595,7 @@ describe('ERC20Wrapper', () => {
         it('should REVERT if user does not have sufficient wrapped tokens', async () => {
           //@ts-ignore
           const tx = userErc20WrapperContract.functions.safeBatchTransferFrom(userAddress, wrapperAddress, tokenIDs, depositAmounts.map(val => val.add(1)), data)
-          await expect(tx).to.be.rejectedWith( RevertError("SafeMath#sub: UNDERFLOW") )
+          await expect(tx).to.be.rejectedWith( RevertUnsafeMathError() )
         })
 
         it('should PASS if user has sufficient wrapped tokens', async () => {

@@ -22,7 +22,7 @@ For more information see, [github.com/0xsequence/erc20-meta-token](https://githu
 ### Usage from Solidity
 
 ```solidity
-pragma solidity ^0.7.4;
+pragma solidity ^0.8.0;
 
 import '@0xsequence/erc20-meta-token/contracts/interfaces/IMetaERC20Wrapper.sol';
 

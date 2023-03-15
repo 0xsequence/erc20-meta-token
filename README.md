@@ -13,7 +13,7 @@ an ERC-20 token to function as an ERC-1155 contract.
 ### Usage from Solidity
 
 ```solidity
-pragma solidity ^0.7.4;
+pragma solidity ^0.8.0;
 
 import '@0xsequence/erc20-meta-token/contracts/interfaces/IERC20Wrapper.sol';
 
