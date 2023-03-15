@@ -1,5 +1,3 @@
-import * as ethers from 'ethers'
-
 import { AbstractContract, RevertError, expect } from './utils'
 import * as utils from './utils'
 
@@ -11,7 +9,7 @@ import {
 import { BigNumber } from 'ethers'
 
 // init test wallets from package.json mnemonic
-import { web3 } from 'hardhat'
+import { ethers, web3 } from 'hardhat'
 
 const {
   wallet: ownerWallet,
@@ -62,7 +60,7 @@ describe('ERC20Wrapper', () => {
   let userERC20Contract: ERC20Mock
 
   // Provider
-  let provider = new ethers.providers.JsonRpcProvider()
+  const { provider } = ethers
 
   context('When Erc20Wrapper contract is deployed', () => {
     before(async () => {
