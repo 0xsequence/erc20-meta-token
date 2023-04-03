@@ -1,5 +1,4 @@
 pragma solidity ^0.8.0;
-pragma experimental ABIEncoderV2;
 
 import "@0xsequence/erc-1155/contracts/interfaces/IERC20.sol";
 import "@0xsequence/erc-1155/contracts/interfaces/IERC165.sol";
