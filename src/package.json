@@ -1,6 +1,6 @@
 {
   "name": "@0xsequence/erc20-meta-token",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "General ERC20 to ERC1155 Token Wrapper Contract",
   "repository": "https://github.com/0xsequence/erc20-meta-token",
   "homepage": "https://sequence.build",
