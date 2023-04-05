@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@0xsequence/erc-1155@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@0xsequence/erc-1155/-/erc-1155-4.0.0.tgz#187d13ce84c95b4348fde09535cd83b0151c42e4"
-  integrity sha512-N0lR3qnryAMEWeiIvfI413LZYSdFwkZ+AxBgch23DwFdo7ugr2n5g/SsmhPsMoray3Syf78MCRKNDMuDU7t26Q==
+"@0xsequence/erc-1155@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@0xsequence/erc-1155/-/erc-1155-4.0.1.tgz#c991fe06b6ae385146e69cd9d1c4982b06487c10"
+  integrity sha512-KFLxBfiocOuHmPUkGYiWw5fLZ8uCDhXhcyzFFv8oe/KWXdxL37NTD7n6CmMSRiUxr4qaXuFV5u38vPFWFdOY0g==
   optionalDependencies:
     "@ethersproject/abi" "^5.7.0"
     "@ethersproject/providers" "^5.7.2"
