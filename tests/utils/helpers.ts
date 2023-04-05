@@ -3,10 +3,10 @@ import * as ethers from 'ethers'
 // createTestWallet creates a new wallet
 export const createTestWallet = (web3: any, addressIndex: number = 0) => {
   const provider = new Web3DebugProvider(web3.currentProvider)
-  
-  const wallet = ethers.Wallet
-    .fromMnemonic(process.env.npm_package_config_mnemonic!, `m/44'/60'/0'/0/${addressIndex}`)
-    .connect(provider)
+
+  const wallet = ethers.Wallet.fromMnemonic(process.env.npm_package_config_mnemonic!, `m/44'/60'/0'/0/${addressIndex}`).connect(
+    provider
+  )
 
   const signer = provider.getSigner(addressIndex)
 
@@ -26,7 +26,6 @@ export function RevertUnsafeMathError() {
   return /Arithmetic operation .*flowed/
 }
 
-
 export interface JSONRPCRequest {
   jsonrpc: string
   id: number
@@ -35,7 +34,6 @@ export interface JSONRPCRequest {
 }
 
 export class Web3DebugProvider extends ethers.providers.JsonRpcProvider {
-
   public reqCounter = 0
   public reqLog: JSONRPCRequest[] = []
 
@@ -43,26 +41,25 @@ export class Web3DebugProvider extends ethers.providers.JsonRpcProvider {
   private _sendAsync: (request: any, callback: (error: any, response: any) => void) => void
 
   constructor(web3Provider: ethers.providers.ExternalProvider, network?: ethers.providers.Networkish) {
-      // HTTP has a host; IPC has a path.
-      super(web3Provider.host || web3Provider.path || '', network)
+    // HTTP has a host; IPC has a path.
+    super(web3Provider.host || web3Provider.path || '', network)
 
-      if (web3Provider) {
-        if (web3Provider.sendAsync) {
-          this._sendAsync = web3Provider.sendAsync.bind(web3Provider)
-        } else if (web3Provider.send) {
-          this._sendAsync = web3Provider.send.bind(web3Provider)
-        }
+    if (web3Provider) {
+      if (web3Provider.sendAsync) {
+        this._sendAsync = web3Provider.sendAsync.bind(web3Provider)
+      } else if (web3Provider.send) {
+        this._sendAsync = web3Provider.send.bind(web3Provider)
       }
+    }
 
-      if (!web3Provider || !this._sendAsync) {
-          console.error(ethers.errors.INVALID_ARGUMENT)
-      }
+    if (!web3Provider || !this._sendAsync) {
+      console.error(ethers.errors.INVALID_ARGUMENT)
+    }
 
-      ethers.utils.defineReadOnly(this, '_web3Provider', web3Provider)
+    ethers.utils.defineReadOnly(this, '_web3Provider', web3Provider)
   }
 
   send(method: string, params: any): Promise<any> {
-
     this.reqCounter++
 
     return new Promise((resolve, reject) => {
@@ -98,6 +95,6 @@ export class Web3DebugProvider extends ethers.providers.JsonRpcProvider {
     if (this.reqLog.length === 0) {
       return { jsonrpc: '2.0', id: 0, method: null, params: null }
     }
-    return this.reqLog[this.reqLog.length-reverseIndex-1]
+    return this.reqLog[this.reqLog.length - reverseIndex - 1]
   }
 }
