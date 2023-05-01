@@ -35,7 +35,7 @@ contract MetaERC20Wrapper is ERC1155Meta, ERC1155MintBurn {
   |__________________________________*/
 
   // Register ETH as ID #1 and address 0x1
-  constructor() public {
+  constructor() {
     addressToID[ETH_ADDRESS] = ETH_ID;
     IDtoAddress[ETH_ID] = ETH_ADDRESS;
   }
