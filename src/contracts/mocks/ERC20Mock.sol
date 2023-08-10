@@ -1,6 +1,7 @@
 pragma solidity ^0.8.0;
 
 import "@0xsequence/erc-1155/contracts/interfaces/IERC20.sol";
+import "@0xsequence/erc-1155/contracts/interfaces/IERC165.sol";
 
 /**
  * @title Standard ERC20 token
@@ -14,7 +15,7 @@ import "@0xsequence/erc-1155/contracts/interfaces/IERC20.sol";
  * all accounts just by listening to said events. Note that this isn't required by the specification, and other
  * compliant implementations may not do it.
  */
-contract ERC20 is IERC20 {
+contract ERC20 is IERC20, IERC165 {
   mapping (address => uint256) private _balances;
 
   mapping (address => mapping (address => uint256)) private _allowed;
@@ -185,7 +186,17 @@ contract ERC20 is IERC20 {
     _approve(account, msg.sender, _allowed[account][msg.sender] - value);
   }
 
+  /**
+   * @dev Indicates whether a contract implements the ERC-20 functions.
+   * @param  interfaceID The ERC-165 interface ID that is queried for support.
+   * @return Whether ERC-165 or ERC-20 interfaces are supported.
+   */
+  function supportsInterface(bytes4 interfaceID) public override view returns (bool) {
+    return  interfaceID == type(IERC165).interfaceId || interfaceID == type(IERC20).interfaceId;
+  }
+
 }
+
 
 contract ERC20Mock is ERC20 {
 

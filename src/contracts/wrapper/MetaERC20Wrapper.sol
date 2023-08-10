@@ -270,10 +270,10 @@ contract MetaERC20Wrapper is ERC1155Meta, ERC1155MintBurn {
 
   /**
    * @notice Indicates whether a contract implements the `ERC1155TokenReceiver` functions and so can accept ERC1155 token types.
-   * @param  interfaceID The ERC-165 interface ID that is queried for support.s
+   * @param  interfaceID The ERC-165 interface ID that is queried for support.
    * @dev This function MUST return true if it implements the ERC1155TokenReceiver interface and ERC-165 interface.
    *      This function MUST NOT consume more than 5,000 gas.
-   * @return Wheter ERC-165 or ERC1155TokenReceiver interfaces are supported.
+   * @return Whether ERC-165 or ERC1155TokenReceiver interfaces are supported.
    */
   function supportsInterface(bytes4 interfaceID) public override view returns (bool) {
     return  interfaceID == type(IERC165).interfaceId ||
