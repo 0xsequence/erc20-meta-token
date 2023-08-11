@@ -34,7 +34,7 @@ contract ERC20Wrapper is ERC1155, ERC1155MintBurn {
   |__________________________________*/
 
   // Register ETH as ID #1 and address 0x1
-  constructor() public {
+  constructor() {
     addressToID[ETH_ADDRESS] = ETH_ID;
     IDtoAddress[ETH_ID] = ETH_ADDRESS;
   }
@@ -274,10 +274,10 @@ contract ERC20Wrapper is ERC1155, ERC1155MintBurn {
    *      This function MUST NOT consume more than 5,000 gas.
    * @return Wheter ERC-165 or ERC1155TokenReceiver interfaces are supported.
    */
-  function supportsInterface(bytes4 interfaceID) public override pure returns (bool) {
+  function supportsInterface(bytes4 interfaceID) public override view returns (bool) {
     return  interfaceID == type(IERC165).interfaceId ||
       interfaceID == type(IERC1155).interfaceId || 
-      interfaceID == type(IERC1155TokenReceiver).interfaceId;        
+      interfaceID == type(IERC1155TokenReceiver).interfaceId;
   }
 
 }
