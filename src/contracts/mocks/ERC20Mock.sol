@@ -191,7 +191,7 @@ contract ERC20 is IERC20, IERC165 {
    * @param  interfaceID The ERC-165 interface ID that is queried for support.
    * @return Whether ERC-165 or ERC-20 interfaces are supported.
    */
-  function supportsInterface(bytes4 interfaceID) public override view returns (bool) {
+  function supportsInterface(bytes4 interfaceID) public override pure returns (bool) {
     return  interfaceID == type(IERC165).interfaceId || interfaceID == type(IERC20).interfaceId;
   }
 
